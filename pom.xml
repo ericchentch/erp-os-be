@@ -8,11 +8,11 @@
         <version>2.7.6-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>e-com</artifactId>
+    <groupId>com.chilleric</groupId>
+    <artifactId>franchise_system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>e-com</name>
-    <description>E-com project</description>
+    <name>franchise_system</name>
+    <description>franchise_system project</description>
     <properties>
         <java.version>11</java.version>
     </properties>
