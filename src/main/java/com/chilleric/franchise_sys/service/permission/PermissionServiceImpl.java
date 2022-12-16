@@ -24,7 +24,6 @@ import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
 import com.chilleric.franchise_sys.inventory.permission.PermissionInventory;
-import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
@@ -46,9 +45,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
 
   @Autowired
   private PermissionInventory permissionInventory;
-
-  @Autowired
-  private UserInventory userInventory;
 
   @Autowired
   private AccessabilityRepository accessabilityRepository;

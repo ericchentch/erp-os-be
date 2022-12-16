@@ -1,14 +1,6 @@
 package com.chilleric.franchise_sys.config;
 
 import static java.util.Map.entry;
-
-import com.chilleric.franchise_sys.repository.language.Language;
-import com.chilleric.franchise_sys.repository.language.LanguageRepository;
-import com.chilleric.franchise_sys.repository.permission.Permission;
-import com.chilleric.franchise_sys.repository.permission.PermissionRepository;
-import com.chilleric.franchise_sys.repository.user.User;
-import com.chilleric.franchise_sys.repository.user.UserRepository;
-import com.chilleric.franchise_sys.utils.DateFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -21,6 +13,13 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import com.chilleric.franchise_sys.repository.language.Language;
+import com.chilleric.franchise_sys.repository.language.LanguageRepository;
+import com.chilleric.franchise_sys.repository.permission.Permission;
+import com.chilleric.franchise_sys.repository.permission.PermissionRepository;
+import com.chilleric.franchise_sys.repository.user.User;
+import com.chilleric.franchise_sys.repository.user.UserRepository;
+import com.chilleric.franchise_sys.utils.DateFormat;
 
 @Component
 public class EndpointsListener implements ApplicationListener<ContextRefreshedEvent> {
@@ -70,12 +69,12 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
       List<ObjectId> userIds = Arrays.asList(user.get_id());
       Permission permission =
           new Permission(null, "super_admin_permission", userIds, DateFormat.getCurrentTime(), null,
-              permissionRepository.getViewPointSelect(), permissionRepository.getViewPointSelect());
+              permissionRepository.getViewPointSelect(), permissionRepository.getEditableSelect());
       permissionRepository.insertAndUpdate(permission);
     } else {
       Permission permission = permissions.get(0);
       permission.setViewPoints(permissionRepository.getViewPointSelect());
-      permission.setEditable(permissionRepository.getViewPointSelect());
+      permission.setEditable(permissionRepository.getEditableSelect());
       permissionRepository.insertAndUpdate(permission);
     }
     List<Language> defLanguages =

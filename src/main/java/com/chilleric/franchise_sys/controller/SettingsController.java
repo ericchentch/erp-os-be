@@ -15,6 +15,7 @@ import com.chilleric.franchise_sys.dto.settings.AccountSetting;
 import com.chilleric.franchise_sys.dto.settings.ChangePasswordRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsResponse;
+import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.service.settings.SettingService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -30,7 +31,7 @@ public class SettingsController extends AbstractController<SettingService> {
                 return response(service.getSettingsByUserId(result.getLoginId()),
                                 LanguageMessageKey.SUCCESS,
                                 result.getViewPoints().get(SettingsResponse.class.getSimpleName()),
-                                result.getEditable().get(SettingsResponse.class.getSimpleName()));
+                                result.getEditable().get(SettingsRequest.class.getSimpleName()));
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -47,7 +48,7 @@ public class SettingsController extends AbstractController<SettingService> {
                                                                 .get(SettingsResponse.class
                                                                                 .getSimpleName()),
                                                 result.getEditable()
-                                                                .get(SettingsResponse.class
+                                                                .get(SettingsRequest.class
                                                                                 .getSimpleName())),
                                 null, HttpStatus.OK.value());
         }
@@ -62,11 +63,10 @@ public class SettingsController extends AbstractController<SettingService> {
                                 new CommonResponse<String>(true, null,
                                                 LanguageMessageKey.UPDATE_ACCOUNT_SETTINGS_SUCCESS,
                                                 HttpStatus.OK.value(),
-                                                result.getViewPoints()
-                                                                .get(SettingsResponse.class
-                                                                                .getSimpleName()),
+                                                result.getViewPoints().get(
+                                                                UserResponse.class.getSimpleName()),
                                                 result.getEditable()
-                                                                .get(SettingsResponse.class
+                                                                .get(AccountSetting.class
                                                                                 .getSimpleName())),
                                 null, HttpStatus.OK.value());
         }
@@ -82,10 +82,10 @@ public class SettingsController extends AbstractController<SettingService> {
                                                 LanguageMessageKey.UPDATE_PASSWORD_SUCCESS,
                                                 HttpStatus.OK.value(),
                                                 result.getViewPoints()
-                                                                .get(SettingsResponse.class
+                                                                .get(ChangePasswordRequest.class
                                                                                 .getSimpleName()),
                                                 result.getEditable()
-                                                                .get(SettingsResponse.class
+                                                                .get(ChangePasswordRequest.class
                                                                                 .getSimpleName())),
                                 null, HttpStatus.OK.value());
         }

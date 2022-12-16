@@ -21,12 +21,10 @@ import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
-import com.chilleric.franchise_sys.inventory.permission.PermissionInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
-import com.chilleric.franchise_sys.repository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.repository.user.User;
 import com.chilleric.franchise_sys.repository.user.UserRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
@@ -38,11 +36,6 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
   @Value("${default.password}")
   protected String defaultPassword;
 
-  @Autowired
-  private PermissionRepository permissionRepository;
-
-  @Autowired
-  private PermissionInventory permissionInventory;
   @Autowired
   private UserInventory userInventory;
 

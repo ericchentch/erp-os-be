@@ -36,16 +36,11 @@ public class UserController extends AbstractController<UserService> {
                         throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
                 }
                 service.createNewUser(userRequest, result.getLoginId());
-                return new ResponseEntity<CommonResponse<String>>(
-                                new CommonResponse<String>(true, null,
-                                                LanguageMessageKey.CREATE_USER_SUCCESS,
-                                                HttpStatus.OK.value(),
-                                                result.getViewPoints().get(
-                                                                UserResponse.class.getSimpleName()),
-                                                result.getEditable()
-                                                                .get(UserResponse.class
-                                                                                .getSimpleName())),
-                                null, HttpStatus.OK.value());
+                return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true,
+                                null, LanguageMessageKey.CREATE_USER_SUCCESS, HttpStatus.OK.value(),
+                                result.getViewPoints().get(UserResponse.class.getSimpleName()),
+                                result.getEditable().get(UserRequest.class.getSimpleName())), null,
+                                HttpStatus.OK.value());
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -64,7 +59,7 @@ public class UserController extends AbstractController<UserService> {
                 return response(Optional.of(filterResponse(service.findOneUserById(id).get(),
                                 result.getViewPoints())), LanguageMessageKey.SUCCESS,
                                 result.getViewPoints().get(UserResponse.class.getSimpleName()),
-                                result.getEditable().get(UserResponse.class.getSimpleName()));
+                                result.getEditable().get(UserRequest.class.getSimpleName()));
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -80,7 +75,7 @@ public class UserController extends AbstractController<UserService> {
                 return response(service.getUsers(allParams, keySort, page, pageSize, "",
                                 result.getLoginId()), LanguageMessageKey.SUCCESS,
                                 result.getViewPoints().get(UserResponse.class.getSimpleName()),
-                                result.getEditable().get(UserResponse.class.getSimpleName()));
+                                result.getEditable().get(UserRequest.class.getSimpleName()));
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -91,17 +86,12 @@ public class UserController extends AbstractController<UserService> {
                 ValidationResult result = validateToken(request);
                 checkAccessability(result.getLoginId(), id);
                 service.updateUserById(id, userRequest,
-                                result.getEditable().get(UserResponse.class.getSimpleName()));
-                return new ResponseEntity<CommonResponse<String>>(
-                                new CommonResponse<String>(true, null,
-                                                LanguageMessageKey.UPDATE_USER_SUCCESS,
-                                                HttpStatus.OK.value(),
-                                                result.getViewPoints().get(
-                                                                UserResponse.class.getSimpleName()),
-                                                result.getEditable()
-                                                                .get(UserResponse.class
-                                                                                .getSimpleName())),
-                                null, HttpStatus.OK.value());
+                                result.getEditable().get(UserRequest.class.getSimpleName()));
+                return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true,
+                                null, LanguageMessageKey.UPDATE_USER_SUCCESS, HttpStatus.OK.value(),
+                                result.getViewPoints().get(UserResponse.class.getSimpleName()),
+                                result.getEditable().get(UserRequest.class.getSimpleName())), null,
+                                HttpStatus.OK.value());
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -111,16 +101,12 @@ public class UserController extends AbstractController<UserService> {
                 ValidationResult result = validateToken(request);
                 checkAccessability(result.getLoginId(), id);
                 service.changeStatusUser(id);
-                return new ResponseEntity<CommonResponse<String>>(
-                                new CommonResponse<String>(true, null,
-                                                LanguageMessageKey.CHANGE_STATUS_USER_SUCCESS,
-                                                HttpStatus.OK.value(),
-                                                result.getViewPoints().get(
-                                                                UserResponse.class.getSimpleName()),
-                                                result.getEditable()
-                                                                .get(UserResponse.class
-                                                                                .getSimpleName())),
-                                null, HttpStatus.OK.value());
+                return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true,
+                                null, LanguageMessageKey.CHANGE_STATUS_USER_SUCCESS,
+                                HttpStatus.OK.value(),
+                                result.getViewPoints().get(UserResponse.class.getSimpleName()),
+                                result.getEditable().get(UserRequest.class.getSimpleName())), null,
+                                HttpStatus.OK.value());
         }
 
 }
