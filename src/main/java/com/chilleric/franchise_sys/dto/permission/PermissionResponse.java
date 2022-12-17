@@ -15,6 +15,7 @@ public class PermissionResponse {
   private String id;
   private String name;
   private List<String> userId;
+  private List<String> paths;
   private String created;
   private String modified;
   private Map<String, List<ViewPoint>> viewPoints;

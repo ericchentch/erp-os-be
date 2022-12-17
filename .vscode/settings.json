@@ -3,5 +3,8 @@
   "java.format.settings.profile": "GoogleStyle",
   "java.compile.nullAnalysis.mode": "automatic",
   "editor.formatOnSave": true,
-  "java.saveActions.organizeImports": true
+  "java.saveActions.organizeImports": true,
+  "cSpell.words": [
+    "chilleric"
+  ]
 }

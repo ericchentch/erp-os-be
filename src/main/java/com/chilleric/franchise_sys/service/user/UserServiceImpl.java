@@ -23,7 +23,6 @@ import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.accessability.Accessability;
-import com.chilleric.franchise_sys.repository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.repository.user.User;
 import com.chilleric.franchise_sys.repository.user.UserRepository;
@@ -38,9 +37,6 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
 
   @Autowired
   private UserInventory userInventory;
-
-  @Autowired
-  private AccessabilityRepository accessabilityRepository;
 
   @Override
   public void createNewUser(UserRequest userRequest, String loginId) {

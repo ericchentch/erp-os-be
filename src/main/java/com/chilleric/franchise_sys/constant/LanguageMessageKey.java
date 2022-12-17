@@ -244,4 +244,20 @@ public class LanguageMessageKey {
                                                                               // Mỗi người dùng chỉ
                                                                               // có một quyền duy
                                                                               // nhất
+  public static final String LABEL_REQUIRED = "labelRequired"; // Label is required
+
+  public static final String PATH_REQUIRED = "pathRequired"; // Path is required
+
+  public static final String PATH_EXISTED = "pathExisted"; // Path is existed
+
+  public static final String LABEL_EXISTED = "labelExisted"; // Label is existed
+
+  public static final String PATH_NOTFOUND = "pathNotfound"; // Path is not found
+
+  public static final String PATH_ADD_SUCCESS = "addPathSuccess"; // New path is added successfully
+
+  public static final String DELETE_PATH_SUCCESS = "deletePathSuccess"; // Deleted path successfully
+  public static final String PARENT_ID_REQURIED = "parentIdRequired"; // Parent id is required
+  public static final String PATH_LIST_REQUIRED = "pathListRequired"; // Path lists is required
+  public static final String PARENT_ID_NOTFOUND = "parentIdNotFound"; // Not found parent id
 }

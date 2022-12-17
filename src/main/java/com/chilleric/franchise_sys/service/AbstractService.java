@@ -11,10 +11,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.constant.ResponseType;
 import com.chilleric.franchise_sys.exception.BadSqlException;
+import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
+import com.chilleric.franchise_sys.repository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.utils.ObjectValidator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -34,6 +36,10 @@ public abstract class AbstractService<r> {
   protected ObjectMapper objectMapper;
 
   protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
+
+
+  @Autowired
+  protected AccessabilityRepository accessabilityRepository;
 
   @PostConstruct
   public void init() {
@@ -116,5 +122,10 @@ public abstract class AbstractService<r> {
     } else {
       return ResponseType.PUBLIC;
     }
+  }
+
+  protected void checkDeleteAndEdit(String userId, String targetId) {
+    accessabilityRepository.getAccessability(userId, targetId)
+        .orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
   }
 }

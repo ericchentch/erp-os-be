@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.inventory.langauge;
+package com.chilleric.franchise_sys.inventory.language;
 
 import static java.util.Map.entry;
 import java.util.List;
