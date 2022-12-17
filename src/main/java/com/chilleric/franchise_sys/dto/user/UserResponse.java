@@ -1,7 +1,5 @@
 package com.chilleric.franchise_sys.dto.user;
 
-import java.util.Date;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +19,7 @@ public class UserResponse {
   private String lastName;
   private String email;
   private String phone;
-  private Map<String, Date> tokens;
+  private String tokens;
   private String created;
   private String modified;
   private boolean verified;

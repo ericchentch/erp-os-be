@@ -60,20 +60,33 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     User user = new User();
     if (users.size() == 0) {
       user = new User(new ObjectId(), "super_admin",
-          bCryptPasswordEncoder.encode(
-              Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
-          0, "", "", "Super", "Admin", email, "", new HashMap<>(), DateFormat.getCurrentTime(),
-          null, true, false, 0);
+          bCryptPasswordEncoder
+              .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
+          0, "", "", "Super", "Admin", email, "", "", DateFormat.getCurrentTime(), null, true,
+          false, 0);
       userRepository.insertAndUpdate(user);
     } else {
       user = users.get(0);
+    }
+    List<User> userDevs = userRepository
+        .getUsers(Map.ofEntries(entry("username", "super_admin_dev")), "", 0, 0, "").get();
+    User usersDev = new User();
+    if (userDevs.size() == 0) {
+      usersDev = new User(new ObjectId(), "super_admin_dev",
+          bCryptPasswordEncoder
+              .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
+          0, "", "", "Dev", "Admin", email, "", "", DateFormat.getCurrentTime(), null, true, false,
+          0);
+      userRepository.insertAndUpdate(usersDev);
+    } else {
+      usersDev = userDevs.get(0);
     }
     List<Permission> permissions = permissionRepository
         .getPermissions(Map.ofEntries(entry("name", "super_admin_permission")), "", 0, 0, "").get();
     List<ObjectId> paths = pathRepository.getPaths(new HashMap<>(), "", 0, 0, "").get().stream()
         .map(thisPath -> thisPath.get_id()).collect(Collectors.toList());
     if (permissions.size() == 0) {
-      List<ObjectId> userIds = Arrays.asList(user.get_id());
+      List<ObjectId> userIds = Arrays.asList(user.get_id(), usersDev.get_id());
       Permission permission = new Permission(null, "super_admin_permission", userIds, paths,
           DateFormat.getCurrentTime(), null, permissionRepository.getViewPointSelect(),
           permissionRepository.getEditableSelect());

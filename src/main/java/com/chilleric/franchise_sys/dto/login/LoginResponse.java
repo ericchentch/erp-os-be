@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponse {
     private String userId;
-    private String deviceId;
+    private String token;
     private boolean isVerify2Fa;
     private boolean needVerify;
 }

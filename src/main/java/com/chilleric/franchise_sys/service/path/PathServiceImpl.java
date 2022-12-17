@@ -58,7 +58,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         return Optional.of(new ListWrapperResponse<>(
                 paths.stream()
                         .map(path -> new PathResponse(path.get_id().toString(), path.getLabel(),
-                                path.getPath(), path.getParentId().toString()))
+                                path.getPath()))
                         .collect(Collectors.toList()),
                 page, pageSize, repository.getTotal(allParams)));
     }
@@ -75,13 +75,8 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
             error.put("path", LanguageMessageKey.PATH_EXISTED);
             throw new InvalidRequestException(error, LanguageMessageKey.PATH_EXISTED);
         });
-        pathInventory.findPathById(pathRequest.getParentId()).orElseThrow(() -> {
-            error.put("parentId", LanguageMessageKey.PARENT_ID_NOTFOUND);
-            return new InvalidRequestException(error, LanguageMessageKey.PARENT_ID_NOTFOUND);
-        });
         ObjectId newId = new ObjectId();
-        Path path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                new ObjectId(pathRequest.getParentId()));
+        Path path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath());
         accessabilityRepository
                 .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId));
         repository.insertAndUpdate(path);

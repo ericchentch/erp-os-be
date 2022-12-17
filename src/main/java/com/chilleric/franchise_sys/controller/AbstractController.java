@@ -2,12 +2,12 @@ package com.chilleric.franchise_sys.controller;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import com.chilleric.franchise_sys.dto.common.ValidationResult;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
+import com.chilleric.franchise_sys.inventory.path.PathInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.jwt.JwtValidation;
-import com.chilleric.franchise_sys.jwt.TokenContent;
 import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
@@ -31,6 +31,8 @@ import com.chilleric.franchise_sys.repository.user.User;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
 
 public abstract class AbstractController<s> {
+
+	protected static ObjectId findPathId;
 
 	@Autowired
 	protected s service;
@@ -45,6 +47,9 @@ public abstract class AbstractController<s> {
 	protected UserInventory userInventory;
 
 	@Autowired
+	protected PathInventory pathInventory;
+
+	@Autowired
 	private AccessabilityRepository accessabilityRepository;
 
 	protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
@@ -54,33 +59,39 @@ public abstract class AbstractController<s> {
 		if (token == null) {
 			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
 		}
-		return checkAuthentication(token);
+		String path = request.getHeader("pathName");
+		if (StringUtils.hasText(path)) {
+			return checkAuthentication(token, Optional.of(path));
+		} else {
+			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+		}
 	}
 
 	protected ValidationResult validateSSE(String token) {
 		if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-			return checkAuthentication(token.substring(7));
+			return checkAuthentication(token.substring(7), Optional.empty());
 		} else {
 			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
 		}
 
 	}
 
-	protected ValidationResult checkAuthentication(String token) {
-		TokenContent info = jwtValidation.getUserIdFromJwt(token);
-		User user = userInventory.getActiveUserById(info.getUserId())
+	protected ValidationResult checkAuthentication(String token, Optional<String> path) {
+		String userId = jwtValidation.getUserIdFromJwt(token);
+		User user = userInventory.getActiveUserById(userId)
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
-		if (!user.getTokens().containsKey(info.getDeviceId())) {
-			APP_LOGGER.error("not found deviceid authen");
-			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
-		}
-		Date now = new Date();
-		if (user.getTokens().get(info.getDeviceId()).compareTo(now) <= 0) {
-			APP_LOGGER.error("not found expired device authen");
-			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
-		}
 		Map<String, List<ViewPoint>> thisView = new HashMap<>();
 		Map<String, List<ViewPoint>> thisEdit = new HashMap<>();
+		if (user.getTokens().compareTo(token) != 0
+				&& user.getUsername().compareTo("super_admin_dev") != 0) {
+			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+		}
+		if (path.isPresent()) {
+			String thisPath = path.get();
+			findPathId = pathInventory.findPathByPath(thisPath)
+					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
+					.get_id();
+		}
 		permissionRepository.getPermissionByUserId(user.get_id().toString())
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
 				.forEach(thisPerm -> {
@@ -88,6 +99,12 @@ public abstract class AbstractController<s> {
 							ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
 					thisEdit.putAll(
 							ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
+					if (path.isPresent()) {
+						if (!thisPerm.getPaths().contains(findPathId)) {
+							throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+						}
+					}
+
 				});
 		return new ValidationResult(user.get_id().toString(), thisView, thisEdit);
 

@@ -19,7 +19,4 @@ public class PathRequest {
     @NotBlank(message = LanguageMessageKey.PATH_REQUIRED)
     private String path;
 
-    @NotEmpty(message = LanguageMessageKey.PARENT_ID_REQURIED)
-    @NotBlank(message = LanguageMessageKey.PARENT_ID_REQURIED)
-    private String parentId;
 }

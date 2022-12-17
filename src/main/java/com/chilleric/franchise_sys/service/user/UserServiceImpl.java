@@ -52,7 +52,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.set_id(newId);
     user.setPassword(bCryptPasswordEncoder()
         .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())));
-    user.setTokens(new HashMap<>());
+    user.setTokens("");
     user.setCreated(currentTime);
     user.setModified(currentTime);
     accessabilityRepository

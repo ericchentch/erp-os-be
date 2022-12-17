@@ -14,5 +14,4 @@ public class Path {
     private ObjectId _id;
     private String label;
     private String path;
-    private ObjectId parentId;
 }

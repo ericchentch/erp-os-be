@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +20,11 @@ import com.chilleric.franchise_sys.email.EmailService;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
-import com.chilleric.franchise_sys.inventory.permission.PermissionInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
+import com.chilleric.franchise_sys.jwt.JwtValidation;
 import com.chilleric.franchise_sys.repository.code.Code;
 import com.chilleric.franchise_sys.repository.code.CodeRepository;
 import com.chilleric.franchise_sys.repository.code.TypeCode;
-import com.chilleric.franchise_sys.repository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.repository.user.User;
 import com.chilleric.franchise_sys.repository.user.UserRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
@@ -37,18 +35,18 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
 
   @Value("${default.password}")
   protected String defaultPassword;
+
   @Autowired
   private EmailService emailService;
+
   @Autowired
   private CodeRepository codeRepository;
-  @Autowired
-  private PermissionRepository permissionRepository;
 
   @Autowired
   private UserInventory userInventory;
 
   @Autowired
-  private PermissionInventory permissionInventory;
+  private JwtValidation jwtValidation;
 
   @Override
   public Optional<LoginResponse> login(LoginRequest loginRequest, boolean isRegister) {
@@ -100,22 +98,19 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       }
       return Optional.of(new LoginResponse("", "", true, false));
     } else {
-      String deviceId = UUID.randomUUID().toString();
-      Date expiredDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000L);
-      Map<String, Date> tokens = user.getTokens();
-      tokens.put(deviceId, expiredDate);
+      String newTokens = jwtValidation.generateToken(user.get_id().toString());
+      user.setTokens("Bearer " + newTokens);
       repository.insertAndUpdate(user);
-      return Optional.of(new LoginResponse(user.get_id().toString(), deviceId, false, false));
+      return Optional
+          .of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens, false, false));
     }
   }
 
   @Override
-  public void logout(String id, String deviceId) {
+  public void logout(String id) {
     User user = userInventory.findUserById(id)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
-    if (user.getTokens() != null) {
-      user.getTokens().remove(deviceId);
-    }
+    user.setTokens("");
     repository.insertAndUpdate(user);
   }
 
@@ -146,7 +141,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     ObjectId newId = new ObjectId();
     user.set_id(newId);
     user.setPassword(passwordEncode);
-    user.setTokens(new HashMap<>());
+    user.setTokens("");
     user.setGender(0);
     user.setDob("");
     repository.insertAndUpdate(user);
@@ -261,12 +256,12 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     } else {
       throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_CODE);
     }
-    String deviceId = UUID.randomUUID().toString();
-    Map<String, Date> devices = user.getTokens();
-    Date expiredDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000L);
-    devices.put(deviceId, expiredDate);
+    String newTokens = jwtValidation.generateToken(user.get_id().toString());
+    user.setTokens("Bearer " + newTokens);
     repository.insertAndUpdate(user);
-    return Optional.of(new LoginResponse(user.get_id().toString(), deviceId, false, false));
+    return Optional
+        .of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens, false, false));
+
   }
 
   @Override

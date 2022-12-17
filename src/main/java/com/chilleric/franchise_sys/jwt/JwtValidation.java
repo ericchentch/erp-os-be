@@ -28,15 +28,13 @@ public class JwtValidation {
 
     protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
 
-    public String generateToken(String userId, String deviceId) {
+    public String generateToken(String userId) {
         Date now = new Date();
         long JWT_EXPIRATION = 7 * 24 * 60 * 60 * 1000L; // expired in 7 days since login
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
         try {
             Algorithm algorithm = Algorithm.HMAC512(JWT_SECRET);
-            String token = JWT.create()
-                    .withPayload(
-                            Map.ofEntries(entry("userId", userId), entry("deviceId", deviceId)))
+            String token = JWT.create().withPayload(Map.ofEntries(entry("userId", userId)))
                     .withExpiresAt(expiryDate).sign(algorithm);
             return token;
         } catch (JWTCreationException exception) {
@@ -54,7 +52,7 @@ public class JwtValidation {
         return null;
     }
 
-    public TokenContent getUserIdFromJwt(String token) {
+    public String getUserIdFromJwt(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC512(JWT_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
@@ -63,17 +61,28 @@ public class JwtValidation {
             if (claims == null) {
                 throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
             } else {
-                if (!claims.containsKey("userId") || !claims.containsKey("deviceId")) {
+                if (!claims.containsKey("userId")) {
                     throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
                 }
                 String userId = claims.get("userId").toString();
-                String deviceId = claims.get("deviceId").toString();
-                return new TokenContent(userId.substring(1, userId.length() - 1),
-                        deviceId.substring(1, deviceId.length() - 1));
+                return userId.substring(1, userId.length() - 1);
             }
         } catch (JWTVerificationException exception) {
-            APP_LOGGER.error("JWT signature does not match locally computed signature!");
+            APP_LOGGER.error(exception.getMessage());
             throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+        }
+
+    }
+
+    public boolean isValid(String token) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC512(JWT_SECRET);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            verifier.verify(token);
+            return true;
+        } catch (JWTVerificationException exception) {
+            APP_LOGGER.error(exception.getMessage());
+            return false;
         }
 
     }

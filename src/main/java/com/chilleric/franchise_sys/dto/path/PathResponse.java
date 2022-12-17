@@ -11,5 +11,4 @@ public class PathResponse {
     private String id;
     private String label;
     private String path;
-    private String parentId;
 }
