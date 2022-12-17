@@ -58,12 +58,8 @@ public abstract class AbstractController<s> {
 		String token = jwtValidation.getJwtFromRequest(request);
 		if (token == null) {
 			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
-		}
-		String path = request.getHeader("pathName");
-		if (StringUtils.hasText(path)) {
-			return checkAuthentication(token, Optional.of(path));
 		} else {
-			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+			return checkAuthentication(token, Optional.of(request));
 		}
 	}
 
@@ -76,19 +72,31 @@ public abstract class AbstractController<s> {
 
 	}
 
-	protected ValidationResult checkAuthentication(String token, Optional<String> path) {
+	protected ValidationResult checkAuthentication(String token,
+			Optional<HttpServletRequest> request) {
 		String userId = jwtValidation.getUserIdFromJwt(token);
 		User user = userInventory.getActiveUserById(userId)
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
 		Map<String, List<ViewPoint>> thisView = new HashMap<>();
 		Map<String, List<ViewPoint>> thisEdit = new HashMap<>();
-		if (user.getTokens().compareTo(token) != 0
-				&& user.getUsername().compareTo("super_admin_dev") != 0) {
+		if (user.getUsername().compareTo("super_admin_dev") == 0) {
+			permissionRepository.getPermissionByUserId(user.get_id().toString())
+					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
+					.forEach(thisPerm -> {
+						thisView.putAll(ObjectUtilities.mergePermission(thisView,
+								thisPerm.getViewPoints()));
+						thisEdit.putAll(
+								ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
+					});
+			System.out.println("!");
+			return new ValidationResult(user.get_id().toString(), thisView, thisEdit);
+		}
+		if (user.getTokens().compareTo(token) != 0) {
 			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
 		}
-		if (path.isPresent()) {
-			String thisPath = path.get();
-			findPathId = pathInventory.findPathByPath(thisPath)
+		if (request.isPresent()) {
+			String path = request.get().getHeader("pathName");
+			findPathId = pathInventory.findPathByPath(path)
 					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
 					.get_id();
 		}
@@ -99,7 +107,7 @@ public abstract class AbstractController<s> {
 							ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
 					thisEdit.putAll(
 							ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
-					if (path.isPresent()) {
+					if (request.isPresent()) {
 						if (!thisPerm.getPaths().contains(findPathId)) {
 							throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
 						}

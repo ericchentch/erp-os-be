@@ -99,7 +99,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       return Optional.of(new LoginResponse("", "", true, false));
     } else {
       String newTokens = jwtValidation.generateToken(user.get_id().toString());
-      user.setTokens("Bearer " + newTokens);
+      user.setTokens(newTokens);
       repository.insertAndUpdate(user);
       return Optional
           .of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens, false, false));
@@ -257,7 +257,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_CODE);
     }
     String newTokens = jwtValidation.generateToken(user.get_id().toString());
-    user.setTokens("Bearer " + newTokens);
+    user.setTokens(newTokens);
     repository.insertAndUpdate(user);
     return Optional
         .of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens, false, false));
