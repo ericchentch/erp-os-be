@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SettingsRequest {
 
-    @NotNull(message = LanguageMessageKey.INVALID_DARK_THEME)
-    private boolean darkTheme;
-
     @NotEmpty(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
     @NotNull(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
     @NotBlank(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)

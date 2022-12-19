@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SettingsResponse {
-    private boolean darkTheme;
     private String languageKey;
 }

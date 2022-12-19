@@ -44,8 +44,8 @@ public class SettingServiceImpl extends AbstractService<SettingRepository>
                 repository.getSettings(Map.ofEntries(entry("userId", userId)), "", 0, 0, "").get();
 
         if (settings.size() == 0) {
-            repository.insertAndUpdate(new Setting(null, new ObjectId(userId), false, "en"));
-            return Optional.of(new SettingsResponse(false, "en"));
+            repository.insertAndUpdate(new Setting(null, new ObjectId(userId), "en"));
+            return Optional.of(new SettingsResponse("en"));
         }
         Setting setting = settings.get(0);
         return Optional.of(objectMapper.convertValue(setting, SettingsResponse.class));
@@ -62,11 +62,9 @@ public class SettingServiceImpl extends AbstractService<SettingRepository>
         List<Setting> settings =
                 repository.getSettings(Map.ofEntries(entry("userId", userId)), "", 0, 0, "").get();
         if (settings.size() == 0) {
-            repository.insertAndUpdate(
-                    new Setting(null, new ObjectId(userId), settingsRequest.isDarkTheme(), "en"));
+            repository.insertAndUpdate(new Setting(null, new ObjectId(userId), "en"));
         } else {
             Setting setting = settings.get(0);
-            setting.setDarkTheme(settingsRequest.isDarkTheme());
             setting.setLanguageKey(settingsRequest.getLanguageKey());
             repository.insertAndUpdate(setting);
         }
