@@ -33,7 +33,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         return Optional.of(new ListWrapperResponse<>(
                 paths.stream()
                         .map(path -> new PathResponse(path.get_id().toString(), path.getLabel(),
-                                path.getPath()))
+                                path.getPath(), path.getType()))
                         .collect(Collectors.toList()),
                 page, pageSize, repository.getTotal(allParams)));
     }
@@ -51,13 +51,20 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
             throw new InvalidRequestException(error, LanguageMessageKey.PATH_EXISTED);
         });
         ObjectId newId = new ObjectId();
-        if (pathRequest.getType().compareTo(TypeAccount.EXTERNAL) != 0
-                && pathRequest.getType().compareTo(TypeAccount.INTERNAL) != 0) {
+        if (pathRequest.getType().compareTo("EXTERNAL") != 0
+                && pathRequest.getType().compareTo("INTERNAL") != 0) {
             error.put("type", LanguageMessageKey.TYPE_PATH_INVALID);
             throw new InvalidRequestException(error, LanguageMessageKey.TYPE_PATH_INVALID);
         }
-        Path path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                pathRequest.getType());
+        Path path = new Path();
+        if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
+            path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
+                    TypeAccount.EXTERNAL);
+        }
+        if (pathRequest.getType().compareTo("INTERNAL") == 0) {
+            path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
+                    TypeAccount.INTERNAL);
+        }
         accessabilityRepository
                 .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId));
         repository.insertAndUpdate(path);

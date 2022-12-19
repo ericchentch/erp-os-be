@@ -3,7 +3,6 @@ package com.chilleric.franchise_sys.dto.path;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.repository.user.User.TypeAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +21,6 @@ public class PathRequest {
 
     @NotEmpty(message = LanguageMessageKey.TYPE_PATH_REQUIRED)
     @NotBlank(message = LanguageMessageKey.TYPE_PATH_REQUIRED)
-    private TypeAccount type;
+    private String type;
 
 }

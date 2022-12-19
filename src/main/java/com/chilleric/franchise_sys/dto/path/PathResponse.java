@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.dto.path;
 
+import com.chilleric.franchise_sys.repository.user.User.TypeAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,4 +12,5 @@ public class PathResponse {
     private String id;
     private String label;
     private String path;
+    private TypeAccount type;
 }
