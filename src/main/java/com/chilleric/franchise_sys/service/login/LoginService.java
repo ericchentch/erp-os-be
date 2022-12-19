@@ -8,7 +8,7 @@ import com.chilleric.franchise_sys.dto.login.RegisterRequest;
 public interface LoginService {
     Optional<LoginResponse> login(LoginRequest loginRequest, boolean isRegister);
 
-    void logout(String id, String deviceId);
+    void logout(String id);
 
     void register(RegisterRequest registerRequest);
 

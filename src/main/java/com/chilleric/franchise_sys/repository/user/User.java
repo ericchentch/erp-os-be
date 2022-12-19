@@ -1,7 +1,6 @@
 package com.chilleric.franchise_sys.repository.user;
 
 import java.util.Date;
-import java.util.Map;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+    public enum TypeAccount {
+        INTERNAL, EXTERNAL
+    }
+
     private ObjectId _id;
+    private ObjectId unitId;
+    private TypeAccount type;
     private String username;
     private String password;
     private int gender;
@@ -23,7 +28,7 @@ public class User {
     private String lastName;
     private String email;
     private String phone;
-    private Map<String, Date> tokens;
+    private String tokens;
     private Date created;
     private Date modified;
     private boolean verified;

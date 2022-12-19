@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.dto.user.UserRequest;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.repository.AbstractMongoRepo;
@@ -64,6 +65,20 @@ public class PermissionRepositoryImpl extends AbstractMongoRepo implements Permi
   @Override
   public Map<String, List<ViewPoint>> getViewPointSelect() {
     List<Class<?>> viewPointList = List.of(UserResponse.class);
+    Map<String, List<ViewPoint>> result = new HashMap<>();
+    viewPointList.forEach(clazz -> {
+      List<ViewPoint> attributes = new ArrayList<>();
+      for (Field field : clazz.getDeclaredFields()) {
+        attributes.add(new ViewPoint(field.getName(), field.getName()));
+      }
+      result.put(clazz.getSimpleName(), attributes);
+    });
+    return removeId(result);
+  }
+
+  @Override
+  public Map<String, List<ViewPoint>> getEditableSelect() {
+    List<Class<?>> viewPointList = List.of(UserRequest.class);
     Map<String, List<ViewPoint>> result = new HashMap<>();
     viewPointList.forEach(clazz -> {
       List<ViewPoint> attributes = new ArrayList<>();

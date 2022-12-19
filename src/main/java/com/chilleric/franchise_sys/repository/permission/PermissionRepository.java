@@ -21,5 +21,7 @@ public interface PermissionRepository {
 
   Map<String, List<ViewPoint>> getViewPointSelect();
 
+  Map<String, List<ViewPoint>> getEditableSelect();
+
   long getTotal(Map<String, String> allParams);
 }

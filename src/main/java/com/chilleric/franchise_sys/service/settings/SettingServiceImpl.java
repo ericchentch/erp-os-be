@@ -14,7 +14,7 @@ import com.chilleric.franchise_sys.dto.settings.ChangePasswordRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsResponse;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
-import com.chilleric.franchise_sys.inventory.langauge.LanguageInventory;
+import com.chilleric.franchise_sys.inventory.language.LanguageInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.settings.Setting;
 import com.chilleric.franchise_sys.repository.settings.SettingRepository;
