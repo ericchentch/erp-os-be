@@ -17,6 +17,7 @@ import com.chilleric.franchise_sys.inventory.path.PathInventory;
 import com.chilleric.franchise_sys.repository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.path.Path;
 import com.chilleric.franchise_sys.repository.path.PathRepository;
+import com.chilleric.franchise_sys.repository.user.User.TypeAccount;
 import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service
@@ -50,7 +51,13 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
             throw new InvalidRequestException(error, LanguageMessageKey.PATH_EXISTED);
         });
         ObjectId newId = new ObjectId();
-        Path path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath());
+        if (pathRequest.getType().compareTo(TypeAccount.EXTERNAL) != 0
+                && pathRequest.getType().compareTo(TypeAccount.INTERNAL) != 0) {
+            error.put("type", LanguageMessageKey.TYPE_PATH_INVALID);
+            throw new InvalidRequestException(error, LanguageMessageKey.TYPE_PATH_INVALID);
+        }
+        Path path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
+                pathRequest.getType());
         accessabilityRepository
                 .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId));
         repository.insertAndUpdate(path);

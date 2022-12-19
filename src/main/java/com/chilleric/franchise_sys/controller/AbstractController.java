@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +25,12 @@ import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
 import com.chilleric.franchise_sys.repository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
+import com.chilleric.franchise_sys.repository.path.Path;
 import com.chilleric.franchise_sys.repository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.repository.user.User;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
 
 public abstract class AbstractController<s> {
-
-	protected static ObjectId findPathId;
 
 	@Autowired
 	protected s service;
@@ -98,9 +96,11 @@ public abstract class AbstractController<s> {
 			if (!StringUtils.hasText(path)) {
 				throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
 			}
-			findPathId = pathInventory.findPathByPath(path)
-					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
-					.get_id();
+			Path thisPath = pathInventory.findPathByPath(path)
+					.orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
+			if (thisPath.getType().compareTo(user.getType()) != 0) {
+
+			}
 		}
 		permissionRepository.getPermissionByUserId(user.get_id().toString())
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
@@ -109,12 +109,6 @@ public abstract class AbstractController<s> {
 							ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
 					thisEdit.putAll(
 							ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
-					if (request.isPresent()) {
-						if (!thisPerm.getPaths().contains(findPathId)) {
-							throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
-						}
-					}
-
 				});
 		return new ValidationResult(user.get_id().toString(), thisView, thisEdit);
 

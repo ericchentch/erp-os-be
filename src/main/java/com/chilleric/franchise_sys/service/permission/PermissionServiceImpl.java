@@ -23,7 +23,6 @@ import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
-import com.chilleric.franchise_sys.inventory.path.PathInventory;
 import com.chilleric.franchise_sys.inventory.permission.PermissionInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.accessability.Accessability;
@@ -42,9 +41,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
 
   @Autowired
   private UserInventory userInventory;
-
-  @Autowired
-  private PathInventory pathInventory;
 
   @Autowired
   private PermissionInventory permissionInventory;
@@ -86,8 +82,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
             permission.getName(),
             permission.getUserId().size() > 0 ? permission.getUserId().stream()
                 .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
-            permission.getPaths().size() > 0 ? permission.getPaths().stream()
-                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
             DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
             DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
             removeId(permission.getViewPoints()), removeId(permission.getEditable())))
@@ -98,16 +92,13 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
   public Optional<PermissionResponse> getPermissionById(String id, String loginId) {
     Permission permission = permissionInventory.getPermissionById(id)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PERMISSION_NOT_FOUND));
-    return Optional.of(new PermissionResponse(permission.get_id().toString(), permission.getName(),
-        permission.getUserId().size() > 0
-            ? permission.getUserId().stream().map(ObjectId::toString).collect(Collectors.toList())
-            : new ArrayList<>(),
-        permission.getPaths().size() > 0
-            ? permission.getPaths().stream().map(ObjectId::toString).collect(Collectors.toList())
-            : new ArrayList<>(),
-        DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
-        DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-        removeId(permission.getViewPoints()), removeId(permission.getEditable())));
+    return Optional
+        .of(new PermissionResponse(permission.get_id().toString(), permission.getName(),
+            permission.getUserId().size() > 0 ? permission.getUserId().stream()
+                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+            DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
+            DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
+            removeId(permission.getViewPoints()), removeId(permission.getEditable())));
   }
 
   @Override
@@ -141,19 +132,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       permission.setUserId(resultIds);
     } else {
       permission.setUserId(new ArrayList<>());
-    }
-    if (permissionRequest.getPaths().size() != 0) {
-      List<ObjectId> resultIds = new ArrayList<>();
-      permissionRequest.getPaths().forEach(thisPathId -> {
-        pathInventory.findPathById(thisPathId).ifPresent(thisPath -> {
-          accessabilityRepository.getAccessability(loginId, thisPathId).ifPresent(thisAccess -> {
-            resultIds.add(new ObjectId(thisPathId));
-          });
-        });
-      });
-      permission.setPaths(resultIds);
-    } else {
-      permission.setPaths(new ArrayList<>());
     }
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
@@ -190,19 +168,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       permission.setUserId(resultIds);
     } else {
       permission.setUserId(new ArrayList<>());
-    }
-    if (permissionRequest.getPaths().size() != 0) {
-      List<ObjectId> resultIds = new ArrayList<>();
-      permissionRequest.getPaths().forEach(thisPathId -> {
-        pathInventory.findPathById(thisPathId).ifPresent(thisPath -> {
-          accessabilityRepository.getAccessability(loginId, thisPathId).ifPresent(thisAccess -> {
-            resultIds.add(new ObjectId(thisPathId));
-          });
-        });
-      });
-      permission.setPaths(resultIds);
-    } else {
-      permission.setPaths(new ArrayList<>());
     }
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
@@ -260,8 +225,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
         .map(permission -> new PermissionResponse(permission.get_id().toString(),
             permission.getName(),
             permission.getUserId().size() > 0 ? permission.getUserId().stream()
-                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
-            permission.getPaths().size() > 0 ? permission.getPaths().stream()
                 .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
             DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
             DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
