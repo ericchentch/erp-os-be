@@ -12,7 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+    public enum TypeAccount {
+        INTERNAL, EXTERNAL
+    }
+
     private ObjectId _id;
+    private ObjectId unitId;
+    private TypeAccount type;
     private String username;
     private String password;
     private int gender;

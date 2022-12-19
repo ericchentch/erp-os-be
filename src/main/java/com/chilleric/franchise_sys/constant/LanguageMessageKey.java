@@ -260,4 +260,10 @@ public class LanguageMessageKey {
   public static final String PARENT_ID_REQURIED = "parentIdRequired"; // Parent id is required
   public static final String PATH_LIST_REQUIRED = "pathListRequired"; // Path lists is required
   public static final String PARENT_ID_NOTFOUND = "parentIdNotFound"; // Not found parent id
+  public static final String UNIT_ID_REQUIRED = "unitIdRequired"; // unit id is requried
+  public static final String UNIT_NAME_REQUIRED = "unitNameRequired"; // unit name is requried
+  public static final String UNIT_NAME_EXISTED = "unitNameExisted"; // unit name existed
+  public static final String UNIT_NOT_FOUND = "unitNotFound"; // unit is not found
+  public static final String UNIT_ADD_SUCCESS = "unitAddSuccess"; // added unit successfully
+  public static final String DELETE_UNIT_SUCCESS = "deleteUnitSuccess"; // delete unit successfully
 }

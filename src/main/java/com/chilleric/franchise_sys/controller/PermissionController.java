@@ -28,6 +28,21 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 public class PermissionController extends AbstractController<PermissionService> {
 
         @SecurityRequirement(name = "Bearer Authentication")
+        @GetMapping(value = "get-list-your-permissions")
+        public ResponseEntity<CommonResponse<ListWrapperResponse<PermissionResponse>>> getListYourPermissions(
+                        @RequestParam(required = false, defaultValue = "1") int page,
+                        @RequestParam(required = false, defaultValue = "10") int pageSize,
+                        @RequestParam Map<String, String> allParams,
+                        @RequestParam(defaultValue = "asc") String keySort,
+                        @RequestParam(defaultValue = "modified") String sortField,
+                        HttpServletRequest request) {
+                ValidationResult result = validateToken(request);
+                return response(service.getYourPermissions(allParams, keySort, page, pageSize,
+                                sortField, result.getLoginId()), LanguageMessageKey.SUCCESS,
+                                service.getPermissionView(), service.getPermissionView());
+        }
+
+        @SecurityRequirement(name = "Bearer Authentication")
         @GetMapping(value = "get-list-permissions")
         public ResponseEntity<CommonResponse<ListWrapperResponse<PermissionResponse>>> getListPermissions(
                         @RequestParam(required = false, defaultValue = "1") int page,
@@ -37,7 +52,7 @@ public class PermissionController extends AbstractController<PermissionService> 
                         @RequestParam(defaultValue = "modified") String sortField,
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
-                return response(service.getPermissions(allParams, keySort, page, pageSize,
+                return response(service.getAllPermissions(allParams, keySort, page, pageSize,
                                 sortField, result.getLoginId()), LanguageMessageKey.SUCCESS,
                                 service.getPermissionView(), service.getPermissionView());
         }

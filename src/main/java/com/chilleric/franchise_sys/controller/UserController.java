@@ -63,7 +63,7 @@ public class UserController extends AbstractController<UserService> {
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
-        @GetMapping(value = "get-list-users")
+        @GetMapping(value = "get-list-your-users")
         public ResponseEntity<CommonResponse<ListWrapperResponse<UserResponse>>> getListUsers(
                         @RequestParam(required = false, defaultValue = "1") int page,
                         @RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -72,7 +72,23 @@ public class UserController extends AbstractController<UserService> {
                         @RequestParam(defaultValue = "modified") String sortField,
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
-                return response(service.getUsers(allParams, keySort, page, pageSize, "",
+                return response(service.getAllUsers(allParams, keySort, page, pageSize, "",
+                                result.getLoginId()), LanguageMessageKey.SUCCESS,
+                                result.getViewPoints().get(UserResponse.class.getSimpleName()),
+                                result.getEditable().get(UserRequest.class.getSimpleName()));
+        }
+
+        @SecurityRequirement(name = "Bearer Authentication")
+        @GetMapping(value = "get-list-users")
+        public ResponseEntity<CommonResponse<ListWrapperResponse<UserResponse>>> getListYourUsers(
+                        @RequestParam(required = false, defaultValue = "1") int page,
+                        @RequestParam(required = false, defaultValue = "10") int pageSize,
+                        @RequestParam Map<String, String> allParams,
+                        @RequestParam(defaultValue = "asc") String keySort,
+                        @RequestParam(defaultValue = "modified") String sortField,
+                        HttpServletRequest request) {
+                ValidationResult result = validateToken(request);
+                return response(service.getYourUsers(allParams, keySort, page, pageSize, "",
                                 result.getLoginId()), LanguageMessageKey.SUCCESS,
                                 result.getViewPoints().get(UserResponse.class.getSimpleName()),
                                 result.getEditable().get(UserRequest.class.getSimpleName()));

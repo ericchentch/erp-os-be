@@ -16,7 +16,10 @@ public interface UserService {
 
   Optional<UserResponse> findOneUserById(String userId);
 
-  Optional<ListWrapperResponse<UserResponse>> getUsers(Map<String, String> allParams,
+  Optional<ListWrapperResponse<UserResponse>> getYourUsers(Map<String, String> allParams,
+      String keySort, int page, int pageSize, String sortField, String loginId);
+
+  Optional<ListWrapperResponse<UserResponse>> getAllUsers(Map<String, String> allParams,
       String keySort, int page, int pageSize, String sortField, String loginId);
 
   void changeStatusUser(String userId);

@@ -10,7 +10,11 @@ import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 
 public interface PermissionService {
 
-  Optional<ListWrapperResponse<PermissionResponse>> getPermissions(Map<String, String> allParams,
+  Optional<ListWrapperResponse<PermissionResponse>> getYourPermissions(
+      Map<String, String> allParams, String keySort, int page, int pageSize, String sortField,
+      String loginId);
+
+  Optional<ListWrapperResponse<PermissionResponse>> getAllPermissions(Map<String, String> allParams,
       String keySort, int page, int pageSize, String sortField, String loginId);
 
   Optional<PermissionResponse> getPermissionById(String id, String loginId);

@@ -53,7 +53,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
   private AccessabilityRepository accessabilityRepository;
 
   @Override
-  public Optional<ListWrapperResponse<PermissionResponse>> getPermissions(
+  public Optional<ListWrapperResponse<PermissionResponse>> getYourPermissions(
       Map<String, String> allParams, String keySort, int page, int pageSize, String sortField,
       String loginId) {
     List<String> targets = accessabilityRepository.getListTargetId(loginId)
@@ -248,6 +248,25 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
           thisView.putAll(ObjectUtilities.mergePermission(thisView, thisPerm.getEditable()));
         });
     return thisView;
+  }
+
+  @Override
+  public Optional<ListWrapperResponse<PermissionResponse>> getAllPermissions(
+      Map<String, String> allParams, String keySort, int page, int pageSize, String sortField,
+      String loginId) {
+    List<Permission> permissions =
+        repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
+    return Optional.of(new ListWrapperResponse<PermissionResponse>(permissions.stream()
+        .map(permission -> new PermissionResponse(permission.get_id().toString(),
+            permission.getName(),
+            permission.getUserId().size() > 0 ? permission.getUserId().stream()
+                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+            permission.getPaths().size() > 0 ? permission.getPaths().stream()
+                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+            DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
+            DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
+            removeId(permission.getViewPoints()), removeId(permission.getEditable())))
+        .collect(Collectors.toList()), page, pageSize, repository.getTotal(allParams)));
   }
 
   private void checkDeleteAndEdit(Permission permission) {
