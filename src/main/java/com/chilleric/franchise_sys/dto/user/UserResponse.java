@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class UserResponse {
 
   private String id;
-  private String unitId;
   private TypeAccount type;
   private String username;
   private String password;

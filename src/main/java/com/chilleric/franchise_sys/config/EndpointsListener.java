@@ -60,7 +60,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         .getUsers(Map.ofEntries(entry("username", "super_admin")), "", 0, 0, "").get();
     User user = new User();
     if (users.size() == 0) {
-      user = new User(new ObjectId(), null, TypeAccount.INTERNAL, "super_admin",
+      user = new User(new ObjectId(), TypeAccount.INTERNAL, "super_admin",
           bCryptPasswordEncoder
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", "Super", "Admin", email, "", "", DateFormat.getCurrentTime(), null, true,
@@ -73,7 +73,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         .getUsers(Map.ofEntries(entry("username", "super_admin_dev")), "", 0, 0, "").get();
     User usersDev = new User();
     if (userDevs.size() == 0) {
-      usersDev = new User(new ObjectId(), null, TypeAccount.INTERNAL, "super_admin_dev",
+      usersDev = new User(new ObjectId(), TypeAccount.INTERNAL, "super_admin_dev",
           bCryptPasswordEncoder
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", "Dev", "Admin", email, "", "", DateFormat.getCurrentTime(), null, true, false,
