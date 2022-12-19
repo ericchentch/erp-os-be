@@ -24,9 +24,6 @@ public class PermissionRequest {
   @NotNull(message = LanguageMessageKey.USER_LIST_REQUIRED)
   private List<String> userId;
 
-  @NotNull(message = LanguageMessageKey.PATH_LIST_REQUIRED)
-  private List<String> paths;
-
   @NotNull(message = LanguageMessageKey.VIEW_POINT_REQUIRED)
   private Map<String, List<ViewPoint>> viewPoints;
 
