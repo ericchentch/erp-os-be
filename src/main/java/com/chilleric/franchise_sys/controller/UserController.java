@@ -63,7 +63,7 @@ public class UserController extends AbstractController<UserService> {
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
-        @GetMapping(value = "get-list-your-users")
+        @GetMapping(value = "get-list-users")
         public ResponseEntity<CommonResponse<ListWrapperResponse<UserResponse>>> getListUsers(
                         @RequestParam(required = false, defaultValue = "1") int page,
                         @RequestParam(required = false, defaultValue = "10") int pageSize,
@@ -79,7 +79,7 @@ public class UserController extends AbstractController<UserService> {
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
-        @GetMapping(value = "get-list-users")
+        @GetMapping(value = "get-list-your-users")
         public ResponseEntity<CommonResponse<ListWrapperResponse<UserResponse>>> getListYourUsers(
                         @RequestParam(required = false, defaultValue = "1") int page,
                         @RequestParam(required = false, defaultValue = "10") int pageSize,
