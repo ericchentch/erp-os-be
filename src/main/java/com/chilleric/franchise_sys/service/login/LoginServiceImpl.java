@@ -26,6 +26,7 @@ import com.chilleric.franchise_sys.repository.code.Code;
 import com.chilleric.franchise_sys.repository.code.CodeRepository;
 import com.chilleric.franchise_sys.repository.code.TypeCode;
 import com.chilleric.franchise_sys.repository.user.User;
+import com.chilleric.franchise_sys.repository.user.User.TypeAccount;
 import com.chilleric.franchise_sys.repository.user.UserRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 import com.chilleric.franchise_sys.utils.PasswordValidator;
@@ -74,7 +75,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
     if (!user.isVerified()) {
-      return Optional.of(new LoginResponse("", "", false, true));
+      return Optional.of(new LoginResponse("", "", TypeAccount.EXTERNAL, false, true));
     }
     if (!bCryptPasswordEncoder().matches(loginRequest.getPassword(), user.getPassword())) {
       error.put("password", LanguageMessageKey.PASSWORD_NOT_MATCH);
@@ -96,13 +97,13 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
         Code code = new Code(null, user.get_id(), TypeCode.VERIFY2FA, verify2FACode, expiredDate);
         codeRepository.insertAndUpdateCode(code);
       }
-      return Optional.of(new LoginResponse("", "", true, false));
+      return Optional.of(new LoginResponse("", "", TypeAccount.EXTERNAL, true, false));
     } else {
       String newTokens = jwtValidation.generateToken(user.get_id().toString());
       user.setTokens(newTokens);
       repository.insertAndUpdate(user);
-      return Optional
-          .of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens, false, false));
+      return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
+          user.getType(), false, false));
     }
   }
 
@@ -259,8 +260,8 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     String newTokens = jwtValidation.generateToken(user.get_id().toString());
     user.setTokens(newTokens);
     repository.insertAndUpdate(user);
-    return Optional
-        .of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens, false, false));
+    return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
+        user.getType(), false, false));
 
   }
 
