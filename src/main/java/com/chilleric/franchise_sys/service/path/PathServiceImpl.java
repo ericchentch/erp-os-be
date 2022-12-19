@@ -1,7 +1,5 @@
 package com.chilleric.franchise_sys.service.path;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -13,7 +11,6 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.path.PathRequest;
 import com.chilleric.franchise_sys.dto.path.PathResponse;
-import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.path.PathInventory;
@@ -32,29 +29,6 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     public Optional<ListWrapperResponse<PathResponse>> getPaths(Map<String, String> allParams,
             String keySort, int page, int pageSize, String sortField, String loginId) {
         List<Path> paths = repository.getPaths(allParams, keySort, page, pageSize, sortField).get();
-        List<String> targets = accessabilityRepository.getListTargetId(loginId)
-                .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).stream()
-                .map(access -> access.getTargetId().toString()).collect(Collectors.toList());
-        if (targets.size() == 0) {
-            return Optional.of(
-                    new ListWrapperResponse<PathResponse>(new ArrayList<>(), page, pageSize, 0));
-        }
-        if (allParams.containsKey("_id")) {
-            String[] idList = allParams.get("_id").split(",");
-            ArrayList<String> check = new ArrayList<>(Arrays.asList(idList));
-            for (int i = 0; i < check.size(); i++) {
-                if (targets.contains(idList[i])) {
-                    check.add(idList[i]);
-                }
-            }
-            if (check.size() == 0) {
-                return Optional.of(new ListWrapperResponse<PathResponse>(new ArrayList<>(), page,
-                        pageSize, 0));
-            }
-            allParams.put("_id", generateParamsValue(check));
-        } else {
-            allParams.put("_id", generateParamsValue(targets));
-        }
         return Optional.of(new ListWrapperResponse<>(
                 paths.stream()
                         .map(path -> new PathResponse(path.get_id().toString(), path.getLabel(),

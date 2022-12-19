@@ -88,7 +88,6 @@ public abstract class AbstractController<s> {
 						thisEdit.putAll(
 								ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
 					});
-			System.out.println("!");
 			return new ValidationResult(user.get_id().toString(), thisView, thisEdit);
 		}
 		if (user.getTokens().compareTo(token) != 0) {
@@ -96,6 +95,9 @@ public abstract class AbstractController<s> {
 		}
 		if (request.isPresent()) {
 			String path = request.get().getHeader("pathName");
+			if (!StringUtils.hasText(path)) {
+				throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+			}
 			findPathId = pathInventory.findPathByPath(path)
 					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
 					.get_id();
