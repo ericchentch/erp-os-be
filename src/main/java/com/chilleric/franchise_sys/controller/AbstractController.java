@@ -97,9 +97,9 @@ public abstract class AbstractController<s> {
 				throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
 			}
 			Path thisPath = pathInventory.findPathByPath(path)
-					.orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
-			if (thisPath.getType().compareTo(user.getType()) != 0) {
-
+					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
+			if (thisPath.getType().toString().compareTo(user.getType().toString()) != 0) {
+				throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
 			}
 		}
 		permissionRepository.getPermissionByUserId(user.get_id().toString())
