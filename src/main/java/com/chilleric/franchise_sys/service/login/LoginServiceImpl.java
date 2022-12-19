@@ -144,6 +144,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     user.setPassword(passwordEncode);
     user.setTokens("");
     user.setGender(0);
+    user.setType(TypeAccount.EXTERNAL);
     user.setDob("");
     repository.insertAndUpdate(user);
     String newCode = RandomStringUtils.randomAlphabetic(6).toUpperCase();
