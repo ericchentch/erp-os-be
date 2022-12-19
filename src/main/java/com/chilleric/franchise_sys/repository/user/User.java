@@ -17,7 +17,6 @@ public class User {
     }
 
     private ObjectId _id;
-    private ObjectId unitId;
     private TypeAccount type;
     private String username;
     private String password;

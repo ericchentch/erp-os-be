@@ -54,11 +54,6 @@ public class UserRequest {
     @Pattern(regexp = TypeValidation.PHONE, message = LanguageMessageKey.INVALID_PHONE)
     private String phone;
 
-    @NotEmpty(message = LanguageMessageKey.UNIT_ID_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.UNIT_ID_REQUIRED)
-    @NotNull(message = LanguageMessageKey.UNIT_ID_REQUIRED)
-    private String unitId;
-
     @NotNull(message = LanguageMessageKey.DELETED_REQUIRED)
     @Min(value = 0, message = LanguageMessageKey.ONLY_0_1)
     @Max(value = 1, message = LanguageMessageKey.ONLY_0_1)
