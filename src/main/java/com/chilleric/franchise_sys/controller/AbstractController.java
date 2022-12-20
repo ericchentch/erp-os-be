@@ -127,6 +127,12 @@ public abstract class AbstractController<s> {
 		}
 	}
 
+	protected void preventItSelf(String loginId, String targetId) {
+		if (loginId.compareTo(targetId) == 0) {
+			throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+		}
+	}
+
 	protected <T> T filterResponse(T input, Map<String, List<ViewPoint>> compares) {
 		List<ViewPoint> compareList = new ArrayList<>();
 		compares.forEach((key, value) -> {
