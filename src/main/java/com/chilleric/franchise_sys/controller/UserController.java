@@ -101,6 +101,7 @@ public class UserController extends AbstractController<UserService> {
                         @RequestParam(required = true) String id, HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
                 checkAccessability(result.getLoginId(), id);
+                preventItSelf(result.getLoginId(), id);
                 service.updateUserById(id, userRequest,
                                 result.getEditable().get(UserRequest.class.getSimpleName()));
                 return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true,
@@ -116,6 +117,7 @@ public class UserController extends AbstractController<UserService> {
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
                 checkAccessability(result.getLoginId(), id);
+                preventItSelf(result.getLoginId(), id);
                 service.changeStatusUser(id);
                 return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true,
                                 null, LanguageMessageKey.CHANGE_STATUS_USER_SUCCESS,
