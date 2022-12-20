@@ -77,6 +77,9 @@ public abstract class AbstractController<s> {
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
 		Map<String, List<ViewPoint>> thisView = new HashMap<>();
 		Map<String, List<ViewPoint>> thisEdit = new HashMap<>();
+		if (user.getTokens().compareTo(token) != 0) {
+			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+		}
 		if (user.getUsername().compareTo("super_admin_dev") == 0) {
 			permissionRepository.getPermissionByUserId(user.get_id().toString())
 					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
@@ -87,9 +90,6 @@ public abstract class AbstractController<s> {
 								ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
 					});
 			return new ValidationResult(user.get_id().toString(), thisView, thisEdit);
-		}
-		if (user.getTokens().compareTo(token) != 0) {
-			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
 		}
 		if (request.isPresent()) {
 			String path = request.get().getHeader("pathName");
