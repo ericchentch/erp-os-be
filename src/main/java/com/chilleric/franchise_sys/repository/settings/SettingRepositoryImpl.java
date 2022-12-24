@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import com.chilleric.franchise_sys.repository.AbstractMongoRepo;
+import com.chilleric.franchise_sys.repository.AbstractSystemRepo;
 
 @Repository
-public class SettingRepositoryImpl extends AbstractMongoRepo implements SettingRepository {
+public class SettingRepositoryImpl extends AbstractSystemRepo implements SettingRepository {
 
     @Override
     public Optional<List<Setting>> getSettings(Map<String, String> allParams, String keySort,
@@ -20,7 +20,7 @@ public class SettingRepositoryImpl extends AbstractMongoRepo implements SettingR
 
     @Override
     public void insertAndUpdate(Setting setting) {
-        authenticationTemplate.save(setting, "settings");
+        systemDBTemplate.save(setting, "settings");
     }
 
 }

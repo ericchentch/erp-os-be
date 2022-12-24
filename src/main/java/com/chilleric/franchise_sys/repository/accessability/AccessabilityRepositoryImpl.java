@@ -8,10 +8,10 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import com.chilleric.franchise_sys.repository.AbstractMongoRepo;
+import com.chilleric.franchise_sys.repository.AbstractSystemRepo;
 
 @Repository
-public class AccessabilityRepositoryImpl extends AbstractMongoRepo
+public class AccessabilityRepositoryImpl extends AbstractSystemRepo
         implements AccessabilityRepository {
     @Override
     public Optional<Accessability> getAccessability(String userId, String targetId) {
@@ -42,7 +42,7 @@ public class AccessabilityRepositoryImpl extends AbstractMongoRepo
 
     @Override
     public void addNewAccessability(Accessability accessability) {
-        authenticationTemplate.save(accessability, "accessability");
+        systemDBTemplate.save(accessability, "accessability");
     }
 
     @Override
@@ -50,6 +50,6 @@ public class AccessabilityRepositoryImpl extends AbstractMongoRepo
         Map<String, String> params = new HashMap<>();
         params.put("_id", id);
         Query query = generateQueryMongoDB(params, Accessability.class, "", "", 0, 0);
-        authenticationTemplate.remove(query, Accessability.class);
+        systemDBTemplate.remove(query, Accessability.class);
     }
 }

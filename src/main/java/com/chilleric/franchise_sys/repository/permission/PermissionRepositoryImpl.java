@@ -17,11 +17,11 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.user.UserRequest;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.exception.BadSqlException;
-import com.chilleric.franchise_sys.repository.AbstractMongoRepo;
+import com.chilleric.franchise_sys.repository.AbstractSystemRepo;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 
 @Repository
-public class PermissionRepositoryImpl extends AbstractMongoRepo implements PermissionRepository {
+public class PermissionRepositoryImpl extends AbstractSystemRepo implements PermissionRepository {
 
   @Override
   public Optional<List<Permission>> getPermissions(Map<String, String> allParams, String keySort,
@@ -46,7 +46,7 @@ public class PermissionRepositoryImpl extends AbstractMongoRepo implements Permi
 
   @Override
   public void insertAndUpdate(Permission permission) {
-    authenticationTemplate.save(permission, "permissions");
+    systemDBTemplate.save(permission, "permissions");
   }
 
   @Override
@@ -55,7 +55,7 @@ public class PermissionRepositoryImpl extends AbstractMongoRepo implements Permi
       ObjectId _id = new ObjectId(id);
       Query query = new Query();
       query.addCriteria(Criteria.where("_id").is(_id));
-      authenticationTemplate.remove(query, Permission.class);
+      systemDBTemplate.remove(query, Permission.class);
     } catch (IllegalArgumentException e) {
       APP_LOGGER.error("wrong type_id");
       throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
@@ -106,7 +106,7 @@ public class PermissionRepositoryImpl extends AbstractMongoRepo implements Permi
   @Override
   public long getTotal(Map<String, String> allParams) {
     Query query = generateQueryMongoDB(allParams, Permission.class, "", "", 0, 0);
-    return authenticationTemplate.count(query, Permission.class);
+    return systemDBTemplate.count(query, Permission.class);
   }
 
   private Map<String, List<ViewPoint>> removeId(Map<String, List<ViewPoint>> thisView) {

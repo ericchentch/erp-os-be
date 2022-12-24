@@ -5,10 +5,10 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import com.chilleric.franchise_sys.repository.AbstractMongoRepo;
+import com.chilleric.franchise_sys.repository.AbstractSystemRepo;
 
 @Repository
-public class CodeRepositoryImpl extends AbstractMongoRepo implements CodeRepository {
+public class CodeRepositoryImpl extends AbstractSystemRepo implements CodeRepository {
     @Override
     public Optional<Code> getCodesByCode(String userId, String code) {
         try {
@@ -24,7 +24,7 @@ public class CodeRepositoryImpl extends AbstractMongoRepo implements CodeReposit
 
     @Override
     public void insertAndUpdateCode(Code code) {
-        authenticationTemplate.save(code, "codes");
+        systemDBTemplate.save(code, "codes");
     }
 
     @Override

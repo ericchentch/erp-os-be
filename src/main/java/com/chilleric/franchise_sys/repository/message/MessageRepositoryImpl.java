@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import com.chilleric.franchise_sys.repository.AbstractMongoRepo;
+import com.chilleric.franchise_sys.repository.AbstractSystemRepo;
 
 @Repository
-public class MessageRepositoryImpl extends AbstractMongoRepo implements MessageRepository {
+public class MessageRepositoryImpl extends AbstractSystemRepo implements MessageRepository {
 
     @Override
     public Optional<List<Message>> getMessage(Map<String, String> allParams, String keySort,
@@ -21,7 +21,7 @@ public class MessageRepositoryImpl extends AbstractMongoRepo implements MessageR
 
     @Override
     public void insertAndUpdate(Message message) {
-        authenticationTemplate.save(message, "messages");
+        systemDBTemplate.save(message, "messages");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class MessageRepositoryImpl extends AbstractMongoRepo implements MessageR
         Map<String, String> params = new HashMap<>();
         params.put("_id", id);
         Query query = generateQueryMongoDB(params, Message.class, "", "", 0, 0);
-        authenticationTemplate.remove(query, Message.class);
+        systemDBTemplate.remove(query, Message.class);
     }
 
 }

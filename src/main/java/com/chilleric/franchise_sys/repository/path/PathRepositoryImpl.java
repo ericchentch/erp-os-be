@@ -9,10 +9,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.exception.BadSqlException;
-import com.chilleric.franchise_sys.repository.AbstractMongoRepo;
+import com.chilleric.franchise_sys.repository.AbstractSystemRepo;
 
 @Repository
-public class PathRepositoryImpl extends AbstractMongoRepo implements PathRepository {
+public class PathRepositoryImpl extends AbstractSystemRepo implements PathRepository {
 
     @Override
     public Optional<List<Path>> getPaths(Map<String, String> allParams, String keySort, int page,
@@ -24,7 +24,7 @@ public class PathRepositoryImpl extends AbstractMongoRepo implements PathReposit
 
     @Override
     public void insertAndUpdate(Path path) {
-        authenticationTemplate.save(path, "paths");
+        systemDBTemplate.save(path, "paths");
 
     }
 
@@ -34,7 +34,7 @@ public class PathRepositoryImpl extends AbstractMongoRepo implements PathReposit
             ObjectId _id = new ObjectId(id);
             Query query = new Query();
             query.addCriteria(Criteria.where("_id").is(_id));
-            authenticationTemplate.remove(query, Path.class);
+            systemDBTemplate.remove(query, Path.class);
         } catch (IllegalArgumentException e) {
             APP_LOGGER.error("wrong type_id");
             throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
@@ -45,7 +45,7 @@ public class PathRepositoryImpl extends AbstractMongoRepo implements PathReposit
     @Override
     public long getTotal(Map<String, String> allParams) {
         Query query = generateQueryMongoDB(allParams, Path.class, "", "", 0, 0);
-        return authenticationTemplate.count(query, Path.class);
+        return systemDBTemplate.count(query, Path.class);
     }
 
 }
