@@ -5,41 +5,49 @@ import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 
 @Configuration
 public class MongoConfiguration {
 
-    @Bean("mongo_database")
-    @ConfigurationProperties("spring.data.mongodb")
-    public MongoProperties getAuthentication() {
+    @Bean("mongo_system")
+    @ConfigurationProperties("mongodb.system")
+    public MongoProperties getSystemDBProperties() {
         return new MongoProperties();
     }
 
-    @Bean("mongo_secondary_database")
-    @ConfigurationProperties("mongodb.secondary")
-    public MongoProperties getSecondaryAuthentication() {
-        return new MongoProperties();
-    }
-
-    @Bean("mongo_template")
-    public MongoTemplate getAuthenticationMongoTemplate() {
-        return new MongoTemplate(authenticationMongoFactory(getAuthentication()));
-    }
-
-    @Bean
-    public MongoDatabaseFactory authenticationMongoFactory(
-            @Qualifier("mongo_database") MongoProperties mongo) {
-        return new SimpleMongoClientDatabaseFactory(mongo.getUri());
-    }
-
-    @Bean("mongo_secondary_template")
-    public MongoTemplate getSecondaryTemplate(
-            @Qualifier("mongo_secondary_database") MongoProperties mongo) {
-        SimpleMongoClientDatabaseFactory clientData =
+    @Bean("mongo_system_template")
+    public MongoTemplate getSystemDBTemplate(@Qualifier("mongo_system") MongoProperties mongo) {
+        SimpleMongoClientDatabaseFactory factory =
                 new SimpleMongoClientDatabaseFactory(mongo.getUri());
-        return new MongoTemplate(clientData);
+        return new MongoTemplate(factory);
+    }
+
+    @Bean("mongo_crm")
+    @ConfigurationProperties("mongodb.crm")
+    public MongoProperties getCrmDBProperties() {
+        return new MongoProperties();
+    }
+
+    @Bean("mongo_crm_template")
+    public MongoTemplate getCrmDBTemplate(@Qualifier("mongo_crm") MongoProperties mongo) {
+        SimpleMongoClientDatabaseFactory factory =
+                new SimpleMongoClientDatabaseFactory(mongo.getUri());
+        return new MongoTemplate(factory);
+    }
+
+    @Bean("mongo_information")
+    @ConfigurationProperties("mongodb.information")
+    public MongoProperties getInformationDBProperties() {
+        return new MongoProperties();
+    }
+
+    @Bean("mongo_information_template")
+    public MongoTemplate getInformationDBTemplate(
+            @Qualifier("mongo_information") MongoProperties mongo) {
+        SimpleMongoClientDatabaseFactory factory =
+                new SimpleMongoClientDatabaseFactory(mongo.getUri());
+        return new MongoTemplate(factory);
     }
 }
