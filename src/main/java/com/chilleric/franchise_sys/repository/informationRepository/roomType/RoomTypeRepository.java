@@ -8,6 +8,8 @@ public interface RoomTypeRepository {
     Optional<List<RoomType>> getRoomTypes(Map<String, String> allParams, String keySort, int page,
             int pageSize, String sortField);
 
+    Optional<List<RoomType>> getRoomTypesByHotel(String hotelId);
+
     void insertAndUpdate(RoomType roomType);
 
     long getTotalPage(Map<String, String> allParams);

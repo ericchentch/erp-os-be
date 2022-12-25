@@ -3,6 +3,8 @@ package com.chilleric.franchise_sys.repository.informationRepository.roomType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.repository.AbstractRepo;
@@ -28,6 +30,19 @@ public class RoomTypeRepositoryImpl extends AbstractRepo implements RoomTypeRepo
     public long getTotalPage(Map<String, String> allParams) {
         Query query = generateQueryMongoDB(allParams, RoomType.class, "", "", 0, 0);
         return informationDBTemplate.count(query, RoomType.class);
+    }
+
+    @Override
+    public Optional<List<RoomType>> getRoomTypesByHotel(String hotelId) {
+        try {
+            ObjectId hotel_id = new ObjectId(hotelId);
+            Query query = new Query();
+            query.addCriteria(Criteria.where("hotelId").is(hotel_id));
+            return informationFind(query, RoomType.class);
+        } catch (IllegalArgumentException e) {
+            APP_LOGGER.error("hotel id is wrong type");
+            return Optional.empty();
+        }
     }
 
 }
