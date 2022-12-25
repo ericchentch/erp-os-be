@@ -18,11 +18,19 @@ import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
 
-public abstract class AbstractMongoRepo {
+public abstract class AbstractRepo {
 
   @Autowired
-  @Qualifier("mongo_template")
-  protected MongoTemplate authenticationTemplate;
+  @Qualifier("mongo_system_template")
+  protected MongoTemplate systemDBTemplate;
+
+  @Autowired
+  @Qualifier("mongo_information_template")
+  protected MongoTemplate informationDBTemplate;
+
+  @Autowired
+  @Qualifier("mongo_crm_template")
+  protected MongoTemplate crmDBTemplate;
 
   protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
 
@@ -97,9 +105,9 @@ public abstract class AbstractMongoRepo {
     return query;
   }
 
-  protected <T> Optional<List<T>> replaceFind(Query query, Class<T> clazz) {
+  protected <T> Optional<List<T>> systemFind(Query query, Class<T> clazz) {
     try {
-      List<T> result = authenticationTemplate.find(query, clazz);
+      List<T> result = systemDBTemplate.find(query, clazz);
       return Optional.of(result);
     } catch (IllegalArgumentException | NullPointerException e) {
       APP_LOGGER.error(e.getMessage());
@@ -107,9 +115,29 @@ public abstract class AbstractMongoRepo {
     }
   }
 
-  protected <T> Optional<T> replaceFindOne(Query query, Class<T> clazz) {
+  protected <T> Optional<T> systemFindOne(Query query, Class<T> clazz) {
     try {
-      T result = authenticationTemplate.findOne(query, clazz);
+      T result = systemDBTemplate.findOne(query, clazz);
+      return Optional.of(result);
+    } catch (IllegalArgumentException | NullPointerException e) {
+      APP_LOGGER.error(e.getMessage());
+      return Optional.empty();
+    }
+  }
+
+  protected <T> Optional<List<T>> crmFind(Query query, Class<T> clazz) {
+    try {
+      List<T> result = crmDBTemplate.find(query, clazz);
+      return Optional.of(result);
+    } catch (IllegalArgumentException | NullPointerException e) {
+      APP_LOGGER.error(e.getMessage());
+      return Optional.empty();
+    }
+  }
+
+  protected <T> Optional<List<T>> informationFind(Query query, Class<T> clazz) {
+    try {
+      List<T> result = informationDBTemplate.find(query, clazz);
       return Optional.of(result);
     } catch (IllegalArgumentException | NullPointerException e) {
       APP_LOGGER.error(e.getMessage());
