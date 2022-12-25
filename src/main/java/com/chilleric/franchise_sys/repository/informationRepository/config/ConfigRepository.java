@@ -8,6 +8,7 @@ public interface ConfigRepository {
     Optional<List<Config>> getConfigs(Map<String, String> allParams, String keySort, int page,
             int pageSize, String sortField);
 
+    Optional<Config> getConfigByHotel(String hotelId);
 
     void insertAndUpdate(Config config);
 
