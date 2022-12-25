@@ -1,12 +1,15 @@
 name: develop CI/CD work-flow
 
 env:
-  MONGO_DATABASE_URI: ${{ secrets.MONGO_DATABASE_URI }}
   EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
   EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
   KEY_JWT: ${{ secrets.KEY_JWT }}
   DEFAULT_PASSWORD: ${{ secrets.DEFAULT_PASSWORD}}
   PORT: ${{ secrets.PORT}}
+  MONGO_SYSTEM_DB: ${{ secrets.MONGO_SYSTEM_DB }}
+  MONGO_CRM_DB: ${{ secrets.MONGO_CRM_DB }}
+  MONGO_INFORMATION_DB: ${{ secrets.MONGO_INFORMATION_DB }}
+
 on:
   pull_request:
     branches: [develop]
@@ -20,8 +23,8 @@ jobs:
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: "11"
+          distribution: "adopt"
       - name: Test with Maven
         run: mvn test
 
@@ -35,7 +38,7 @@ jobs:
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          java-version: "11"
+          distribution: "adopt"
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
