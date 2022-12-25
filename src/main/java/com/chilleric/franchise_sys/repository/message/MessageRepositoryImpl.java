@@ -6,17 +6,17 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import com.chilleric.franchise_sys.repository.AbstractSystemRepo;
+import com.chilleric.franchise_sys.repository.AbstractRepo;
 
 @Repository
-public class MessageRepositoryImpl extends AbstractSystemRepo implements MessageRepository {
+public class MessageRepositoryImpl extends AbstractRepo implements MessageRepository {
 
     @Override
     public Optional<List<Message>> getMessage(Map<String, String> allParams, String keySort,
             int page, int pageSize, String sortField) {
         Query query =
                 generateQueryMongoDB(allParams, Message.class, keySort, sortField, page, pageSize);
-        return replaceFind(query, Message.class);
+        return systemFind(query, Message.class);
     }
 
     @Override

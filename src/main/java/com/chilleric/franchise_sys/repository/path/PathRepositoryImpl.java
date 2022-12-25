@@ -9,17 +9,17 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.exception.BadSqlException;
-import com.chilleric.franchise_sys.repository.AbstractSystemRepo;
+import com.chilleric.franchise_sys.repository.AbstractRepo;
 
 @Repository
-public class PathRepositoryImpl extends AbstractSystemRepo implements PathRepository {
+public class PathRepositoryImpl extends AbstractRepo implements PathRepository {
 
     @Override
     public Optional<List<Path>> getPaths(Map<String, String> allParams, String keySort, int page,
             int pageSize, String sortField) {
         Query query =
                 generateQueryMongoDB(allParams, Path.class, keySort, sortField, page, pageSize);
-        return replaceFind(query, Path.class);
+        return systemFind(query, Path.class);
     }
 
     @Override
