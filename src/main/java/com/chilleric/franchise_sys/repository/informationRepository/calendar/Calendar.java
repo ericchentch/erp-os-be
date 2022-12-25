@@ -17,8 +17,6 @@ public class Calendar {
     private ObjectId roomTypeId;
     private String position;
     private ObjectId billId;
-
     private Date checkoutTime;
-
     private Date checkinTime;
 }
