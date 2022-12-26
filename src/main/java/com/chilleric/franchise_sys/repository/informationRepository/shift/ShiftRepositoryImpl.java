@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.repository.AbstractRepo;
 
+@Repository
 public class ShiftRepositoryImpl extends AbstractRepo implements ShiftRepository {
     @Override
     public Optional<List<Shift>> getShifts(Map<String, String> allParams, String keySort, int page,
