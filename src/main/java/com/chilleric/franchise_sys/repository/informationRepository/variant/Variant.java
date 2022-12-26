@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.informationRepository.varian;
+package com.chilleric.franchise_sys.repository.informationRepository.variant;
 
 import java.util.List;
 import org.bson.types.ObjectId;
@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "varians")
-public class Varian {
+@Document(collection = "variants")
+public class Variant {
     private ObjectId _id;
 
     private String name;
