@@ -18,5 +18,4 @@ public class RoomType {
     private List<String> imageLinks;
     private float rate;
     private float stockPrice;
-    private float discount;
 }

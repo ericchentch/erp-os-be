@@ -17,5 +17,5 @@ public class Discount {
     private String name;
     private float discount;
     private String policy;
-    private List<ObjectId> userIds;
+    private List<ObjectId> targetIds;
 }
