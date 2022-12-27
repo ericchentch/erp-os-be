@@ -156,7 +156,8 @@ public abstract class AbstractController<s> {
 	protected <T> ResponseEntity<CommonResponse<T>> response(Optional<T> response,
 			String successMessage, List<ViewPoint> viewPoint, List<ViewPoint> editable) {
 		return new ResponseEntity<>(new CommonResponse<>(true, response.get(), successMessage,
-				HttpStatus.OK.value(), viewPoint, editable), HttpStatus.OK);
+				HttpStatus.OK.value(), viewPoint == null ? new ArrayList<>() : viewPoint,
+				editable == null ? new ArrayList<>() : editable), HttpStatus.OK);
 	}
 
 	protected void checkAccessability(String loginId, String targetId) {
