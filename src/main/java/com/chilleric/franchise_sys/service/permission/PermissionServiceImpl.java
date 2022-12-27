@@ -201,7 +201,8 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     for (Field field : PermissionResponse.class.getDeclaredFields()) {
       attributes.add(new ViewPoint(field.getName(), field.getName()));
     }
-    return attributes;
+    return removeId(Map.ofEntries(entry(PermissionResponse.class.getSimpleName(), attributes)))
+        .get(PermissionResponse.class.getSimpleName());
   }
 
   @Override
