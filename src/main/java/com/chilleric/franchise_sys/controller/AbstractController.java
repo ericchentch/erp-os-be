@@ -29,6 +29,7 @@ import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
 import com.chilleric.franchise_sys.repository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
+import com.chilleric.franchise_sys.repository.path.Path;
 import com.chilleric.franchise_sys.repository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.repository.user.User;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
@@ -89,31 +90,32 @@ public abstract class AbstractController<s> {
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
 		Map<String, List<ViewPoint>> thisView = new HashMap<>();
 		Map<String, List<ViewPoint>> thisEdit = new HashMap<>();
-		// if (user.getTokens().compareTo(token) != 0) {
-		// throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
-		// }
-		// if (user.getUsername().compareTo("super_admin_dev") == 0) {
-		// permissionRepository.getPermissionByUserId(user.get_id().toString())
-		// .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
-		// .forEach(thisPerm -> {
-		// thisView.putAll(ObjectUtilities.mergePermission(thisView,
-		// thisPerm.getViewPoints()));
-		// thisEdit.putAll(
-		// ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
-		// });
-		// return new ValidationResult(user.get_id().toString(), thisView, thisEdit);
-		// }
-		// if (request.isPresent()) {
-		// String path = request.get().getHeader("pathName");
-		// if (!StringUtils.hasText(path)) {
-		// throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
-		// }
-		// Path thisPath = pathInventory.findPathByPath(path)
-		// .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
-		// if (thisPath.getType().toString().compareTo(user.getType().toString()) != 0) {
-		// throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
-		// }
-		// }
+		if (user.getTokens().compareTo(token) != 0) {
+			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+		}
+		if (user.getUsername().compareTo("super_admin_dev") == 0) {
+			permissionRepository.getPermissionByUserId(user.get_id().toString())
+					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
+					.forEach(thisPerm -> {
+						thisView.putAll(ObjectUtilities.mergePermission(thisView,
+								thisPerm.getViewPoints()));
+						thisEdit.putAll(
+								ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
+					});
+			return new ValidationResult(user.get_id().toString(),
+					removeAttributes(thisView, IgnoreView), removeAttributes(thisEdit, IgnoreEdit));
+		}
+		if (request.isPresent()) {
+			String path = request.get().getHeader("pathName");
+			if (!StringUtils.hasText(path)) {
+				throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+			}
+			Path thisPath = pathInventory.findPathByPath(path)
+					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
+			if (thisPath.getType().toString().compareTo(user.getType().toString()) != 0) {
+				throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+			}
+		}
 		permissionRepository.getPermissionByUserId(user.get_id().toString())
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
 				.forEach(thisPerm -> {
