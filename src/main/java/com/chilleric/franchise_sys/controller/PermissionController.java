@@ -37,9 +37,12 @@ public class PermissionController extends AbstractController<PermissionService> 
                         @RequestParam(defaultValue = "modified") String sortField,
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
-                return response(service.getYourPermissions(allParams, keySort, page, pageSize,
-                                sortField, result.getLoginId()), LanguageMessageKey.SUCCESS,
-                                service.getPermissionView(), service.getPermissionView());
+                return response(service.getYourPermissions(
+                                allParams, keySort, page, pageSize, sortField, result.getLoginId()),
+                                LanguageMessageKey.SUCCESS,
+                                result.getViewPoints()
+                                                .get(PermissionResponse.class.getSimpleName()),
+                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -52,9 +55,12 @@ public class PermissionController extends AbstractController<PermissionService> 
                         @RequestParam(defaultValue = "modified") String sortField,
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
-                return response(service.getAllPermissions(allParams, keySort, page, pageSize,
-                                sortField, result.getLoginId()), LanguageMessageKey.SUCCESS,
-                                service.getPermissionView(), service.getPermissionView());
+                return response(service.getAllPermissions(
+                                allParams, keySort, page, pageSize, sortField, result.getLoginId()),
+                                LanguageMessageKey.SUCCESS,
+                                result.getViewPoints()
+                                                .get(PermissionResponse.class.getSimpleName()),
+                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -64,8 +70,10 @@ public class PermissionController extends AbstractController<PermissionService> 
                 ValidationResult result = validateToken(request);
                 checkAccessability(result.getLoginId(), id);
                 return response(service.getPermissionById(id, result.getLoginId()),
-                                LanguageMessageKey.SUCCESS, service.getPermissionView(),
-                                service.getPermissionView());
+                                LanguageMessageKey.SUCCESS,
+                                result.getViewPoints()
+                                                .get(PermissionResponse.class.getSimpleName()),
+                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -74,8 +82,10 @@ public class PermissionController extends AbstractController<PermissionService> 
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
                 return response(Optional.of(service.getViewPointSelect(result.getLoginId())),
-                                LanguageMessageKey.SUCCESS, service.getPermissionView(),
-                                service.getPermissionView());
+                                LanguageMessageKey.SUCCESS,
+                                result.getViewPoints()
+                                                .get(PermissionResponse.class.getSimpleName()),
+                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -84,8 +94,10 @@ public class PermissionController extends AbstractController<PermissionService> 
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
                 return response(Optional.of(service.getEditableSelect(result.getLoginId())),
-                                LanguageMessageKey.SUCCESS, service.getPermissionView(),
-                                service.getPermissionView());
+                                LanguageMessageKey.SUCCESS,
+                                result.getViewPoints()
+                                                .get(PermissionResponse.class.getSimpleName()),
+                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
@@ -98,8 +110,13 @@ public class PermissionController extends AbstractController<PermissionService> 
                 return new ResponseEntity<CommonResponse<String>>(
                                 new CommonResponse<String>(true, null,
                                                 LanguageMessageKey.ADD_PERMISSION_SUCCESS,
-                                                HttpStatus.OK.value(), service.getPermissionView(),
-                                                service.getPermissionView()),
+                                                HttpStatus.OK.value(),
+                                                result.getViewPoints()
+                                                                .get(PermissionResponse.class
+                                                                                .getSimpleName()),
+                                                result.getEditable()
+                                                                .get(PermissionRequest.class
+                                                                                .getSimpleName())),
                                 null, HttpStatus.OK.value());
         }
 
@@ -116,8 +133,13 @@ public class PermissionController extends AbstractController<PermissionService> 
                 return new ResponseEntity<CommonResponse<String>>(
                                 new CommonResponse<String>(true, null,
                                                 LanguageMessageKey.UPDATE_PERMISSION_SUCCESS,
-                                                HttpStatus.OK.value(), service.getPermissionView(),
-                                                service.getPermissionView()),
+                                                HttpStatus.OK.value(),
+                                                result.getViewPoints()
+                                                                .get(PermissionResponse.class
+                                                                                .getSimpleName()),
+                                                result.getEditable()
+                                                                .get(PermissionRequest.class
+                                                                                .getSimpleName())),
                                 null, HttpStatus.OK.value());
         }
 
@@ -131,8 +153,13 @@ public class PermissionController extends AbstractController<PermissionService> 
                 return new ResponseEntity<CommonResponse<String>>(
                                 new CommonResponse<String>(true, null,
                                                 LanguageMessageKey.DELETE_PERMISSION_SUCCESS,
-                                                HttpStatus.OK.value(), service.getPermissionView(),
-                                                service.getPermissionView()),
+                                                HttpStatus.OK.value(),
+                                                result.getViewPoints()
+                                                                .get(PermissionResponse.class
+                                                                                .getSimpleName()),
+                                                result.getEditable()
+                                                                .get(PermissionRequest.class
+                                                                                .getSimpleName())),
                                 null, HttpStatus.OK.value());
         }
 }
