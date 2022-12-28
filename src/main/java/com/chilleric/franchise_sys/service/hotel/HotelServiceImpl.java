@@ -19,12 +19,14 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
 
 	@Override
 	public void createNewHotel(HotelRequest hotelRequest) {
+		validate(hotelRequest);
 		Hotel hotel = objectMapper.convertValue(hotelRequest, Hotel.class);
 		repository.insertAndUpdate(hotel);
 	}
 
 	@Override
 	public void updateHotel(String hotelId, HotelRequest hotelRequest) {
+		validate(hotelRequest);
 		List<Hotel> hotels = repository
 				.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").orElseThrow(
 						() -> new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND));
