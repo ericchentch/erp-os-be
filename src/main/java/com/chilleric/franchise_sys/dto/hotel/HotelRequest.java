@@ -13,23 +13,22 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HotelRequest {
-    @NotBlank(message = LanguageMessageKey.HOTEL_NAME_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.HOTEL_NAME_REQUIRED)
-    @NotNull(message = LanguageMessageKey.HOTEL_NAME_REQUIRED)
-    private String name;
+	@NotBlank(message = LanguageMessageKey.HOTEL_NAME_REQUIRED)
+	@NotEmpty(message = LanguageMessageKey.HOTEL_NAME_REQUIRED)
+	@NotNull(message = LanguageMessageKey.HOTEL_NAME_REQUIRED)
+	private String name;
 
-    @NotBlank(message = LanguageMessageKey.HOTEL_DESCRIPTION_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.HOTEL_DESCRIPTION_REQUIRED)
-    @NotNull(message = LanguageMessageKey.HOTEL_DESCRIPTION_REQUIRED)
-    private String description;
+	@NotBlank(message = LanguageMessageKey.HOTEL_DESCRIPTION_REQUIRED)
+	@NotEmpty(message = LanguageMessageKey.HOTEL_DESCRIPTION_REQUIRED)
+	@NotNull(message = LanguageMessageKey.HOTEL_DESCRIPTION_REQUIRED)
+	private String description;
 
-    @NotNull(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED)
-    private List<@NotBlank(
-            message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED) String> linkImage;
+	@NotNull(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED)
+	@NotEmpty(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED)
+	private List<@NotBlank(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED) @NotEmpty(
+			message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED) String> linkImages;
 
-    @NotNull(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
-    private List<@NotBlank(
-            message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED) ClientRequest> client;
+	@NotNull(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
+	@NotEmpty(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
+	private List<ClientRequest> client;
 }
