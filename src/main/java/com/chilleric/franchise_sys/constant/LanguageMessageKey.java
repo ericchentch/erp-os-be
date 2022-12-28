@@ -268,4 +268,11 @@ public class LanguageMessageKey {
   public static final String DELETE_UNIT_SUCCESS = "deleteUnitSuccess"; // delete unit successfully
   public static final String TYPE_PATH_REQUIRED = "typePathRequired"; // type of path is reqruied
   public static final String TYPE_PATH_INVALID = "typePathInvalid"; // type of path is invalid
+
+  public static final String SHIFT_NAME_REQUIRED = "shiftNameRequired"; // shift name is required
+  public static final String SHIFT_START_DATE_REQUIRED = "shiftStartDateRequired"; // shift start date is required
+  public static final String SHIFT_END_DATE_REQUIRED = "shiftEndDateRequired"; // shift end date is required
+  public static final String INVALID_SHIFT_NAME = "invalidShiftName";  // invalid shift name
+  public static final String SHIFT_NAME_EXISTED = "shiftNameExisted";
+  public static final String SHIFT_NOT_FOUND = "shiftNotFound";
 }

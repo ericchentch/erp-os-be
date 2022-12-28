@@ -11,4 +11,6 @@ public interface ShiftRepository {
     void insertAndUpdate(Shift shift);
 
     long getTotalPage(Map<String, String> allParams);
+
+    void deleteShift(String shiftId);
 }
