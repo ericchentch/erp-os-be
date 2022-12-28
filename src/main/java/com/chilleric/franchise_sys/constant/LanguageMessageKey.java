@@ -281,4 +281,6 @@ public class LanguageMessageKey {
                                                                               // required
   public static final String HOTEL_CLIENT_REQUIRED = "hotelClientRequired"; // Hotel client is
                                                                             // required
+  public static final String HOTEL_ADD_SUCCEED = "addHotelSuccess"; // A new hotel is added
+                                                                    // successfully
 }
