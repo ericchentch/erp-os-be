@@ -1,11 +1,15 @@
 package com.chilleric.franchise_sys.controller;
 
+import static java.util.Map.entry;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +35,15 @@ import com.chilleric.franchise_sys.repository.user.User;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
 
 public abstract class AbstractController<s> {
+
+	protected static final Map<String, List<String>> IgnoreView = Map.ofEntries(
+			entry("PermissionResponse", Arrays.asList("id", "userId", "editable", "viewPoints")),
+			entry("UserResponse", Arrays.asList("id", "password", "username", "dob", "address",
+					"email", "tokens", "modified", "verified", "verify2FA")));
+
+	protected static final Map<String, List<String>> IgnoreEdit =
+			Map.ofEntries(entry("PermissionRequest", Arrays.asList("id")),
+					entry("UserRequest", Arrays.asList("id", "password")));
 
 	@Autowired
 	protected s service;
@@ -77,9 +90,6 @@ public abstract class AbstractController<s> {
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
 		Map<String, List<ViewPoint>> thisView = new HashMap<>();
 		Map<String, List<ViewPoint>> thisEdit = new HashMap<>();
-		if (user.getTokens().compareTo(token) != 0) {
-			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
-		}
 		if (user.getUsername().compareTo("super_admin_dev") == 0) {
 			permissionRepository.getPermissionByUserId(user.get_id().toString())
 					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
@@ -89,7 +99,11 @@ public abstract class AbstractController<s> {
 						thisEdit.putAll(
 								ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
 					});
-			return new ValidationResult(user.get_id().toString(), thisView, thisEdit);
+			return new ValidationResult(user.get_id().toString(),
+					removeAttributes(thisView, IgnoreView), removeAttributes(thisEdit, IgnoreEdit));
+		}
+		if (user.getTokens().compareTo(token) != 0) {
+			throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
 		}
 		if (request.isPresent()) {
 			String path = request.get().getHeader("pathName");
@@ -110,14 +124,40 @@ public abstract class AbstractController<s> {
 					thisEdit.putAll(
 							ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
 				});
-		return new ValidationResult(user.get_id().toString(), thisView, thisEdit);
+		return new ValidationResult(user.get_id().toString(),
+				removeAttributes(thisView, IgnoreView), removeAttributes(thisEdit, IgnoreEdit));
 
+	}
+
+	protected Map<String, List<ViewPoint>> removeAttributes(Map<String, List<ViewPoint>> thisView,
+			Map<String, List<String>> ignoreView) {
+		return thisView.entrySet().stream().map((key) -> {
+			List<ViewPoint> newValue = new ArrayList<>();
+			if (ignoreView.get(key.getKey()) != null) {
+				key.getValue().forEach(thisViewKey -> {
+					boolean isFound = false;
+					for (int i = 0; i < ignoreView.get(key.getKey()).size(); i++) {
+						if (thisViewKey.getKey()
+								.compareTo(ignoreView.get(key.getKey()).get(i)) == 0) {
+							isFound = true;
+							break;
+						}
+					}
+					if (isFound == false) {
+						newValue.add(thisViewKey);
+					}
+				});
+			}
+			return entry(key.getKey(), newValue);
+		}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y,
+				LinkedHashMap::new));
 	}
 
 	protected <T> ResponseEntity<CommonResponse<T>> response(Optional<T> response,
 			String successMessage, List<ViewPoint> viewPoint, List<ViewPoint> editable) {
 		return new ResponseEntity<>(new CommonResponse<>(true, response.get(), successMessage,
-				HttpStatus.OK.value(), viewPoint, editable), HttpStatus.OK);
+				HttpStatus.OK.value(), viewPoint == null ? new ArrayList<>() : viewPoint,
+				editable == null ? new ArrayList<>() : editable), HttpStatus.OK);
 	}
 
 	protected void checkAccessability(String loginId, String targetId) {

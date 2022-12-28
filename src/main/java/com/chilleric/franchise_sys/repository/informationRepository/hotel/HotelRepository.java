@@ -11,4 +11,6 @@ public interface HotelRepository {
     void insertAndUpdate(Hotel hotel);
 
     long getTotalPage(Map<String, String> allParams);
+
+    void delete(String hotelId);
 }

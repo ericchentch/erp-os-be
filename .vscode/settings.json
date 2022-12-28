@@ -6,5 +6,6 @@
   "java.saveActions.organizeImports": true,
   "cSpell.words": [
     "chilleric"
-  ]
+  ],
+  "java.configuration.updateBuildConfiguration": "interactive"
 }
