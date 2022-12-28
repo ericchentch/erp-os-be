@@ -271,4 +271,16 @@ public class LanguageMessageKey {
   public static final String INVALID_TOKEN_GG = "tokenGGInvalid"; // Google token is invalid
   public static final String GG_EMAIL_IS_NOT_VERIFIED = "ggEmailIsNotVerified"; // Google email is
                                                                                 // not verified
+
+  public static final String HOTEL_NOT_FOUND = "hotelNotfound"; // Hotel is not found
+  public static final String HOTEL_NAME_REQUIRED = "hotelNameRequired"; // Hotel is required
+  public static final String HOTEL_DESCRIPTION_REQUIRED = "descriptionRequired"; // Hotel
+                                                                                 // description
+                                                                                 // is required
+  public static final String HOTEL_LINK_IMAGE_REQUIRED = "linkImageRequired"; // Link images are
+                                                                              // required
+  public static final String HOTEL_CLIENT_REQUIRED = "hotelClientRequired"; // Hotel client is
+                                                                            // required
+  public static final String HOTEL_ADD_SUCCEED = "addHotelSuccess"; // A new hotel is added
+                                                                    // successfully
 }
