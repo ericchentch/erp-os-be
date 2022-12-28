@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.hotel.ClientRequest;
@@ -21,17 +22,21 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
 	public void createNewHotel(HotelRequest hotelRequest) {
 		validate(hotelRequest);
 		Hotel hotel = objectMapper.convertValue(hotelRequest, Hotel.class);
+		ObjectId hotelId = new ObjectId();
+		hotel.set_id(hotelId);
 		repository.insertAndUpdate(hotel);
 	}
 
 	@Override
 	public void updateHotel(String hotelId, HotelRequest hotelRequest) {
 		validate(hotelRequest);
-		List<Hotel> hotels = repository
-				.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").orElseThrow(
-						() -> new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND));
-
+		List<Hotel> hotels =
+				repository.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
+		if (hotels.size() == 0) {
+			throw new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND);
+		}
 		Hotel hotel = hotels.get(0);
+
 		Hotel newHotel = objectMapper.convertValue(hotelRequest, Hotel.class);
 		newHotel.set_id(hotel.get_id());
 
@@ -40,11 +45,12 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
 
 	@Override
 	public Optional<HotelResponse> getHotelById(String hotelId) {
-		List<Hotel> listHotel = repository
-				.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").orElseThrow(
-						() -> new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND));
-
-		Hotel hotel = listHotel.get(0);
+		List<Hotel> hotels =
+				repository.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
+		if (hotels.size() == 0) {
+			throw new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND);
+		}
+		Hotel hotel = hotels.get(0);
 
 		return Optional.of(new HotelResponse(hotel.get_id().toString(), hotel.getName(),
 				hotel.getDescription(), hotel.getLinkImages(),
@@ -56,8 +62,11 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
 
 	@Override
 	public void deleteHotel(String hotelId) {
-		repository.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").orElseThrow(
-				() -> new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND));
+		List<Hotel> hotels =
+				repository.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
+		if (hotels.size() == 0) {
+			throw new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND);
+		}
 		repository.delete(hotelId);
 	}
 
