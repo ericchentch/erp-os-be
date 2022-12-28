@@ -285,4 +285,6 @@ public class LanguageMessageKey {
                                                                     // successfully
   public static final String HOTEL_UPDATE_SUCCEED = "updateHotelSuccess"; // Hotel is updated
                                                                           // successfully
+  public static final String HOTEL_DELETE_SUCCEED = "deleteHotelSuccess"; // Hotel is deleted
+                                                                          // successfully
 }
