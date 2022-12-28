@@ -14,13 +14,13 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.dto.login.LoginRequest;
 import com.chilleric.franchise_sys.dto.login.LoginResponse;
-import com.chilleric.franchise_sys.dto.login.RegisterRequest;
 import com.chilleric.franchise_sys.email.EmailDetail;
 import com.chilleric.franchise_sys.email.EmailService;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
+import com.chilleric.franchise_sys.jwt.GoogleValidation;
 import com.chilleric.franchise_sys.jwt.JwtValidation;
 import com.chilleric.franchise_sys.repository.code.Code;
 import com.chilleric.franchise_sys.repository.code.CodeRepository;
@@ -30,6 +30,7 @@ import com.chilleric.franchise_sys.repository.user.User.TypeAccount;
 import com.chilleric.franchise_sys.repository.user.UserRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 import com.chilleric.franchise_sys.utils.PasswordValidator;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 
 @Service
 public class LoginServiceImpl extends AbstractService<UserRepository> implements LoginService {
@@ -45,6 +46,9 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
 
   @Autowired
   private UserInventory userInventory;
+
+  @Autowired
+  private GoogleValidation googleValidation;
 
   @Autowired
   private JwtValidation jwtValidation;
@@ -115,55 +119,55 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     repository.insertAndUpdate(user);
   }
 
-  @Override
-  public void register(RegisterRequest registerRequest) {
-    validate(registerRequest);
-    Map<String, String> error = generateError(RegisterRequest.class);
-    userInventory.findUserByUsername(registerRequest.getUsername()).ifPresent(username -> {
-      error.put("username", LanguageMessageKey.USERNAME_EXISTED);
-      throw new InvalidRequestException(error, LanguageMessageKey.USERNAME_EXISTED);
-    });
-    userInventory.findUserByEmail(registerRequest.getEmail()).ifPresent(userEmail -> {
-      if (userEmail.isVerified()) {
-        error.put("email", LanguageMessageKey.EMAIL_TAKEN);
-        throw new InvalidRequestException(error, LanguageMessageKey.EMAIL_TAKEN);
-      } else {
-        error.put("email", LanguageMessageKey.PLEASE_VERIFY_EMAIL);
-        throw new InvalidRequestException(error, LanguageMessageKey.PLEASE_VERIFY_EMAIL);
-      }
-    });
-    userInventory.findUserByPhone(registerRequest.getPhone()).ifPresent(userPhone -> {
-      error.put("phone", LanguageMessageKey.PHONE_TAKEN);
-      throw new InvalidRequestException(error, LanguageMessageKey.PHONE_TAKEN);
-    });
-    PasswordValidator.validateNewPassword(error, registerRequest.getPassword(), "password");
-    String passwordEncode = bCryptPasswordEncoder().encode(registerRequest.getPassword());
-    User user = objectMapper.convertValue(registerRequest, User.class);
-    ObjectId newId = new ObjectId();
-    user.set_id(newId);
-    user.setPassword(passwordEncode);
-    user.setTokens("");
-    user.setGender(0);
-    user.setType(TypeAccount.EXTERNAL);
-    user.setDob("");
-    repository.insertAndUpdate(user);
-    String newCode = RandomStringUtils.randomAlphabetic(6).toUpperCase();
-    Date now = new Date();
-    Date expiredDate = new Date(now.getTime() + 5 * 60 * 1000L);
-    Optional<Code> codes =
-        codeRepository.getCodesByType(user.get_id().toString(), TypeCode.REGISTER.name());
-    if (codes.isPresent()) {
-      Code code = codes.get();
-      code.setCode(newCode);
-      code.setExpiredDate(expiredDate);
-      codeRepository.insertAndUpdateCode(code);
-    } else {
-      Code code = new Code(null, user.get_id(), TypeCode.REGISTER, newCode, expiredDate);
-      codeRepository.insertAndUpdateCode(code);
-    }
-    emailService.sendSimpleMail(new EmailDetail(user.getEmail(), newCode, "OTP"));
+  // @Override
+  // public void register(RegisterRequest registerRequest) {
+  // validate(registerRequest);
+  // Map<String, String> error = generateError(RegisterRequest.class);
+  // userInventory.findUserByUsername(registerRequest.getUsername()).ifPresent(username -> {
+  // error.put("username", LanguageMessageKey.USERNAME_EXISTED);
+  // throw new InvalidRequestException(error, LanguageMessageKey.USERNAME_EXISTED);
+  // });
+  // userInventory.findUserByEmail(registerRequest.getEmail()).ifPresent(userEmail -> {
+  // if (userEmail.isVerified()) {
+  // error.put("email", LanguageMessageKey.EMAIL_TAKEN);
+  // throw new InvalidRequestException(error, LanguageMessageKey.EMAIL_TAKEN);
+  // } else {
+  // error.put("email", LanguageMessageKey.PLEASE_VERIFY_EMAIL);
+  // throw new InvalidRequestException(error, LanguageMessageKey.PLEASE_VERIFY_EMAIL);
+  // }
+  // });
+  // userInventory.findUserByPhone(registerRequest.getPhone()).ifPresent(userPhone -> {
+  // error.put("phone", LanguageMessageKey.PHONE_TAKEN);
+  // throw new InvalidRequestException(error, LanguageMessageKey.PHONE_TAKEN);
+  // });
+  // PasswordValidator.validateNewPassword(error, registerRequest.getPassword(), "password");
+  // String passwordEncode = bCryptPasswordEncoder().encode(registerRequest.getPassword());
+  // User user = objectMapper.convertValue(registerRequest, User.class);
+  // ObjectId newId = new ObjectId();
+  // user.set_id(newId);
+  // user.setPassword(passwordEncode);
+  // user.setTokens("");
+  // user.setGender(0);
+  // user.setType(TypeAccount.EXTERNAL);
+  // user.setDob("");
+  // repository.insertAndUpdate(user);
+  // String newCode = RandomStringUtils.randomAlphabetic(6).toUpperCase();
+  // Date now = new Date();
+  // Date expiredDate = new Date(now.getTime() + 5 * 60 * 1000L);
+  // Optional<Code> codes =
+  // codeRepository.getCodesByType(user.get_id().toString(), TypeCode.REGISTER.name());
+  // if (codes.isPresent()) {
+  // Code code = codes.get();
+  // code.setCode(newCode);
+  // code.setExpiredDate(expiredDate);
+  // codeRepository.insertAndUpdateCode(code);
+  // } else {
+  // Code code = new Code(null, user.get_id(), TypeCode.REGISTER, newCode, expiredDate);
+  // codeRepository.insertAndUpdateCode(code);
+  // }
+  // emailService.sendSimpleMail(new EmailDetail(user.getEmail(), newCode, "OTP"));
 
-  }
+  // }
 
   @Override
   public void verifyRegister(String inputCode, String email) {
@@ -294,6 +298,64 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       codeRepository.insertAndUpdateCode(code);
     }
     emailService.sendSimpleMail(new EmailDetail(user.getEmail(), newCode, "OTP"));
+  }
+
+  @Override
+  public Optional<LoginResponse> loginGoogle(String token) {
+    Payload payload = googleValidation.validateTokenId(token);
+    String email = payload.getEmail();
+    boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+    if (!emailVerified) {
+      throw new InvalidRequestException(new HashMap<>(),
+          LanguageMessageKey.GG_EMAIL_IS_NOT_VERIFIED);
+    }
+    // String name = (String) payload.get("name");
+    // String userId = payload.getSubject();
+    // String pictureUrl = (String) payload.get("picture");
+    // String locale = (String) payload.get("locale");
+    String familyName = (String) payload.get("family_name");
+    String givenName = (String) payload.get("given_name");
+    Optional<User> getUser = userInventory.findUserByEmail(email);
+    if (getUser.isPresent()) {
+      User user = getUser.get();
+      Date now = new Date();
+      if (user.isVerify2FA()) {
+        String verify2FACode = RandomStringUtils.randomAlphabetic(6).toUpperCase();
+        emailService.sendSimpleMail(new EmailDetail(user.getEmail(), verify2FACode, "OTP"));
+        Date expiredDate = new Date(now.getTime() + 5 * 60 * 1000L);
+        Optional<Code> codes =
+            codeRepository.getCodesByType(user.get_id().toString(), TypeCode.VERIFY2FA.name());
+        if (codes.isPresent()) {
+          Code code = codes.get();
+          code.setCode(verify2FACode);
+          code.setExpiredDate(expiredDate);
+          codeRepository.insertAndUpdateCode(code);
+        } else {
+          Code code = new Code(null, user.get_id(), TypeCode.VERIFY2FA, verify2FACode, expiredDate);
+          codeRepository.insertAndUpdateCode(code);
+        }
+        return Optional.of(new LoginResponse("", "", TypeAccount.EXTERNAL, true, false));
+      } else {
+        String newTokens = jwtValidation.generateToken(user.get_id().toString());
+        user.setTokens(newTokens);
+        repository.insertAndUpdate(user);
+        return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
+            user.getType(), false, false));
+      }
+    } else {
+      Date now = new Date();
+      ObjectId newId = new ObjectId();
+      String newTokens = jwtValidation.generateToken(newId.toString());
+      User user = new User(newId, TypeAccount.EXTERNAL, "",
+          bCryptPasswordEncoder()
+              .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
+          0, "", "", givenName, familyName, email, "", newTokens, now, null, emailVerified, false,
+          0);
+      repository.insertAndUpdate(user);
+      return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
+          user.getType(), false, false));
+    }
+
   }
 
 }

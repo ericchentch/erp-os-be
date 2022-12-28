@@ -268,4 +268,7 @@ public class LanguageMessageKey {
   public static final String DELETE_UNIT_SUCCESS = "deleteUnitSuccess"; // delete unit successfully
   public static final String TYPE_PATH_REQUIRED = "typePathRequired"; // type of path is reqruied
   public static final String TYPE_PATH_INVALID = "typePathInvalid"; // type of path is invalid
+  public static final String INVALID_TOKEN_GG = "tokenGGInvalid"; // Google token is invalid
+  public static final String GG_EMAIL_IS_NOT_VERIFIED = "ggEmailIsNotVerified"; // Google email is
+                                                                                // not verified
 }

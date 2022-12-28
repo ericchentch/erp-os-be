@@ -3,14 +3,15 @@ package com.chilleric.franchise_sys.service.login;
 import java.util.Optional;
 import com.chilleric.franchise_sys.dto.login.LoginRequest;
 import com.chilleric.franchise_sys.dto.login.LoginResponse;
-import com.chilleric.franchise_sys.dto.login.RegisterRequest;
 
 public interface LoginService {
     Optional<LoginResponse> login(LoginRequest loginRequest, boolean isRegister);
 
+    Optional<LoginResponse> loginGoogle(String token);
+
     void logout(String id);
 
-    void register(RegisterRequest registerRequest);
+    // void register(RegisterRequest registerRequest);
 
     void verifyRegister(String code, String email);
 
