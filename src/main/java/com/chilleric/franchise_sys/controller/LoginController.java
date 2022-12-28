@@ -14,7 +14,6 @@ import com.chilleric.franchise_sys.dto.common.CommonResponse;
 import com.chilleric.franchise_sys.dto.common.ValidationResult;
 import com.chilleric.franchise_sys.dto.login.LoginRequest;
 import com.chilleric.franchise_sys.dto.login.LoginResponse;
-import com.chilleric.franchise_sys.dto.login.RegisterRequest;
 import com.chilleric.franchise_sys.service.login.LoginService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -29,6 +28,12 @@ public class LoginController extends AbstractController<LoginService> {
 				new ArrayList<>(), new ArrayList<>());
 	}
 
+	@PostMapping(value = "login-google")
+	public ResponseEntity<CommonResponse<LoginResponse>> loginGoogle(@RequestParam String idToken) {
+		return response(service.loginGoogle(idToken), LanguageMessageKey.LOGIN_SUCCESS,
+				new ArrayList<>(), new ArrayList<>());
+	}
+
 	@SecurityRequirement(name = "Bearer Authentication")
 	@PostMapping(value = "logout")
 	public ResponseEntity<CommonResponse<String>> logout(HttpServletRequest request) {
@@ -40,15 +45,15 @@ public class LoginController extends AbstractController<LoginService> {
 				null, HttpStatus.OK.value());
 	}
 
-	@PostMapping(value = "register")
-	public ResponseEntity<CommonResponse<String>> signUp(
-			@RequestBody RegisterRequest registerRequest) {
-		service.register(registerRequest);
-		return new ResponseEntity<CommonResponse<String>>(
-				new CommonResponse<String>(true, null, LanguageMessageKey.SEND_VERIFY_EMAIL,
-						HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
-				null, HttpStatus.OK.value());
-	}
+	// @PostMapping(value = "register")
+	// public ResponseEntity<CommonResponse<String>> signUp(
+	// @RequestBody RegisterRequest registerRequest) {
+	// service.register(registerRequest);
+	// return new ResponseEntity<CommonResponse<String>>(
+	// new CommonResponse<String>(true, null, LanguageMessageKey.SEND_VERIFY_EMAIL,
+	// HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
+	// null, HttpStatus.OK.value());
+	// }
 
 	@PostMapping(value = "verify-email")
 	public ResponseEntity<CommonResponse<String>> verifyEmail(
