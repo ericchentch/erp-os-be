@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RequestMapping(value = "hotel")
 public class HotelController extends AbstractController<HotelService> {
 	@SecurityRequirement(name = "Bearer Authentication")
-	@GetMapping
+	@GetMapping(name = "get-hotel-by-id")
 	public ResponseEntity<CommonResponse<HotelResponse>> getHotel(
 			@RequestParam(required = true) String hotelId, HttpServletRequest request) {
 		validateToken(request);
@@ -34,7 +34,7 @@ public class HotelController extends AbstractController<HotelService> {
 	}
 
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PostMapping
+	@PostMapping(name = "create-hotel")
 	public ResponseEntity<CommonResponse<String>> createHotel(
 			@RequestBody(required = true) HotelRequest hotelRequest, HttpServletRequest request) {
 		ValidationResult result = validateToken(request);
@@ -48,7 +48,7 @@ public class HotelController extends AbstractController<HotelService> {
 	}
 
 	@SecurityRequirement(name = "Bearer Authentication")
-	@PutMapping
+	@PutMapping(name = "update-hotel")
 	public ResponseEntity<CommonResponse<String>> updateHotel(@RequestParam String hotelId,
 			@RequestBody HotelRequest hotelRequest, HttpServletRequest httpServletRequest) {
 		validateToken(httpServletRequest);
@@ -60,7 +60,7 @@ public class HotelController extends AbstractController<HotelService> {
 	}
 
 	@SecurityRequirement(name = "Bearer Authentication")
-	@DeleteMapping
+	@DeleteMapping(name = "delete-hotel-by-id")
 	public ResponseEntity<CommonResponse<String>> deleteHotel(@RequestParam String hotelId,
 			HttpServletRequest httpServletRequest) {
 		validateToken(httpServletRequest);

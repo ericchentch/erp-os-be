@@ -67,6 +67,7 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
 		if (hotels.size() == 0) {
 			throw new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND);
 		}
+		// TODO: need check other constraint repository. Can delete if have nothing use this hotelId
 		repository.delete(hotelId);
 	}
 
