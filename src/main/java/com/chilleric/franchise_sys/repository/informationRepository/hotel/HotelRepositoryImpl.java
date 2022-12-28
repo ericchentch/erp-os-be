@@ -31,4 +31,11 @@ public class HotelRepositoryImpl extends AbstractRepo implements HotelRepository
         return informationFind(query, Hotel.class);
     }
 
+    @Override
+    public void delete(String hotelId) {
+        Query query = generateQueryMongoDB(Map.ofEntries(Map.entry("_id", hotelId)), Hotel.class,
+                "", "", 0, 0);
+        informationDBTemplate.remove(query, Hotel.class);
+    }
+
 }
