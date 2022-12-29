@@ -15,6 +15,6 @@ import java.util.Date;
 public class Shift {
     private ObjectId _id;
     private String shiftName;
-    private Date startDate;
-    private Date endDate;
+    private Date startHour;
+    private Date endHour;
 }
