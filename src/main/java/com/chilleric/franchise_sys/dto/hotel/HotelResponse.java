@@ -12,6 +12,6 @@ public class HotelResponse {
     private String hotelId;
     private String name;
     private String description;
-    private List<String> linkImage;
+    private List<String> linkImages;
     private List<ClientRequest> client;
 }
