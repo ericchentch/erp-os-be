@@ -12,5 +12,7 @@ public interface RoomTypeRepository {
 
     void insertAndUpdate(RoomType roomType);
 
+    void delete(String roomTypeId);
+
     long getTotalPage(Map<String, String> allParams);
 }

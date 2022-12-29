@@ -7,6 +7,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.repository.AbstractRepo;
 
 @Repository
@@ -42,6 +44,19 @@ public class RoomTypeRepositoryImpl extends AbstractRepo implements RoomTypeRepo
         } catch (IllegalArgumentException e) {
             APP_LOGGER.error("hotel id is wrong type");
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public void delete(String roomTypeId) {
+        try {
+            ObjectId roomType_id = new ObjectId(roomTypeId);
+            Query query = new Query();
+            query.addCriteria(Criteria.where("_id").is(roomType_id));
+            informationDBTemplate.remove(query, RoomType.class);
+        } catch (IllegalArgumentException e) {
+            APP_LOGGER.error("Room type id is wrong type");
+            throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
         }
     }
 
