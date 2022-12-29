@@ -281,10 +281,21 @@ public class LanguageMessageKey {
                                                                               // required
   public static final String HOTEL_CLIENT_REQUIRED = "hotelClientRequired"; // Hotel client is
                                                                             // required
-  public static final String HOTEL_ADD_SUCCEED = "addHotelSuccess"; // A new hotel is added
+  public static final String HOTEL_ADD_SUCCESS = "addHotelSuccess"; // A new hotel is added
                                                                     // successfully
-  public static final String HOTEL_UPDATE_SUCCEED = "updateHotelSuccess"; // Hotel is updated
+  public static final String HOTEL_UPDATE_SUCCESS = "updateHotelSuccess"; // Hotel is updated
                                                                           // successfully
-  public static final String HOTEL_DELETE_SUCCEED = "deleteHotelSuccess"; // Hotel is deleted
+  public static final String HOTEL_DELETE_SUCCESS = "deleteHotelSuccess"; // Hotel is deleted
                                                                           // successfully
+  public static final String ROOM_TYPE_HOTELID_REQUIRED = "hotelIdRequired"; // In room type, hotel
+                                                                             // Id is required
+  public static final String ROOM_TYPE_NAME_REQUIRED = "nameRequired"; // Room type name is required
+  public static final String ROOM_TYPE_LINK_IMAGES_REQUIRED = "linkImagesRequired"; // Link images
+                                                                                    // are required
+  public static final String ROOM_TYPE_ROOMS_REQUIRED = "roomsRequired"; // Rooms are required
+  public static final String ROOM_TYPE_RATE_REQUIRED = "rateRequired"; // Rate is required
+  public static final String ROOM_TYPE_STOCK_PRICE_REQUIRED = "rateRequired"; // Rate is required
+  public static final String ROOM_TYPE_NOT_FOUND = "roomTypeNotFound"; // Room type is not found
+  public static final String ROOM_TYPE_ADD_SUCCESS = "roomTypeAddSuccess"; // Room type is added
+                                                                           // successfully
 }
