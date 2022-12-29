@@ -294,4 +294,6 @@ public class LanguageMessageKey {
   public static final String INVALID_SHIFT_NAME = "invalidShiftName";  // invalid shift name
   public static final String SHIFT_NAME_EXISTED = "shiftNameExisted";
   public static final String SHIFT_NOT_FOUND = "shiftNotFound";
+  public static final String INVALID_START_DATE = "invalidStartDate";
+  public static final String INVALID_END_DATE = "invalidEndDate";
 }
