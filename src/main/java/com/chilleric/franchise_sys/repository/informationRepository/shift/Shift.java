@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class Shift {
     private ObjectId _id;
     private String shiftName;
-    private Float startHour;
-    private Float endHour;
+    private Date startDate;
+    private Date endDate;
 }

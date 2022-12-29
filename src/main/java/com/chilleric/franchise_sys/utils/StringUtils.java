@@ -24,8 +24,9 @@ public class StringUtils {
     }
 
     public static String normalizeString(String strInput) {
+        String trimStrInput = strInput.trim();
         return Normalizer
-                .normalize(strInput, Normalizer.Form.NFD)
+                .normalize(trimStrInput, Normalizer.Form.NFC)
                 .replaceAll("[^\\p{ASCII}]", "");
     }
 }

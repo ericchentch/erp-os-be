@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -21,10 +22,10 @@ public class ShiftRequest {
     @NotNull(message = LanguageMessageKey.SHIFT_START_DATE_REQUIRED)
     @NotEmpty(message = LanguageMessageKey.SHIFT_START_DATE_REQUIRED)
     @NotBlank(message = LanguageMessageKey.SHIFT_START_DATE_REQUIRED)
-    private Float startDate;
+    private Date startDate;
 
     @NotNull(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
     @NotEmpty(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
     @NotBlank(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
-    private Float endDate;
+    private Date endDate;
 }

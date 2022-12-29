@@ -44,9 +44,10 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
         Shift shift = new Shift();
         ObjectId newId = new ObjectId();
         shift.set_id(newId);
-        shift.setShiftName(shift.getShiftName());
-        shift.setStartHour(shift.getStartHour());
-        shift.setEndHour(shift.getEndHour());
+        String normalizeName = StringUtils.normalizeString(shift.getShiftName());
+        shift.setShiftName(normalizeName);
+        shift.setStartDate(shift.getStartDate());
+        shift.setEndDate(shift.getEndDate());
         shiftRepository.insertAndUpdate(shift);
     }
 
@@ -56,7 +57,7 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
         return Optional.of(new ListWrapperResponse<>(
                 shifts.stream()
                         .map(shift -> new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
-                                shift.getStartHour(), shift.getEndHour()))
+                                shift.getStartDate(), shift.getEndDate()))
                         .collect(Collectors.toList()),
                 page, pageSize, repository.getTotalPage(allParams)));
     }
@@ -67,7 +68,7 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
                 .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
         return Optional
                 .of(new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
-                        shift.getStartHour(), shift.getEndHour()));
+                        shift.getStartDate(), shift.getEndDate()));
     }
 
     @Override
@@ -77,7 +78,7 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
             .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
         return Optional
                 .of(new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
-                        shift.getStartHour(), shift.getEndHour()));
+                        shift.getStartDate(), shift.getEndDate()));
     }
 
     @Override
@@ -85,10 +86,10 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
         validate(shiftRequest);
         Shift shift = shiftInventory.findShiftById(shiftId).orElseThrow(
                 () -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
-        Map<String, String> error = generateError(ShiftRequest.class);
-        shift.setShiftName(shiftRequest.getShiftName());
-        shift.setStartHour(shiftRequest.getStartDate());
-        shift.setEndHour(shiftRequest.getEndDate());
+        String normalizeName = StringUtils.normalizeString(shiftRequest.getShiftName());
+        shift.setShiftName(normalizeName);
+        shift.setStartDate(shiftRequest.getStartDate());
+        shift.setEndDate(shiftRequest.getEndDate());
         repository.insertAndUpdate(shift);
     }
 
