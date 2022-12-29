@@ -3,6 +3,7 @@ package com.chilleric.franchise_sys.repository.informationRepository.roomType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -16,7 +17,7 @@ public class RoomTypeRepositoryImpl extends AbstractRepo implements RoomTypeRepo
 
     @Override
     public Optional<List<RoomType>> getRoomTypes(Map<String, String> allParams, String keySort,
-            int page, int pageSize, String sortField) {
+                                                 int page, int pageSize, String sortField) {
         Query query =
                 generateQueryMongoDB(allParams, RoomType.class, keySort, sortField, page, pageSize);
         return informationFind(query, RoomType.class);
