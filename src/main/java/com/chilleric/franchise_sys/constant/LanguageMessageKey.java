@@ -295,6 +295,7 @@ public class LanguageMessageKey {
   public static final String ROOM_TYPE_ROOMS_REQUIRED = "roomsRequired"; // Rooms are required
   public static final String ROOM_TYPE_RATE_REQUIRED = "rateRequired"; // Rate is required
   public static final String ROOM_TYPE_STOCK_PRICE_REQUIRED = "rateRequired"; // Rate is required
-  public static final String ROOM_TYPE_DISCOUNT_REQUIRED = "discountRequired"; // Discount is
-                                                                               // required
+  public static final String ROOM_TYPE_NOT_FOUND = "roomTypeNotFound"; // Room type is not found
+  public static final String ROOM_TYPE_ADD_SUCCESS = "roomTypeAddSuccess"; // Room type is added
+                                                                           // successfully
 }
