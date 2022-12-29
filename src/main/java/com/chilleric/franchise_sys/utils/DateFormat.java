@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +23,17 @@ public class DateFormat {
         } catch (Exception e) {
             throw new InvalidRequestException(new HashMap<>(),
                     LanguageMessageKey.INVALID_DATE_FORMAT);
+        }
+        return result;
+    }
+
+    public static Date convertStringToDate(String date, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Date result = null;
+        try {
+            result = sdf.parse(date);
+        }catch (ParseException e) {
+            e.printStackTrace();
         }
         return result;
     }

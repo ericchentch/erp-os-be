@@ -14,7 +14,7 @@ public class ShiftResponse {
 
     private String shiftName;
 
-    private Date startDate;
+    private String startDate;
 
-    private Date endDate;
+    private String endDate;
 }

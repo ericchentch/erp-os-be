@@ -22,10 +22,10 @@ public class ShiftRequest {
     @NotNull(message = LanguageMessageKey.SHIFT_START_DATE_REQUIRED)
     @NotEmpty(message = LanguageMessageKey.SHIFT_START_DATE_REQUIRED)
     @NotBlank(message = LanguageMessageKey.SHIFT_START_DATE_REQUIRED)
-    private Date startDate;
+    private String startDate;
 
     @NotNull(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
     @NotEmpty(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
     @NotBlank(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
-    private Date endDate;
+    private String endDate;
 }

@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.service.shift;
 
+import com.chilleric.franchise_sys.constant.DateTime;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.shift.ShiftRequest;
@@ -10,6 +11,7 @@ import com.chilleric.franchise_sys.inventory.shift.ShiftInventory;
 import com.chilleric.franchise_sys.repository.informationRepository.shift.Shift;
 import com.chilleric.franchise_sys.repository.informationRepository.shift.ShiftRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
+import com.chilleric.franchise_sys.utils.DateFormat;
 import com.chilleric.franchise_sys.utils.StringUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,8 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
         return Optional.of(new ListWrapperResponse<>(
                 shifts.stream()
                         .map(shift -> new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
-                                shift.getStartDate(), shift.getEndDate()))
+                                DateFormat.toDateString(shift.getStartDate(), DateTime.YYYY_MM_DD),
+                                DateFormat.toDateString(shift.getEndDate(), DateTime.YYYY_MM_DD)))
                         .collect(Collectors.toList()),
                 page, pageSize, repository.getTotalPage(allParams)));
     }
@@ -68,7 +71,9 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
                 .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
         return Optional
                 .of(new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
-                        shift.getStartDate(), shift.getEndDate()));
+                        DateFormat.toDateString(shift.getStartDate(), DateTime.YYYY_MM_DD),
+                        DateFormat.toDateString(shift.getEndDate(), DateTime.YYYY_MM_DD))
+                );
     }
 
     @Override
@@ -78,7 +83,9 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
             .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
         return Optional
                 .of(new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
-                        shift.getStartDate(), shift.getEndDate()));
+                        DateFormat.toDateString(shift.getStartDate(), DateTime.YYYY_MM_DD),
+                        DateFormat.toDateString(shift.getEndDate(), DateTime.YYYY_MM_DD))
+                );
     }
 
     @Override
@@ -88,8 +95,8 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
                 () -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
         String normalizeName = StringUtils.normalizeString(shiftRequest.getShiftName());
         shift.setShiftName(normalizeName);
-        shift.setStartDate(shiftRequest.getStartDate());
-        shift.setEndDate(shiftRequest.getEndDate());
+        shift.setStartDate(DateFormat.convertStringToDate(shiftRequest.getStartDate(), DateTime.YYYY_MM_DD));
+        shift.setEndDate(DateFormat.convertStringToDate(shiftRequest.getEndDate(), DateTime.YYYY_MM_DD));
         repository.insertAndUpdate(shift);
     }
 
