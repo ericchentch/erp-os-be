@@ -287,7 +287,17 @@ public class LanguageMessageKey {
                                                                           // successfully
   public static final String HOTEL_DELETE_SUCCEED = "deleteHotelSuccess"; // Hotel is deleted
                                                                           // successfully
-
+  public static final String ROOM_TYPE_HOTELID_REQUIRED = "hotelIdRequired"; // In room type, hotel
+                                                                             // Id is required
+  public static final String ROOM_TYPE_NAME_REQUIRED = "nameRequired"; // Room type name is required
+  public static final String ROOM_TYPE_LINK_IMAGES_REQUIRED = "linkImagesRequired"; // Link images
+                                                                                    // are required
+  public static final String ROOM_TYPE_ROOMS_REQUIRED = "roomsRequired"; // Rooms are required
+  public static final String ROOM_TYPE_RATE_REQUIRED = "rateRequired"; // Rate is required
+  public static final String ROOM_TYPE_STOCK_PRICE_REQUIRED = "rateRequired"; // Rate is required
+  public static final String ROOM_TYPE_NOT_FOUND = "roomTypeNotFound"; // Room type is not found
+  public static final String ROOM_TYPE_ADD_SUCCESS = "roomTypeAddSuccess"; // Room type is added
+                                                                           // successfully
   public static final String SHIFT_NAME_REQUIRED = "shiftNameRequired"; // shift name is required
   public static final String SHIFT_START_DATE_REQUIRED = "shiftStartDateRequired"; // shift start date is required
   public static final String SHIFT_START_HOUR_REQUIRED = "shiftStartHourRequired"; // shift start hour is required
