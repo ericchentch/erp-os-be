@@ -17,6 +17,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,10 +47,12 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
         Shift shift = new Shift();
         ObjectId newId = new ObjectId();
         shift.set_id(newId);
-        String normalizeName = StringUtils.normalizeString(shift.getShiftName());
+        String normalizeName = StringUtils.normalizeString(shiftRequest.getShiftName());
         shift.setShiftName(normalizeName);
-        shift.setStartHour(shift.getStartHour());
-        shift.setEndHour(shift.getEndHour());
+        String startCombine = DateFormat.combineHourAndDate(shiftRequest.getStartDate(), shiftRequest.getStartHour());
+        String endCombine = DateFormat.combineHourAndDate(shiftRequest.getEndDate(), shiftRequest.getEndHour());
+        DateFormat.convertStringToDate(startCombine, DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN);
+        DateFormat.convertStringToDate(endCombine, DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN);
         shiftRepository.insertAndUpdate(shift);
     }
 
@@ -71,8 +74,8 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
                 .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
         return Optional
                 .of(new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
-                        DateFormat.toDateString(shift.getStartHour(), DateTime.YYYY_MM_DD),
-                        DateFormat.toDateString(shift.getEndHour(), DateTime.YYYY_MM_DD))
+                        DateFormat.toDateString(shift.getStartHour(), DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN),
+                        DateFormat.toDateString(shift.getEndHour(), DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN))
                 );
     }
 
@@ -82,8 +85,8 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
             .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
         return Optional
                 .of(new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
-                        DateFormat.toDateString(shift.getStartHour(), DateTime.YYYY_MM_DD),
-                        DateFormat.toDateString(shift.getEndHour(), DateTime.YYYY_MM_DD))
+                        DateFormat.toDateString(shift.getStartHour(), DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN),
+                        DateFormat.toDateString(shift.getEndHour(), DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN))
                 );
     }
 
@@ -94,8 +97,10 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository>
                 () -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
         String normalizeName = StringUtils.normalizeString(shiftRequest.getShiftName());
         shift.setShiftName(normalizeName);
-        shift.setStartHour(DateFormat.convertStringToDate(shiftRequest.getStartDate(), DateTime.YYYY_MM_DD));
-        shift.setEndHour(DateFormat.convertStringToDate(shiftRequest.getEndDate(), DateTime.YYYY_MM_DD));
+        String startCombine = DateFormat.combineHourAndDate(shiftRequest.getStartDate(), shiftRequest.getStartHour());
+        String endCombine = DateFormat.combineHourAndDate(shiftRequest.getEndDate(), shiftRequest.getEndHour());
+        shift.setStartHour(DateFormat.convertStringToDate(startCombine, DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN));
+        shift.setEndHour(DateFormat.convertStringToDate(endCombine, DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN));
         repository.insertAndUpdate(shift);
     }
 

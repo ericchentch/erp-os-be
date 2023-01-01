@@ -27,9 +27,21 @@ public class ShiftRequest {
     @Pattern(regexp = TypeValidation.DATE, message = LanguageMessageKey.INVALID_START_DATE)
     private String startDate;
 
+    @NotNull(message = LanguageMessageKey.SHIFT_START_HOUR_REQUIRED)
+    @NotEmpty(message = LanguageMessageKey.SHIFT_START_HOUR_REQUIRED)
+    @NotBlank(message = LanguageMessageKey.SHIFT_START_HOUR_REQUIRED)
+    @Pattern(regexp = TypeValidation.DATE, message = LanguageMessageKey.INVALID_START_HOUR)
+    private String startHour;
+
     @NotNull(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
     @NotEmpty(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
     @NotBlank(message = LanguageMessageKey.SHIFT_END_DATE_REQUIRED)
     @Pattern(regexp = TypeValidation.DATE, message = LanguageMessageKey.INVALID_END_DATE)
     private String endDate;
+
+  @NotNull(message = LanguageMessageKey.SHIFT_END_HOUR_REQUIRED)
+  @NotEmpty(message = LanguageMessageKey.SHIFT_END_HOUR_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.SHIFT_END_HOUR_REQUIRED)
+  @Pattern(regexp = TypeValidation.DATE, message = LanguageMessageKey.INVALID_END_HOUR)
+  private String endHour;
 }
