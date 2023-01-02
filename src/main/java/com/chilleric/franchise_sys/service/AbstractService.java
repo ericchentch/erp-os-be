@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -74,6 +75,12 @@ public abstract class AbstractService<r> {
     }
     if (isError) {
       throw new InvalidRequestException(errors, LanguageMessageKey.INVALID_REQUEST);
+    }
+  }
+
+  protected void validateStringIsObjectId(String id) {
+    if (!ObjectId.isValid(id)) {
+      throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
     }
   }
 

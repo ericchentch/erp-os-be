@@ -1,7 +1,7 @@
 package com.chilleric.franchise_sys.repository.common_enum;
 
 public enum TypeObjectBill {
-    SERVICES("services"), VARIANTS("variants");
+    SERVICES("Service"), VARIANTS("Variant"), ROOMTYPE("RoomType");
 
     private String typeObjectBill;
 
