@@ -1,8 +1,7 @@
 package com.chilleric.franchise_sys.repository.common_enum;
 
 public enum BillStatus {
-    UNPAID("Unpaid"), PENDING("Pending"), COMPLETED("Completed"), CANCELED("Canceled"), FAIL(
-            "Fail"), REFUND("Refund");
+    UNPAID("Unpaid"), COMPLETED("Completed"), CANCELED("Canceled"), REFUND("Refund");
 
     private String billStatus;
 
