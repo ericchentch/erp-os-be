@@ -38,9 +38,8 @@ public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
     @Override
     public void updateRoomType(String roomTypeId, RoomTypeRequest roomTypeRequest) {
         validate(roomTypeRequest);
-        if (!ObjectId.isValid(roomTypeRequest.getHotelId())) {
-            throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
-        }
+        validateStringIsObjectId(roomTypeRequest.getHotelId());
+
         RoomType roomType = validateExistRoomType(roomTypeId);
 
         RoomType newRoomType = new RoomType(roomType.get_id(),
