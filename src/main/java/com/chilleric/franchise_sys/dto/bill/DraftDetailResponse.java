@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DraftDetailRequest {
+public class DraftDetailResponse {
     private TypeObjectBill type;
-    private String id;
+    private Object objectResponse;
     private int quantity;
 }
