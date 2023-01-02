@@ -147,6 +147,10 @@ public abstract class AbstractController<s> {
 						newValue.add(thisViewKey);
 					}
 				});
+			} else {
+				key.getValue().forEach(thisViewKey -> {
+					newValue.add(thisViewKey);
+				});
 			}
 			return entry(key.getKey(), newValue);
 		}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y,
