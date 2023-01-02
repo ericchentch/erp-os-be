@@ -389,10 +389,14 @@ public class LanguageMessageKey {
 	public static final String SHIFT_END_HOUR_REQUIRED = "shiftEndHourRequired"; // shift start hour
 																					// is required
 	public static final String INVALID_SHIFT_NAME = "invalidShiftName"; // invalid shift name
-	public static final String SHIFT_NAME_EXISTED = "shiftNameExisted";
-	public static final String SHIFT_NOT_FOUND = "shiftNotFound";
-	public static final String INVALID_START_DATE = "invalidStartDate";
-	public static final String INVALID_START_HOUR = "invalidStartHour";
-	public static final String INVALID_END_DATE = "invalidEndDate";
-	public static final String INVALID_END_HOUR = "invalidEndHour";
+	public static final String SHIFT_NAME_EXISTED = "shiftNameExisted"; // Shift name is existed
+	public static final String SHIFT_NOT_FOUND = "shiftNotFound"; // Shift is not found
+	public static final String SHIFT_INVALID_START_DATE = "invalidStartDate"; // Shift start date is
+																				// invalid
+	public static final String SHIFT_INVALID_START_HOUR = "invalidStartHour"; // Shift start hour is
+																				// invalid
+	public static final String SHIFT_INVALID_END_DATE = "invalidEndDate"; // Shift end date is
+																			// invalid;
+	public static final String SHIFT_INVALID_END_HOUR = "invalidEndHour"; // Shift end hour is
+																			// invalid
 }
