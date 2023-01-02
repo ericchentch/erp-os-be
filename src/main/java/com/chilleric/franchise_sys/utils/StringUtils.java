@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.utils;
 
+import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,5 +21,12 @@ public class StringUtils {
         Matcher m = Pattern.compile("(?<=[a-z])[A-Z]").matcher(strInput);
         String result = m.replaceAll(match -> match.group().toUpperCase());
         return result;
+    }
+
+    public static String normalizeString(String strInput) {
+        String trimStrInput = strInput.trim();
+        return Normalizer
+                .normalize(trimStrInput, Normalizer.Form.NFC)
+                .replaceAll("[^\\p{ASCII}]", "");
     }
 }
