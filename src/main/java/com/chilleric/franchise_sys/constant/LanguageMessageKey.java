@@ -420,6 +420,6 @@ public class LanguageMessageKey {
 																			// invalid;
 	public static final String SHIFT_INVALID_END_HOUR = "invalidEndHour"; // Shift end hour is
 																			// invalid
-	public static final String ACCESS_NOTFOUND = "notFoundAccess"; // Not found approvement
+	public static final String ACCESS_NOT_FOUND = "notFoundAccess"; // Not found approvement
 	public static final String EDITABLE_REQUIRED = "editableRequired"; // Editable is required;
 }

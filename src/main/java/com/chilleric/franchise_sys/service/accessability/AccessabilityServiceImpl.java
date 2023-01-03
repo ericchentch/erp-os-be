@@ -32,7 +32,7 @@ public class AccessabilityServiceImpl extends AbstractService<AccessabilityRepos
             String loginId) {
         List<Accessability> accessability =
                 accessabilityInventory.getAccessByTargetId(targetId).orElseThrow(
-                        () -> new ResourceNotFoundException(LanguageMessageKey.ACCESS_NOTFOUND));
+                        () -> new ResourceNotFoundException(LanguageMessageKey.ACCESS_NOT_FOUND));
         List<AccessabilityResponse> result = new ArrayList<>();
         accessability.forEach(thisAccess -> {
             userInventory.getActiveUserById(thisAccess.getUserId().toString())
