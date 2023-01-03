@@ -19,4 +19,10 @@ public class Hotel {
 	private String name;
 	private List<String> linkImages;
 	private List<ClientInfomation> client;
+
+	private float billDeposit;
+	private float VAT;
+	private float maxRefund;
+	private int maxDaysRefund;
+
 }

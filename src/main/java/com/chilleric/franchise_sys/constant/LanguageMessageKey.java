@@ -357,6 +357,12 @@ public class LanguageMessageKey {
 																					// is required
 	public static final String HOTEL_LINK_IMAGE_REQUIRED = "linkImageRequired"; // Link images are
 																				// required
+	public static final String HOTEL_VAT_REQUIRED = "VATRequired"; // VAT is required
+	public static final String HOTEL_MAX_REFUND_REQUIRED = "maxRefundRequired"; // Hotel max refund
+																				// is required
+	public static final String HOTEL_MAX_DAYS_REFUND_REQUIRED = "maxDaysRefundRequired";// Max days
+																						// refund is
+																						// required
 	public static final String HOTEL_CLIENT_REQUIRED = "hotelClientRequired"; // Hotel client is
 																				// required
 	public static final String HOTEL_ADD_SUCCESS = "addHotelSuccess"; // A new hotel is added
@@ -414,4 +420,6 @@ public class LanguageMessageKey {
 																			// invalid;
 	public static final String SHIFT_INVALID_END_HOUR = "invalidEndHour"; // Shift end hour is
 																			// invalid
+	public static final String ACCESS_NOT_FOUND = "notFoundAccess"; // Not found approvement
+	public static final String EDITABLE_REQUIRED = "editableRequired"; // Editable is required;
 }

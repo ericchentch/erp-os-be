@@ -14,4 +14,9 @@ public class HotelResponse {
     private String description;
     private List<String> linkImages;
     private List<ClientRequest> client;
+
+    private float billDeposit;
+    private float VAT;
+    private float maxRefund;
+    private int maxDaysRefund;
 }

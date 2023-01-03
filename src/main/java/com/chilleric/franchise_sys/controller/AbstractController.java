@@ -28,8 +28,10 @@ import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
+import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
+import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
@@ -44,6 +46,8 @@ public abstract class AbstractController<s> {
 	protected static final Map<String, List<String>> IgnoreEdit =
 			Map.ofEntries(entry("PermissionRequest", Arrays.asList("id")),
 					entry("UserRequest", Arrays.asList("id", "password")));
+
+	protected static boolean isDev = false;
 
 	@Autowired
 	protected s service;
@@ -64,6 +68,7 @@ public abstract class AbstractController<s> {
 	private AccessabilityRepository accessabilityRepository;
 
 	protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
+
 
 	protected ValidationResult validateToken(HttpServletRequest request) {
 		String token = jwtValidation.getJwtFromRequest(request);
@@ -90,15 +95,17 @@ public abstract class AbstractController<s> {
 				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
 		Map<String, List<ViewPoint>> thisView = new HashMap<>();
 		Map<String, List<ViewPoint>> thisEdit = new HashMap<>();
-		if (user.getUsername().compareTo("super_admin_dev") == 0) {
-			permissionRepository.getPermissionByUserId(user.get_id().toString())
-					.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
-					.forEach(thisPerm -> {
-						thisView.putAll(ObjectUtilities.mergePermission(thisView,
-								thisPerm.getViewPoints()));
-						thisEdit.putAll(
-								ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
-					});
+		List<Permission> permissions =
+				permissionRepository.getPermissionByUserId(user.get_id().toString()).orElseThrow(
+						() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
+		permissions.forEach(thisPerm -> {
+			if (thisPerm.isDev())
+				isDev = true;
+			thisView.putAll(ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
+			thisEdit.putAll(ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
+		});
+		if (isDev) {
+			isDev = false;
 			return new ValidationResult(user.get_id().toString(),
 					removeAttributes(thisView, IgnoreView), removeAttributes(thisEdit, IgnoreEdit));
 		}
@@ -116,14 +123,7 @@ public abstract class AbstractController<s> {
 				throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
 			}
 		}
-		permissionRepository.getPermissionByUserId(user.get_id().toString())
-				.orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
-				.forEach(thisPerm -> {
-					thisView.putAll(
-							ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
-					thisEdit.putAll(
-							ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
-				});
+		isDev = false;
 		return new ValidationResult(user.get_id().toString(),
 				removeAttributes(thisView, IgnoreView), removeAttributes(thisEdit, IgnoreEdit));
 
@@ -164,16 +164,37 @@ public abstract class AbstractController<s> {
 				editable == null ? new ArrayList<>() : editable), HttpStatus.OK);
 	}
 
-	protected void checkAccessability(String loginId, String targetId) {
-		if (loginId.compareTo(targetId) != 0) {
+	protected void checkAccessability(String loginId, String targetId, boolean isCheckEdit) {
+		if (!isCheckEdit && loginId.compareTo(targetId) != 0) {
 			accessabilityRepository.getAccessability(loginId, targetId)
 					.orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
 		}
+		if (isCheckEdit) {
+			Accessability accessability =
+					accessabilityRepository.getAccessability(loginId, targetId).orElseThrow(
+							() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
+			if (!accessability.isEditable()) {
+				throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+			}
+		}
+
+
 	}
 
 	protected void preventItSelf(String loginId, String targetId) {
 		if (loginId.compareTo(targetId) == 0) {
 			throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+		}
+	}
+
+
+	protected void checkAddCondition(Map<String, List<ViewPoint>> editable, Class<?> clazz) {
+		if (editable.get(clazz.getSimpleName()).isEmpty()) {
+			throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+		} else {
+			if (editable.get(clazz.getSimpleName()).size() < clazz.getDeclaredFields().length) {
+				throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+			}
 		}
 	}
 
