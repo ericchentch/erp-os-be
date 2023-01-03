@@ -422,4 +422,18 @@ public class LanguageMessageKey {
 																			// invalid
 	public static final String ACCESS_NOT_FOUND = "notFoundAccess"; // Not found approvement
 	public static final String EDITABLE_REQUIRED = "editableRequired"; // Editable is required;
+
+	public static final String CALENDAR_NOT_FOUND = "calendarNotFound"; // Calendar is not found
+	public static final String CALENDAR_YEAR_REQUIRED = "calendarYearRequired"; // Calendar year is
+																				// required
+	public static final String CALENDAR_MONTH_REQUIRED = "calendarMonthRequired"; // Calendar month
+																					// is required
+	public static final String CALENDAR_ASSIGNEE_ID_REQUIRED = "assigneeIdRequired"; // Assignee is
+																						// required
+	public static final String CALENDAR_ASSIGNMENT_REQUIRED = "assignmentRequired"; // Assignment is
+																					// required
+	public static final String CALENDAR_DAY_REQUIRED = "calendarDayRequired"; // Calendar day is
+																				// required
+	public static final String CALENDAR_SHIFT_ID_REQUIRED = "shiftIdRequired"; // Shift id is
+																				// required
 }

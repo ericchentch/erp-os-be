@@ -8,7 +8,7 @@ public interface CalendarRepository {
     Optional<List<Calendar>> getCalendars(Map<String, String> allParams, String keySort, int page,
             int pageSize, String sortField);
 
-    Optional<List<Calendar>> getCalendarsByBill(String billId, String roomTypeId);
+    Optional<List<Calendar>> getCalendarsByAssigneeId(String userId);
 
     void insertAndUpdate(Calendar calendar);
 

@@ -32,16 +32,14 @@ public class CalendarRepositoryImpl extends AbstractRepo implements CalendarRepo
     }
 
     @Override
-    public Optional<List<Calendar>> getCalendarsByBill(String billId, String roomTypeId) {
+    public Optional<List<Calendar>> getCalendarsByAssigneeId(String userId) {
         try {
-            ObjectId bill_id = new ObjectId(billId);
-            ObjectId roomType_id = new ObjectId(roomTypeId);
+            ObjectId user_id = new ObjectId(userId);
             Query query = new Query();
-            query.addCriteria(
-                    Criteria.where("billId").is(bill_id).and("roomTypeId").is(roomType_id));
+            query.addCriteria(Criteria.where("assigneeId").is(user_id));
             return informationFind(query, Calendar.class);
         } catch (IllegalArgumentException e) {
-            APP_LOGGER.error("bill id or room typ id is wrong type");
+            APP_LOGGER.error("Assignee id is wrong type");
             return Optional.empty();
         }
     }
