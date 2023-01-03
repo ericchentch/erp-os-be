@@ -120,6 +120,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     permission.setName(permissionRequest.getName());
     permission.setCreated(DateFormat.getCurrentTime());
     permission.setViewPoints(permissionRequest.getViewPoints());
+    permission.setDev(false);
     if (permissionRequest.getUserId().size() != 0) {
       List<ObjectId> resultIds = new ArrayList<>();
       permissionRequest.getUserId().forEach(thisId -> {
