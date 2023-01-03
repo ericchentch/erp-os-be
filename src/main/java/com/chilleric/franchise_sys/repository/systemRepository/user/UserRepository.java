@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.user;
+package com.chilleric.franchise_sys.repository.systemRepository.user;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.path;
+package com.chilleric.franchise_sys.repository.systemRepository.path;
 
 import java.util.List;
 import java.util.Map;

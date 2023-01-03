@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.inventory.AbstractInventory;
-import com.chilleric.franchise_sys.repository.path.Path;
-import com.chilleric.franchise_sys.repository.path.PathRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
+import com.chilleric.franchise_sys.repository.systemRepository.path.PathRepository;
 
 @Service
 public class PathInventoryImpl extends AbstractInventory<PathRepository> implements PathInventory {

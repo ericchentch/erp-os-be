@@ -1,6 +1,6 @@
 package com.chilleric.franchise_sys.dto.path;
 
-import com.chilleric.franchise_sys.repository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
