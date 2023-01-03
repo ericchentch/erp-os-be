@@ -66,7 +66,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
                     TypeAccount.INTERNAL);
         }
         accessabilityRepository
-                .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId));
+                .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
         repository.insertAndUpdate(path);
 
     }

@@ -28,6 +28,7 @@ import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
+import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
@@ -164,16 +165,37 @@ public abstract class AbstractController<s> {
 				editable == null ? new ArrayList<>() : editable), HttpStatus.OK);
 	}
 
-	protected void checkAccessability(String loginId, String targetId) {
-		if (loginId.compareTo(targetId) != 0) {
+	protected void checkAccessability(String loginId, String targetId, boolean isCheckEdit) {
+		if (!isCheckEdit && loginId.compareTo(targetId) != 0) {
 			accessabilityRepository.getAccessability(loginId, targetId)
 					.orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
 		}
+		if (isCheckEdit) {
+			Accessability accessability =
+					accessabilityRepository.getAccessability(loginId, targetId).orElseThrow(
+							() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
+			if (!accessability.isEditable()) {
+				throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+			}
+		}
+
+
 	}
 
 	protected void preventItSelf(String loginId, String targetId) {
 		if (loginId.compareTo(targetId) == 0) {
 			throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+		}
+	}
+
+
+	protected void checkAddCondition(Map<String, List<ViewPoint>> editable, Class<?> clazz) {
+		if (editable.get(clazz.getSimpleName()).isEmpty()) {
+			throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+		} else {
+			if (editable.get(clazz.getSimpleName()).size() < clazz.getDeclaredFields().length) {
+				throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+			}
 		}
 	}
 

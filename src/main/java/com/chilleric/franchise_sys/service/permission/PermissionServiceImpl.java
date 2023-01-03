@@ -136,7 +136,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
     accessabilityRepository
-        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId));
+        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
     repository.insertAndUpdate(permission);
   }
 

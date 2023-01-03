@@ -58,7 +58,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setCreated(currentTime);
     user.setModified(currentTime);
     accessabilityRepository
-        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId));
+        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
     repository.insertAndUpdate(user);
   }
 

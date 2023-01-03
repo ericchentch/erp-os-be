@@ -58,7 +58,7 @@ public class PathController extends AbstractController<PathService> {
         public ResponseEntity<CommonResponse<String>> deletePath(@RequestParam String id,
                         HttpServletRequest httpServletRequest) {
                 ValidationResult result = validateToken(httpServletRequest);
-                checkAccessability(result.getLoginId(), id);
+                checkAccessability(result.getLoginId(), id, true);
                 service.deletePath(id);
                 return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true,
                                 null, LanguageMessageKey.DELETE_PATH_SUCCESS, HttpStatus.OK.value(),
