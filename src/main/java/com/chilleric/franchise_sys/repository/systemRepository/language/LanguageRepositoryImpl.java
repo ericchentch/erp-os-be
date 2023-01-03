@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.language;
+package com.chilleric.franchise_sys.repository.systemRepository.language;
 
 import java.util.List;
 import java.util.Map;

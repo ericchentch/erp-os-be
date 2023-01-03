@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.inventory.AbstractInventory;
-import com.chilleric.franchise_sys.repository.permission.Permission;
-import com.chilleric.franchise_sys.repository.permission.PermissionRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
+import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
 
 @Service
 public class PermissionInventoryImpl extends AbstractInventory<PermissionRepository>

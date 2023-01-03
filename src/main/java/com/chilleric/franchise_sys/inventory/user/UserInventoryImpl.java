@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.inventory.AbstractInventory;
-import com.chilleric.franchise_sys.repository.user.User;
-import com.chilleric.franchise_sys.repository.user.UserRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User;
+import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
 
 @Service
 public class UserInventoryImpl extends AbstractInventory<UserRepository> implements UserInventory {

@@ -19,8 +19,8 @@ import com.chilleric.franchise_sys.dto.language.SelectLanguage;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.language.LanguageInventory;
-import com.chilleric.franchise_sys.repository.language.Language;
-import com.chilleric.franchise_sys.repository.language.LanguageRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.language.Language;
+import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service

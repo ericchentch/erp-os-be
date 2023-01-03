@@ -1,7 +1,7 @@
 package com.chilleric.franchise_sys.inventory.path;
 
 import java.util.Optional;
-import com.chilleric.franchise_sys.repository.path.Path;
+import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
 
 public interface PathInventory {
     Optional<Path> findPathByLabel(String label);

@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.accessability;
+package com.chilleric.franchise_sys.repository.systemRepository.accessability;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package com.chilleric.franchise_sys.inventory.user;
 
 import java.util.Optional;
-import com.chilleric.franchise_sys.repository.user.User;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User;
 
 public interface UserInventory {
 

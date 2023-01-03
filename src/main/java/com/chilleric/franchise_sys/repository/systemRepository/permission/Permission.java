@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.permission;
+package com.chilleric.franchise_sys.repository.systemRepository.permission;
 
 import java.util.Date;
 import java.util.List;

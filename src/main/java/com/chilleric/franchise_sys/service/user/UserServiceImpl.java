@@ -22,11 +22,11 @@ import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
-import com.chilleric.franchise_sys.repository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
-import com.chilleric.franchise_sys.repository.user.User;
-import com.chilleric.franchise_sys.repository.user.User.TypeAccount;
-import com.chilleric.franchise_sys.repository.user.UserRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 import com.chilleric.franchise_sys.utils.DateFormat;
 
