@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.inventory.AbstractInventory;
-import com.chilleric.franchise_sys.repository.language.Language;
-import com.chilleric.franchise_sys.repository.language.LanguageRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.language.Language;
+import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
 
 @Service
 public class LanguageInventoryImpl extends AbstractInventory<LanguageRepository>

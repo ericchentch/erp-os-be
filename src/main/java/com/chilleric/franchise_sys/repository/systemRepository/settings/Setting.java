@@ -1,20 +1,17 @@
-package com.chilleric.franchise_sys.repository.code;
+package com.chilleric.franchise_sys.repository.systemRepository.settings;
 
-import java.util.Date;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Document(collection = "codes")
+@Document(collection = "settings")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Code {
+public class Setting {
     private ObjectId _id;
     private ObjectId userId;
-    private TypeCode type;
-    private String code;
-    private Date expiredDate;
+    private String languageKey;
 }

@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.permission;
+package com.chilleric.franchise_sys.repository.systemRepository.permission;
 
 import static java.util.Map.entry;
 import java.lang.reflect.Field;

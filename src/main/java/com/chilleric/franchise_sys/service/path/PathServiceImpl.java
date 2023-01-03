@@ -14,10 +14,10 @@ import com.chilleric.franchise_sys.dto.path.PathResponse;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.path.PathInventory;
-import com.chilleric.franchise_sys.repository.accessability.Accessability;
-import com.chilleric.franchise_sys.repository.path.Path;
-import com.chilleric.franchise_sys.repository.path.PathRepository;
-import com.chilleric.franchise_sys.repository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
+import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
+import com.chilleric.franchise_sys.repository.systemRepository.path.PathRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
 import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service
