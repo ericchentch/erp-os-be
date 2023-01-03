@@ -81,9 +81,9 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
         .getPermissions(Map.ofEntries(entry("name", "super_admin_permission")), "", 0, 0, "").get();
     if (permissions.size() == 0) {
       List<ObjectId> userIds = Arrays.asList(user.get_id(), usersDev.get_id());
-      Permission permission =
-          new Permission(null, "super_admin_permission", userIds, DateFormat.getCurrentTime(), null,
-              permissionRepository.getViewPointSelect(), permissionRepository.getEditableSelect());
+      Permission permission = new Permission(null, "super_admin_permission", userIds,
+          DateFormat.getCurrentTime(), null, permissionRepository.getViewPointSelect(),
+          permissionRepository.getEditableSelect(), true);
       permissionRepository.insertAndUpdate(permission);
     } else {
       Permission permission = permissions.get(0);

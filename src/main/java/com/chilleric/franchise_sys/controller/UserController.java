@@ -18,7 +18,6 @@ import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.common.ValidationResult;
 import com.chilleric.franchise_sys.dto.user.UserRequest;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
-import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.service.user.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -31,10 +30,7 @@ public class UserController extends AbstractController<UserService> {
         public ResponseEntity<CommonResponse<String>> addNewUser(
                         @RequestBody UserRequest userRequest, HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
-                if (userRequest.getClass().getDeclaredFields().length > result.getViewPoints()
-                                .get(UserResponse.class.getSimpleName()).size()) {
-                        throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
-                }
+                checkAddCondition(result.getEditable(), UserRequest.class);
                 service.createNewUser(userRequest, result.getLoginId());
                 return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true,
                                 null, LanguageMessageKey.CREATE_USER_SUCCESS, HttpStatus.OK.value(),
@@ -48,7 +44,7 @@ public class UserController extends AbstractController<UserService> {
         public ResponseEntity<CommonResponse<UserResponse>> getUserDetail(
                         @RequestParam(required = true) String id, HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
-                checkAccessability(result.getLoginId(), id);
+                checkAccessability(result.getLoginId(), id, false);
                 if (id.compareTo(result.getLoginId()) == 0) {
                         return response(service.findOneUserById(id), LanguageMessageKey.SUCCESS,
                                         result.getViewPoints()
@@ -100,7 +96,7 @@ public class UserController extends AbstractController<UserService> {
                         @RequestBody UserRequest userRequest,
                         @RequestParam(required = true) String id, HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
-                checkAccessability(result.getLoginId(), id);
+                checkAccessability(result.getLoginId(), id, true);
                 preventItSelf(result.getLoginId(), id);
                 service.updateUserById(id, userRequest,
                                 result.getEditable().get(UserRequest.class.getSimpleName()));
@@ -116,7 +112,7 @@ public class UserController extends AbstractController<UserService> {
         public ResponseEntity<CommonResponse<String>> changeStatusUser(@RequestParam String id,
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
-                checkAccessability(result.getLoginId(), id);
+                checkAccessability(result.getLoginId(), id, true);
                 preventItSelf(result.getLoginId(), id);
                 service.changeStatusUser(id);
                 return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true,

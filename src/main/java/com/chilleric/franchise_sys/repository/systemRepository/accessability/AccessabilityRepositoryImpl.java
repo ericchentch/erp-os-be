@@ -51,4 +51,12 @@ public class AccessabilityRepositoryImpl extends AbstractRepo implements Accessa
         Query query = generateQueryMongoDB(params, Accessability.class, "", "", 0, 0);
         systemDBTemplate.remove(query, Accessability.class);
     }
+
+    @Override
+    public Optional<List<Accessability>> getListAccessability(Map<String, String> allParams,
+            String keySort, int page, int pageSize, String sortField) {
+        Query query = generateQueryMongoDB(allParams, Accessability.class, keySort, sortField, page,
+                pageSize);
+        return systemFind(query, Accessability.class);
+    }
 }
