@@ -38,7 +38,7 @@ public class DateFormat {
         return result;
     }
 
-    public static String combineHourAndDate(String hour, String date) {
+    public static String combineDateAndHour(String date, String hour) {
       return date + " " + hour;
     }
 }
