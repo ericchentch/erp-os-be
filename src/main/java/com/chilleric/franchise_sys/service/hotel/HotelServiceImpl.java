@@ -57,7 +57,9 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
 				hotel.getClient().stream()
 						.map((clientInformation) -> new ClientRequest(
 								clientInformation.getAddress(), clientInformation.getPhone()))
-						.collect(Collectors.toList())));
+						.collect(Collectors.toList()),
+				hotel.getBillDeposit(), hotel.getVAT(), hotel.getMaxRefund(),
+				hotel.getMaxDaysRefund()));
 	}
 
 	@Override

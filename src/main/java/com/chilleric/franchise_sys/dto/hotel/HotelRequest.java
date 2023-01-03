@@ -1,6 +1,8 @@
 package com.chilleric.franchise_sys.dto.hotel;
 
 import java.util.List;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -31,4 +33,18 @@ public class HotelRequest {
 	@NotNull(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
 	@NotEmpty(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
 	private List<ClientRequest> client;
+
+	@NotNull(message = LanguageMessageKey.HOTEL_VAT_REQUIRED)
+	@Min(0)
+	@Max(100)
+	private float VAT;
+
+	@NotNull(message = LanguageMessageKey.HOTEL_MAX_REFUND_REQUIRED)
+	@Min(0)
+	@Max(100)
+	private float maxRefund;
+
+	@NotNull(message = LanguageMessageKey.HOTEL_VAT_REQUIRED)
+	@Min(0)
+	private int maxDaysRefund;
 }
