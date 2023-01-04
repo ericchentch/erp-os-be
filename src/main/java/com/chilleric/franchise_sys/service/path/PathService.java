@@ -10,6 +10,8 @@ public interface PathService {
     Optional<ListWrapperResponse<PathResponse>> getPaths(Map<String, String> allParams,
             String keySort, int page, int pageSize, String sortField, String loginId);
 
+    Optional<PathResponse> getPathDetail(String id);
+
     void addNewPath(PathRequest pathRequest, String loginId);
 
     void deletePath(String id);

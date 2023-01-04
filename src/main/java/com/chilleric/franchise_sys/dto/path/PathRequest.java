@@ -23,4 +23,5 @@ public class PathRequest {
     @NotBlank(message = LanguageMessageKey.TYPE_PATH_REQUIRED)
     private String type;
 
+
 }

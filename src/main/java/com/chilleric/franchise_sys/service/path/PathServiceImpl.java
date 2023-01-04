@@ -78,4 +78,12 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         repository.deletePath(id);
     }
 
+    @Override
+    public Optional<PathResponse> getPathDetail(String id) {
+        Path path = pathInventory.findPathById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
+        return Optional.of(new PathResponse(path.get_id().toString(), path.getLabel(),
+                path.getPath(), path.getType()));
+    }
+
 }

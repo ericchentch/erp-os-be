@@ -23,5 +23,7 @@ public class Permission {
   private Date modified;
   private Map<String, List<ViewPoint>> viewPoints;
   private Map<String, List<ViewPoint>> editable;
+  private ObjectId navbar;
+  private List<ObjectId> paths;
   private boolean isDev;
 }
