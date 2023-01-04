@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.service.path;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +34,9 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         return Optional.of(new ListWrapperResponse<>(
                 paths.stream()
                         .map(path -> new PathResponse(path.get_id().toString(), path.getLabel(),
-                                path.getPath(), path.getType()))
+                                path.getPath(), path.getType(),
+                                path.getUserIds().stream().map(thisId -> thisId.toString())
+                                        .collect(Collectors.toList())))
                         .collect(Collectors.toList()),
                 page, pageSize, repository.getTotal(allParams)));
     }
@@ -56,14 +59,20 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
             error.put("type", LanguageMessageKey.TYPE_PATH_INVALID);
             throw new InvalidRequestException(error, LanguageMessageKey.TYPE_PATH_INVALID);
         }
+        List<ObjectId> userIdsUpdate = new ArrayList<>();
+        pathRequest.getUserIds().forEach(thisIds -> {
+            if (accessabilityRepository.getAccessability(loginId, thisIds).isPresent()) {
+                userIdsUpdate.add(new ObjectId(thisIds));
+            }
+        });
         Path path = new Path();
         if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                    TypeAccount.EXTERNAL);
+                    TypeAccount.EXTERNAL, userIdsUpdate);
         }
         if (pathRequest.getType().compareTo("INTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                    TypeAccount.INTERNAL);
+                    TypeAccount.INTERNAL, new ArrayList<>());
         }
         accessabilityRepository
                 .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
@@ -76,6 +85,15 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         pathInventory.findPathById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
         repository.deletePath(id);
+    }
+
+    @Override
+    public Optional<PathResponse> getPathDetail(String id) {
+        Path path = pathInventory.findPathById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
+        return Optional.of(new PathResponse(path.get_id().toString(), path.getLabel(),
+                path.getPath(), path.getType(), path.getUserIds().stream()
+                        .map(thisId -> thisId.toString()).collect(Collectors.toList())));
     }
 
 }
