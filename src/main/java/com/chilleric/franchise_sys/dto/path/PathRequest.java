@@ -1,9 +1,7 @@
 package com.chilleric.franchise_sys.dto.path;
 
-import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +23,5 @@ public class PathRequest {
     @NotBlank(message = LanguageMessageKey.TYPE_PATH_REQUIRED)
     private String type;
 
-    @NotNull(message = LanguageMessageKey.USER_LIST_REQUIRED)
-    private List<String> userIds;
 
 }
