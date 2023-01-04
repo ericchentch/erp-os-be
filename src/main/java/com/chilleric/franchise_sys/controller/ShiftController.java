@@ -1,11 +1,9 @@
 package com.chilleric.franchise_sys.controller;
 
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.dto.bill.BillRequest;
 import com.chilleric.franchise_sys.dto.common.CommonResponse;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.common.ValidationResult;
-import com.chilleric.franchise_sys.dto.language.LanguageResponse;
 import com.chilleric.franchise_sys.dto.shift.ShiftRequest;
 import com.chilleric.franchise_sys.dto.shift.ShiftResponse;
 import com.chilleric.franchise_sys.service.shift.ShiftService;
@@ -45,9 +43,7 @@ public class ShiftController extends AbstractController<ShiftService> {
       HttpServletRequest request) {
       ValidationResult result = validateToken(request);
       return response(service.getShifts(allParams, keySort, page, pageSize, sortField),
-          LanguageMessageKey.SUCCESS,
-          result.getViewPoints().get(LanguageResponse.class.getSimpleName()),
-          result.getEditable().get(LanguageResponse.class.getSimpleName()));
+          LanguageMessageKey.SUCCESS,new ArrayList<>(), new ArrayList<>());
   }
 
   @SecurityRequirement(name = "Bearer Authentication")

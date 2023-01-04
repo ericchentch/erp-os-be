@@ -41,7 +41,8 @@ public class DateFormat {
 
     public static String combineDateAndHour(String date, String hour) {
         String combineDateAndHourString = date + " " + hour;
-        if (combineDateAndHourString.matches(TypeValidation.TIME)) {
+        System.out.println("1111111" + combineDateAndHourString.matches(TypeValidation.TIME));
+        if (!combineDateAndHourString.matches(TypeValidation.TIME)) {
             throw new InvalidRequestException(new HashMap<>(),
                 LanguageMessageKey.INVALID_DATE_FORMAT);
         }
