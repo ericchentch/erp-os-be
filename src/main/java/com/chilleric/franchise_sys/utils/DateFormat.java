@@ -39,6 +39,13 @@ public class DateFormat {
     }
 
     public static String combineDateAndHour(String date, String hour) {
-      return date + " " + hour;
+        String combineDateAndHour = date + " " + hour;
+        try {
+            combineDateAndHour.format(date);
+        } catch (Exception e) {
+            throw new InvalidRequestException(new HashMap<>(),
+                LanguageMessageKey.INVALID_DATE_FORMAT);
+        }
+        return combineDateAndHour;
     }
 }
