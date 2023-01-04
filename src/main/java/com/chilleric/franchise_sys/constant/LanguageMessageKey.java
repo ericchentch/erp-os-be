@@ -430,5 +430,6 @@ public class LanguageMessageKey {
 	public static final String NAVBAR_ADDED = "addedNavbar"; // navbar is added successfully
 	public static final String NAVBAR_UPDATED = "navbarUpdated"; // navbar is updated successfully
 	public static final String NAVBAR_DELETED = "navbarDeleted"; // navbar is deleted successfully
+	public static final String NAVBAR_LIST_REQUIRED = "navbarDeleted"; // navbar lsit is required
 
 }
