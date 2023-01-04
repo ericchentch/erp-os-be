@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 
 public class DateFormat {
@@ -39,13 +40,11 @@ public class DateFormat {
     }
 
     public static String combineDateAndHour(String date, String hour) {
-        String combineDateAndHour = date + " " + hour;
-        try {
-            combineDateAndHour.format(date);
-        } catch (Exception e) {
+        String combineDateAndHourString = date + " " + hour;
+        if (combineDateAndHourString.matches(TypeValidation.TIME)) {
             throw new InvalidRequestException(new HashMap<>(),
                 LanguageMessageKey.INVALID_DATE_FORMAT);
         }
-        return combineDateAndHour;
+        return combineDateAndHourString;
     }
 }

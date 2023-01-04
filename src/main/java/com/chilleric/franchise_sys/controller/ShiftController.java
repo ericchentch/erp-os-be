@@ -89,7 +89,7 @@ public class ShiftController extends AbstractController<ShiftService> {
         service.deleteShift(shiftId);
 
         return new ResponseEntity<CommonResponse<String>>(
-            new CommonResponse<String>(true, null, LanguageMessageKey.HOTEL_DELETE_SUCCESS,
+            new CommonResponse<String>(true, null, LanguageMessageKey.SHIFT_DELETE_SUCCESS,
                 HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
             null, HttpStatus.OK.value());
     }
