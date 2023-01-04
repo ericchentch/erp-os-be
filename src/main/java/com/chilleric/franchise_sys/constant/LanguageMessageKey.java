@@ -424,4 +424,14 @@ public class LanguageMessageKey {
                                                                             // successfully
 	public static final String ACCESS_NOT_FOUND = "notFoundAccess"; // Not found approvement
 	public static final String EDITABLE_REQUIRED = "editableRequired"; // Editable is required;
+	public static final String NAVBAR_NAME_REQUIRED = "navbarNameRequired";// Navbar name is
+																			// required
+	public static final String CONTENT_NAVBAR_REQUIRED = "contentNavbarRequired";
+	public static final String NAVBAR_NOT_FOUND = "navbarNotFound"; // Not found navbar
+	public static final String NAVBAR_EXISTED = "navbarExisted"; // navbar existed
+	public static final String NAVBAR_ADDED = "addedNavbar"; // navbar is added successfully
+	public static final String NAVBAR_UPDATED = "navbarUpdated"; // navbar is updated successfully
+	public static final String NAVBAR_DELETED = "navbarDeleted"; // navbar is deleted successfully
+	public static final String NAVBAR_LIST_REQUIRED = "navbarDeleted"; // navbar lsit is required
+
 }

@@ -40,6 +40,16 @@ public class PathController extends AbstractController<PathService> {
         }
 
         @SecurityRequirement(name = "Bearer Authentication")
+        @GetMapping(value = "get-path-detail")
+        public ResponseEntity<CommonResponse<PathResponse>> getPathsDetail(@RequestParam String id,
+                        HttpServletRequest request) {
+                ValidationResult result = validateToken(request);
+                return response(service.getPathDetail(id), LanguageMessageKey.SUCCESS,
+                                result.getViewPoints().get(PathResponse.class.getSimpleName()),
+                                result.getEditable().get(PathRequest.class.getSimpleName()));
+        }
+
+        @SecurityRequirement(name = "Bearer Authentication")
         @PostMapping(value = "add-new-path")
         public ResponseEntity<CommonResponse<String>> addNewPath(
                         @RequestBody PathRequest pathRequest,

@@ -40,12 +40,15 @@ public abstract class AbstractController<s> {
 
 	protected static final Map<String, List<String>> IgnoreView = Map.ofEntries(
 			entry("PermissionResponse", Arrays.asList("id", "userId", "editable", "viewPoints")),
-			entry("UserResponse", Arrays.asList("id", "password", "username", "dob", "address",
-					"email", "tokens", "modified", "verified", "verify2FA")));
+			entry("UserResponse",
+					Arrays.asList("id", "password", "username", "dob", "address", "email", "tokens",
+							"modified", "verified", "verify2FA")),
+			entry("PathResponse", Arrays.asList("id", "userIds")));
 
 	protected static final Map<String, List<String>> IgnoreEdit =
 			Map.ofEntries(entry("PermissionRequest", Arrays.asList("id")),
-					entry("UserRequest", Arrays.asList("id", "password")));
+					entry("UserRequest", Arrays.asList("id", "password")),
+					entry("PathRequest", Arrays.asList("id")));
 
 	protected static boolean isDev = false;
 

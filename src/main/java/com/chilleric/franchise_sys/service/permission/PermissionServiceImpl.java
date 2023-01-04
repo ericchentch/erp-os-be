@@ -23,11 +23,12 @@ import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
+import com.chilleric.franchise_sys.inventory.navbar.NavbarInventory;
+import com.chilleric.franchise_sys.inventory.path.PathInventory;
 import com.chilleric.franchise_sys.inventory.permission.PermissionInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
-import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
@@ -46,7 +47,9 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
   private PermissionInventory permissionInventory;
 
   @Autowired
-  private AccessabilityRepository accessabilityRepository;
+  private NavbarInventory navbarInventory;
+  @Autowired
+  private PathInventory pathInventory;
 
   @Override
   public Optional<ListWrapperResponse<PermissionResponse>> getYourPermissions(
@@ -77,15 +80,20 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     }
     List<Permission> permissions =
         repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<PermissionResponse>(permissions.stream()
-        .map(permission -> new PermissionResponse(permission.get_id().toString(),
-            permission.getName(),
-            permission.getUserId().size() > 0 ? permission.getUserId().stream()
-                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
-            DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
-            DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-            removeId(permission.getViewPoints()), removeId(permission.getEditable())))
-        .collect(Collectors.toList()), page, pageSize, repository.getTotal(allParams)));
+    return Optional.of(new ListWrapperResponse<PermissionResponse>(
+        permissions.stream()
+            .map(permission -> new PermissionResponse(permission.get_id().toString(),
+                permission.getName(),
+                permission.getUserId().size() > 0 ? permission.getUserId().stream()
+                    .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+                DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
+                DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
+                removeId(permission.getViewPoints()), removeId(permission.getEditable()),
+                permission.getNavbar().toString(),
+                permission.getPaths().stream().map(thisNav -> thisNav.toString())
+                    .collect(Collectors.toList())))
+            .collect(Collectors.toList()),
+        page, pageSize, repository.getTotal(allParams)));
   }
 
   @Override
@@ -98,7 +106,11 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
             DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
             DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-            removeId(permission.getViewPoints()), removeId(permission.getEditable())));
+            removeId(permission.getViewPoints()), removeId(permission.getEditable()),
+            permission.getNavbar().toString(),
+            permission.getPaths().size() > 0 ? permission.getPaths().stream()
+                .map(thisNav -> thisNav.toString()).collect(Collectors.toList())
+                : new ArrayList<>()));
   }
 
   @Override
@@ -131,6 +143,24 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
         });
       });
       permission.setUserId(resultIds);
+    } else {
+      permission.setUserId(new ArrayList<>());
+    }
+    if (navbarInventory.findNavbarById(permissionRequest.getNavbar()).isEmpty()) {
+      error.put("navbar", LanguageMessageKey.NAVBAR_NOT_FOUND);
+      throw new InvalidRequestException(error, LanguageMessageKey.NAVBAR_NOT_FOUND);
+
+    }
+    if (permissionRequest.getPaths().size() != 0) {
+      List<ObjectId> resultIds = new ArrayList<>();
+      permissionRequest.getPaths().forEach(thisId -> {
+        pathInventory.findPathById(thisId).ifPresent(thisNav -> {
+          accessabilityRepository.getAccessability(loginId, thisId).ifPresent(thisAccess -> {
+            resultIds.add(new ObjectId(thisId));
+          });
+        });
+      });
+      permission.setPaths(resultIds);
     } else {
       permission.setUserId(new ArrayList<>());
     }
@@ -167,6 +197,24 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
         });
       });
       permission.setUserId(resultIds);
+    } else {
+      permission.setUserId(new ArrayList<>());
+    }
+    if (navbarInventory.findNavbarById(permissionRequest.getNavbar()).isEmpty()) {
+      error.put("navbar", LanguageMessageKey.NAVBAR_NOT_FOUND);
+      throw new InvalidRequestException(error, LanguageMessageKey.NAVBAR_NOT_FOUND);
+
+    }
+    if (permissionRequest.getPaths().size() != 0) {
+      List<ObjectId> resultIds = new ArrayList<>();
+      permissionRequest.getPaths().forEach(thisId -> {
+        pathInventory.findPathById(thisId).ifPresent(thisNav -> {
+          accessabilityRepository.getAccessability(loginId, thisId).ifPresent(thisAccess -> {
+            resultIds.add(new ObjectId(thisId));
+          });
+        });
+      });
+      permission.setPaths(resultIds);
     } else {
       permission.setUserId(new ArrayList<>());
     }
@@ -223,15 +271,20 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       String loginId) {
     List<Permission> permissions =
         repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<PermissionResponse>(permissions.stream()
-        .map(permission -> new PermissionResponse(permission.get_id().toString(),
-            permission.getName(),
-            permission.getUserId().size() > 0 ? permission.getUserId().stream()
-                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
-            DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
-            DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-            removeId(permission.getViewPoints()), removeId(permission.getEditable())))
-        .collect(Collectors.toList()), page, pageSize, repository.getTotal(allParams)));
+    return Optional.of(new ListWrapperResponse<PermissionResponse>(
+        permissions.stream()
+            .map(permission -> new PermissionResponse(permission.get_id().toString(),
+                permission.getName(),
+                permission.getUserId().size() > 0 ? permission.getUserId().stream()
+                    .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+                DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
+                DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
+                removeId(permission.getViewPoints()), removeId(permission.getEditable()),
+                permission.getNavbar().toString(),
+                permission.getPaths().stream().map(thisNav -> thisNav.toString())
+                    .collect(Collectors.toList())))
+            .collect(Collectors.toList()),
+        page, pageSize, repository.getTotal(allParams)));
   }
 
   private void checkDeleteAndEdit(Permission permission) {
