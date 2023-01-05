@@ -13,7 +13,6 @@ public class UserResponse {
   private String id;
   private TypeAccount type;
   private String username;
-  private String password;
   private int gender;
   private String dob;
   private String address;
@@ -21,7 +20,6 @@ public class UserResponse {
   private String lastName;
   private String email;
   private String phone;
-  private String tokens;
   private String created;
   private String modified;
   private boolean verified;
