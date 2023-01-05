@@ -42,14 +42,13 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository> implement
 		shift.set_id(newId);
 		String normalizeName = StringUtils.normalizeString(shiftRequest.getShiftName());
 		shift.setShiftName(normalizeName);
-		String startCombine = DateFormat.combineDateAndHour(shiftRequest.getStartDate(),
-				shiftRequest.getStartHour());
-		String endCombine =
-				DateFormat.combineDateAndHour(shiftRequest.getEndDate(), shiftRequest.getEndHour());
 		shift.setStartTime(
-				DateFormat.convertStringToDate(startCombine, DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN));
+				DateFormat.convertStringToDate(DateFormat.combineDateAndHour(shiftRequest.getStartDate(),
+                    shiftRequest.getStartHour()), DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN));
 		shift.setEndTime(
-				DateFormat.convertStringToDate(endCombine, DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN));
+				DateFormat.convertStringToDate(
+                    DateFormat.combineDateAndHour(shiftRequest.getEndDate(),
+                    shiftRequest.getEndHour()), DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN));
 		repository.insertAndUpdate(shift);
 	}
 
