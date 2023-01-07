@@ -12,8 +12,6 @@ public class IsObjectIdValidator implements ConstraintValidator<IsObjectId, Stri
             return true;
         } else {
             return false;
-
         }
     }
-
 }
