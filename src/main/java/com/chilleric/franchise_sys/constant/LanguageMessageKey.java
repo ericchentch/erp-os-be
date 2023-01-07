@@ -420,8 +420,8 @@ public class LanguageMessageKey {
 																			// invalid;
 	public static final String SHIFT_INVALID_END_HOUR = "invalidEndHour"; // Shift end hour is
 																			// invalid
-    public static final String SHIFT_DELETE_SUCCESS = "deleteShiftSuccess"; // Shift is deleted
-                                                                            // successfully
+	public static final String SHIFT_DELETE_SUCCESS = "deleteShiftSuccess"; // Shift is deleted
+																			// successfully
 	public static final String ACCESS_NOT_FOUND = "notFoundAccess"; // Not found approvement
 	public static final String EDITABLE_REQUIRED = "editableRequired"; // Editable is required;
 	public static final String NAVBAR_NAME_REQUIRED = "navbarNameRequired";// Navbar name is
@@ -434,4 +434,24 @@ public class LanguageMessageKey {
 	public static final String NAVBAR_DELETED = "navbarDeleted"; // navbar is deleted successfully
 	public static final String NAVBAR_LIST_REQUIRED = "navbarDeleted"; // navbar lsit is required
 
+	public static final String INVALID_OBJECT_ID = "Invalid ObjectId"; // ObjectId is invalid
+	public static final String TASK_NOT_FOUND = "taskNotFound"; // Task is not found
+	public static final String TASK_EMPLOYEE_ID_REQUIRED = "employeeIdRequired"; // Task employee id
+																					// is required
+	public static final String TASK_REVIEWER_ID_REQUIRED = "reviewerIdRequired"; // Task reviewer id
+																					// is required
+
+	public static final String TASK_SHIFT_ID_REQUIRED = "shiftIdRequired"; // Task shift id is
+																			// required
+	public static final String TASK_START_DATE_REQUIRED = "startDateRequired"; // Task start date is
+																				// required
+	public static final String TASK_START_HOUR_REQUIRED = "startHourRequired"; // Task start hour is
+																				// required
+	public static final String TASK_TITLE_REQUIRED = "taskTitleRequired"; // Task title is required
+	public static final String TASK_DESCRIPTION_REQUIRED = "taskDescriptionRequired"; // Task
+																						// description
+																						// is
+																						// required
+	public static final String TASK_STATUS_REQUIRED = "taskStatusRequired"; // Task status is
+																			// required
 }
