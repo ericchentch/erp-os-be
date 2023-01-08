@@ -16,10 +16,10 @@ public class Task {
 
     private ObjectId employeeId;
     private ObjectId reviewerId;
-    private ObjectId calendarId;
+    private ObjectId shiftId;
 
     private Date startTime;
     private String title;
     private String description;
-    private StatusTask status;
+    private TaskStatus status;
 }

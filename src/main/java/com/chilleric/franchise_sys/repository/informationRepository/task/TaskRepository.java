@@ -11,4 +11,6 @@ public interface TaskRepository {
     void insertAndUpdate(Task task);
 
     long getTotalPage(Map<String, String> allParams);
+
+    void delete(String taskId);
 }
