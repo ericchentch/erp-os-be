@@ -3,6 +3,7 @@ package com.chilleric.franchise_sys.repository.crmRepository.bill;
 import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.chilleric.franchise_sys.dto.bill.DraftDetailResponse;
 import com.chilleric.franchise_sys.dto.discount.DiscountResponse;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.repository.common_entity.DraftDetail;
@@ -23,7 +24,7 @@ public class Bill {
     private UserResponse paidCustomer;
 
     private List<DraftDetail> draftDetails;
-    private List<Object> confirmedDetail;
+    private List<DraftDetailResponse> confirmedDetail;
 
     private DiscountResponse discount;
     private float deposit;
