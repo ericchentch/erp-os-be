@@ -49,6 +49,7 @@ public class BillResponseServiceImpl extends AbstractService<BillRepository>
 
     @Override
     public float getBillTotal(List<DraftDetail> draftDetailList) {
+        // TODO: need add discount workflow
         return draftDetailList.stream().map(element -> {
             float price = 0;
             if (element.getType() == TypeObjectBill.ROOMTYPE) {
