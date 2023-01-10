@@ -27,7 +27,5 @@ public class BillRequest {
     private List<TimelineRequest> timeline;
 
     @NotNull(message = LanguageMessageKey.BILL_STATUS_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.BILL_STATUS_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.BILL_STATUS_REQUIRED)
     private BillStatus status;
 }

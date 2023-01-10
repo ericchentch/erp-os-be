@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.dto.bill;
 
+import java.util.List;
 import com.chilleric.franchise_sys.dto.discount.DiscountResponse;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.repository.common_enum.BillStatus;
@@ -7,19 +8,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillResponse {
     private String id;
 
-    private UserResponse customerResponse;
+    private UserResponse customer;
 
     private UserResponse paidCustomer;
     private List<DraftDetailResponse> draftDetails;
-    private List<Object> confirmedDetail;
+    private List<DraftDetailResponse> confirmedDetail;
     private DiscountResponse discount;
     private float deposit;
     private float total;

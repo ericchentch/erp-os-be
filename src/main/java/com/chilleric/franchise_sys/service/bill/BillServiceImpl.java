@@ -1,5 +1,12 @@
 package com.chilleric.franchise_sys.service.bill;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.bson.types.ObjectId;
+import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.bill.BillRequest;
 import com.chilleric.franchise_sys.dto.bill.BillResponse;
@@ -13,14 +20,6 @@ import com.chilleric.franchise_sys.repository.crmRepository.bill.Bill;
 import com.chilleric.franchise_sys.repository.crmRepository.bill.BillRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 import com.chilleric.franchise_sys.service.user.UserService;
-import org.bson.types.ObjectId;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class BillServiceImpl extends AbstractService<BillRepository> implements BillService {
@@ -43,26 +42,31 @@ public class BillServiceImpl extends AbstractService<BillRepository> implements 
 
         bill.set_id(new ObjectId());
         bill.setCustomerId(new ObjectId(billRequest.getCustomerId()));
-        bill.setPaidCustomer(new UserResponse());
+        // TODO: update after having discount
+        bill.setDiscount(new DiscountResponse());
+        // TODO: update deposit following hotel config
+        bill.setDeposit(0);
 
         bill.setDraftDetails(billRequest.getDraftDetail().stream().map(draftDetailRequest -> {
             validateStringIsObjectId(draftDetailRequest.getId());
 
             return new DraftDetail(draftDetailRequest.getType(),
-                new ObjectId(draftDetailRequest.getId()), draftDetailRequest.getQuantity());
+                    new ObjectId(draftDetailRequest.getId()), draftDetailRequest.getQuantity());
         }).collect(Collectors.toList()));
-
-        bill.setConfirmedDetail(new ArrayList<>());
-        bill.setDiscount(new DiscountResponse());
-        bill.setDeposit(0);
-        bill.setTotal(0);
-
-        bill.setTimeline(billRequest.getTimeline().stream().map(
-                timelineRequest -> new Timeline(timelineRequest.getPaymentMethod(),
-                    timelineRequest.getAmountPayment(), timelineRequest.getCreated()))
-            .collect(Collectors.toList()));
+        bill.setTotal(billResponseService.getBillTotal(bill.getDraftDetails()));
+        bill.setTimeline(billRequest.getTimeline().stream()
+                .map(timelineRequest -> new Timeline(timelineRequest.getPaymentMethod(),
+                        timelineRequest.getAmountPayment(), timelineRequest.getCreated()))
+                .collect(Collectors.toList()));
 
         bill.setStatus(getBillStatus(bill.getTimeline(), bill.getDraftDetails()));
+
+        bill.setPaidCustomer(bill.getStatus() != BillStatus.UNPAID
+                ? userService.findOneUserById(bill.getCustomerId().toString()).get()
+                : new UserResponse());
+        bill.setConfirmedDetail(bill.getStatus() != BillStatus.UNPAID
+                ? billResponseService.getListDraftDetailResponse(bill.getDraftDetails())
+                : new ArrayList<>());
 
         repository.insertAndUpdate(bill);
     }
@@ -72,9 +76,9 @@ public class BillServiceImpl extends AbstractService<BillRepository> implements 
         validate(billRequest);
 
         Bill bill = findBillById(billId).orElseThrow(
-            () -> new ResourceNotFoundException(LanguageMessageKey.BILL_NOT_FOUND));
+                () -> new ResourceNotFoundException(LanguageMessageKey.BILL_NOT_FOUND));
 
-        if (bill.getStatus() == BillStatus.COMPLETED || bill.getStatus() == BillStatus.REFUND) {
+        if (bill.getStatus() != BillStatus.UNPAID) {
             throw new ResourceNotFoundException(LanguageMessageKey.BILL_CAN_NOT_BE_UPDATE);
         }
 
@@ -82,16 +86,22 @@ public class BillServiceImpl extends AbstractService<BillRepository> implements 
             validateStringIsObjectId(draftDetailRequest.getId());
 
             return new DraftDetail(draftDetailRequest.getType(),
-                new ObjectId(draftDetailRequest.getId()), draftDetailRequest.getQuantity());
+                    new ObjectId(draftDetailRequest.getId()), draftDetailRequest.getQuantity());
         }).collect(Collectors.toList()));
+        bill.setTotal(billResponseService.getBillTotal(bill.getDraftDetails()));
 
-        bill.setTimeline(billRequest.getTimeline().stream().map(
-                timelineRequest -> new Timeline(timelineRequest.getPaymentMethod(),
-                    timelineRequest.getAmountPayment(), timelineRequest.getCreated()))
-            .collect(Collectors.toList()));
+        bill.setTimeline(billRequest.getTimeline().stream()
+                .map(timelineRequest -> new Timeline(timelineRequest.getPaymentMethod(),
+                        timelineRequest.getAmountPayment(), timelineRequest.getCreated()))
+                .collect(Collectors.toList()));
 
-        // # TODO: handle status of bill.
         bill.setStatus(getBillStatus(bill.getTimeline(), bill.getDraftDetails()));
+        bill.setPaidCustomer(bill.getStatus() != BillStatus.UNPAID
+                ? userService.findOneUserById(bill.getCustomerId().toString()).get()
+                : new UserResponse());
+        bill.setConfirmedDetail(bill.getStatus() != BillStatus.UNPAID
+                ? billResponseService.getListDraftDetailResponse(bill.getDraftDetails())
+                : new ArrayList<>());
 
         repository.insertAndUpdate(bill);
     }
@@ -101,17 +111,16 @@ public class BillServiceImpl extends AbstractService<BillRepository> implements 
     @Override
     public Optional<BillResponse> getBillResponseById(String billId) {
         Bill bill = findBillById(billId).orElseThrow(
-            () -> new ResourceNotFoundException(LanguageMessageKey.BILL_NOT_FOUND));
+                () -> new ResourceNotFoundException(LanguageMessageKey.BILL_NOT_FOUND));
         BillResponse billResponse = new BillResponse();
 
         billResponse.setId(billId);
-        billResponse.setCustomerResponse(
-            userService.findOneUserById(bill.getCustomerId().toString()).orElseThrow(
-                () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER)));
-        billResponse.setPaidCustomer(new UserResponse());
+        billResponse
+                .setCustomer(userService.findOneUserById(bill.getCustomerId().toString()).get());
+        billResponse.setPaidCustomer(bill.getPaidCustomer());
 
         billResponse.setDraftDetails(
-            billResponseService.getListDraftDetailResponse(bill.getDraftDetails()));
+                billResponseService.getListDraftDetailResponse(bill.getDraftDetails()));
 
         billResponse.setTimeline(billResponseService.getListTimelineResponse(bill.getTimeline()));
         billResponse.setStatus(bill.getStatus());
@@ -120,7 +129,7 @@ public class BillServiceImpl extends AbstractService<BillRepository> implements 
         billResponse.setPaidTotal(billResponseService.getPaidTotal(bill.getTimeline()));
 
         // # TODO: need to complete when having data.
-        billResponse.setConfirmedDetail(new ArrayList<>());
+        billResponse.setConfirmedDetail(bill.getConfirmedDetail());
         billResponse.setDiscount(new DiscountResponse());
         billResponse.setDeposit(100);
 
@@ -131,8 +140,8 @@ public class BillServiceImpl extends AbstractService<BillRepository> implements 
     public Optional<Bill> findBillById(String billId) {
         validateStringIsObjectId(billId);
 
-        List<Bill> bills =
-            repository.getBills(Map.ofEntries(Map.entry("_id", billId)), "", 0, 0, "").orElse(null);
+        List<Bill> bills = repository
+                .getBills(Map.ofEntries(Map.entry("_id", billId)), "", 0, 0, "").orElse(null);
         if (bills != null) {
             return Optional.of(bills.get(0));
         } else {
@@ -142,14 +151,14 @@ public class BillServiceImpl extends AbstractService<BillRepository> implements 
 
     @Override
     public BillStatus getBillStatus(List<Timeline> timelineList,
-        List<DraftDetail> draftDetailList) {
+            List<DraftDetail> draftDetailList) {
         if (timelineList.size() == 0) {
             return BillStatus.UNPAID;
         }
 
         float paidTotal = billResponseService.getPaidTotal(timelineList);
         float billTotal = billResponseService.getBillTotal(draftDetailList);
-        if (paidTotal == billTotal) {
+        if (paidTotal >= billTotal) {
             return BillStatus.COMPLETED;
         }
 
