@@ -33,7 +33,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         return Optional.of(new ListWrapperResponse<>(
                 paths.stream()
                         .map(path -> new PathResponse(path.get_id().toString(), path.getLabel(),
-                                path.getPath(), path.getType()))
+                                path.getPath(), path.getType(), path.getIcon()))
                         .collect(Collectors.toList()),
                 page, pageSize, repository.getTotal(allParams)));
     }
@@ -59,11 +59,11 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         Path path = new Path();
         if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                    TypeAccount.EXTERNAL);
+                    TypeAccount.EXTERNAL, pathRequest.getIcon());
         }
         if (pathRequest.getType().compareTo("INTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                    TypeAccount.INTERNAL);
+                    TypeAccount.INTERNAL, pathRequest.getIcon());
         }
         accessabilityRepository
                 .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
@@ -83,7 +83,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         Path path = pathInventory.findPathById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
         return Optional.of(new PathResponse(path.get_id().toString(), path.getLabel(),
-                path.getPath(), path.getType()));
+                path.getPath(), path.getType(), path.getIcon()));
     }
 
 }

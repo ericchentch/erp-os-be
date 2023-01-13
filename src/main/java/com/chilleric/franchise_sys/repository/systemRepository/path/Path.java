@@ -16,4 +16,5 @@ public class Path {
     private String label;
     private String path;
     private TypeAccount type;
+    private String icon;
 }
