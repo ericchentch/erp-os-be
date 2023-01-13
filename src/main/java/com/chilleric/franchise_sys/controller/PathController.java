@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.chilleric.franchise_sys.annotation.IsObjectId;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.CommonResponse;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
@@ -42,9 +41,7 @@ public class PathController extends AbstractController<PathService> {
 
         @SecurityRequirement(name = "Bearer Authentication")
         @GetMapping(value = "get-path-detail")
-        public ResponseEntity<CommonResponse<PathResponse>> getPathsDetail(
-                        @RequestParam @IsObjectId(
-                                        message = LanguageMessageKey.INVALID_OBJECT_ID) String id,
+        public ResponseEntity<CommonResponse<PathResponse>> getPathsDetail(@RequestParam String id,
                         HttpServletRequest request) {
                 ValidationResult result = validateToken(request);
                 return response(service.getPathDetail(id), LanguageMessageKey.SUCCESS,
