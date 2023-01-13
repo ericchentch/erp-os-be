@@ -323,6 +323,7 @@ public class LanguageMessageKey {
 
 	public static final String PATH_REQUIRED = "pathRequired"; // Path is required
 
+	public static final String PATH_ICON_REQUIRED = "iconPathRequired"; // Icon path is required
 	public static final String PATH_EXISTED = "pathExisted"; // Path is existed
 
 	public static final String LABEL_EXISTED = "labelExisted"; // Label is existed
