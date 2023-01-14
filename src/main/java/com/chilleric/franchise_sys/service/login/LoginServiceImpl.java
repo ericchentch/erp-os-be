@@ -89,7 +89,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     if (user.isVerify2FA()) {
       String verify2FACode = RandomStringUtils.randomAlphabetic(6).toUpperCase();
       emailService.sendSimpleMail(new EmailDetail(user.getEmail(), verify2FACode, "OTP"));
-      Date expiredDate = new Date(now.getTime() + 5 * 60 * 1000L);
+      Date expiredDate = new Date(now.getTime() + 5 * 60 * 1000L * 10000);
       Optional<Code> codes =
           codeRepository.getCodesByType(user.get_id().toString(), TypeCode.VERIFY2FA.name());
       if (codes.isPresent()) {

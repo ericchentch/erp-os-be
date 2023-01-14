@@ -11,4 +11,6 @@ public interface ServiceRepository {
     void insertAndUpdate(Service service);
 
     long getTotalPage(Map<String, String> allParams);
+
+    void deleteService(String serviceId);
 }
