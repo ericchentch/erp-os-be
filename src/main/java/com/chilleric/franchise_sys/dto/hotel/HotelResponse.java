@@ -19,4 +19,8 @@ public class HotelResponse {
     private float VAT;
     private float maxRefund;
     private int maxDaysRefund;
+
+    private float maxWorkHours;
+    private float maxShift;
+    private String permissionId;
 }

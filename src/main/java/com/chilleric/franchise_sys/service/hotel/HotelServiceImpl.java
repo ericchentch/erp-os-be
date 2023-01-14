@@ -11,6 +11,7 @@ import com.chilleric.franchise_sys.dto.hotel.ClientRequest;
 import com.chilleric.franchise_sys.dto.hotel.HotelRequest;
 import com.chilleric.franchise_sys.dto.hotel.HotelResponse;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
+import com.chilleric.franchise_sys.repository.common_entity.ClientInfomation;
 import com.chilleric.franchise_sys.repository.informationRepository.hotel.Hotel;
 import com.chilleric.franchise_sys.repository.informationRepository.hotel.HotelRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
@@ -21,9 +22,16 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
 	@Override
 	public void createNewHotel(HotelRequest hotelRequest) {
 		validate(hotelRequest);
-		Hotel hotel = objectMapper.convertValue(hotelRequest, Hotel.class);
-		ObjectId hotelId = new ObjectId();
-		hotel.set_id(hotelId);
+
+		Hotel hotel = new Hotel(new ObjectId(), hotelRequest.getDescription(),
+				hotelRequest.getName(), hotelRequest.getLinkImages(),
+				hotelRequest.getClient().stream()
+						.map(request -> new ClientInfomation(request.getAddress(),
+								request.getPhone()))
+						.collect(Collectors.toList()),
+				hotelRequest.getBillDeposit(), hotelRequest.getVAT(), hotelRequest.getMaxRefund(),
+				hotelRequest.getMaxDaysRefund(), hotelRequest.getMaxWorkHours(),
+				hotelRequest.getMaxShift(), new ObjectId(hotelRequest.getPermissionId()));
 		repository.insertAndUpdate(hotel);
 	}
 
@@ -59,7 +67,8 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
 								clientInformation.getAddress(), clientInformation.getPhone()))
 						.collect(Collectors.toList()),
 				hotel.getBillDeposit(), hotel.getVAT(), hotel.getMaxRefund(),
-				hotel.getMaxDaysRefund()));
+				hotel.getMaxDaysRefund(), hotel.getMaxWorkHours(), hotel.getMaxShift(),
+				hotel.getPermissionId().toString()));
 	}
 
 	@Override
