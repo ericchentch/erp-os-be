@@ -23,6 +23,8 @@ import com.chilleric.franchise_sys.service.AbstractService;
 @Service
 public class PathServiceImpl extends AbstractService<PathRepository> implements PathService {
 
+    private static String PATH_PRE_FIX = "data:image/svg+xml;base64,";
+
     @Autowired
     private PathInventory pathInventory;
 
@@ -64,6 +66,10 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         if (pathRequest.getType().compareTo("INTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
                     TypeAccount.INTERNAL, pathRequest.getIcon());
+        }
+        if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
+            error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
+            throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
         }
         accessabilityRepository
                 .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));

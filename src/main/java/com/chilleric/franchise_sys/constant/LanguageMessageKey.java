@@ -466,4 +466,6 @@ public class LanguageMessageKey {
 																						// required
 	public static final String TASK_STATUS_REQUIRED = "taskStatusRequired"; // Task status is
 																			// required
+	public static final String IS_NOT_BASE64 = "isNotBase64"; // Invalid base64
+	public static final String INVALID_PATH_ICON = "invalidPathIcon"; // Path icon is invalid
 }

@@ -25,8 +25,6 @@ public class PathRequest {
     private String type;
 
 
-    @NotBlank(message = LanguageMessageKey.PATH_ICON_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.PATH_ICON_REQUIRED)
     @NotNull(message = LanguageMessageKey.PATH_ICON_REQUIRED)
     private String icon;
 }
