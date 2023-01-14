@@ -39,7 +39,7 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                                 navbar.get_id().toString(), navbar.getName(),
                                 navbar.getUserIds().stream().map(thisId -> thisId.toString())
                                         .collect(Collectors.toList()),
-                                navbar.getUserIds().stream().map(thisId -> thisId.toString())
+                                navbar.getContents().stream().map(thisId -> thisId.toString())
                                         .collect(Collectors.toList())))
                                 .collect(Collectors.toList()),
                         page, pageSize, repository.getTotal(allParams)));
@@ -52,7 +52,7 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
         return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
                 navbar.getUserIds().stream().map(thisId -> thisId.toString())
                         .collect(Collectors.toList()),
-                navbar.getUserIds().stream().map(thisId -> thisId.toString())
+                        navbar.getContents().stream().map(thisId -> thisId.toString())
                         .collect(Collectors.toList())));
     }
 
@@ -63,7 +63,7 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
         return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
                 navbar.getUserIds().stream().map(thisId -> thisId.toString())
                         .collect(Collectors.toList()),
-                navbar.getUserIds().stream().map(thisId -> thisId.toString())
+                navbar.getContents().stream().map(thisId -> thisId.toString())
                         .collect(Collectors.toList())));
     }
 
