@@ -4,7 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import com.chilleric.franchise_sys.annotation.IsObjectId;
+import com.chilleric.franchise_sys.annotation.IsObjectId.IsObjectId;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.repository.informationRepository.task.TaskStatus;
