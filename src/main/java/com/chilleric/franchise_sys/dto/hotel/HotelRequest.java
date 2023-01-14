@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import com.chilleric.franchise_sys.annotation.IsObjectId;
+import com.chilleric.franchise_sys.annotation.IsObjectId.IsObjectId;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
