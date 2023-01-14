@@ -2,6 +2,7 @@ package com.chilleric.franchise_sys.dto.path;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,4 +25,6 @@ public class PathRequest {
     private String type;
 
 
+    @NotNull(message = LanguageMessageKey.PATH_ICON_REQUIRED)
+    private String icon;
 }

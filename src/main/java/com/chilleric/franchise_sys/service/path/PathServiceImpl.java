@@ -23,6 +23,8 @@ import com.chilleric.franchise_sys.service.AbstractService;
 @Service
 public class PathServiceImpl extends AbstractService<PathRepository> implements PathService {
 
+    private static String PATH_PRE_FIX = "data:image/svg+xml;base64,";
+
     @Autowired
     private PathInventory pathInventory;
 
@@ -33,7 +35,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         return Optional.of(new ListWrapperResponse<>(
                 paths.stream()
                         .map(path -> new PathResponse(path.get_id().toString(), path.getLabel(),
-                                path.getPath(), path.getType()))
+                                path.getPath(), path.getType(), path.getIcon()))
                         .collect(Collectors.toList()),
                 page, pageSize, repository.getTotal(allParams)));
     }
@@ -59,11 +61,15 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         Path path = new Path();
         if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                    TypeAccount.EXTERNAL);
+                    TypeAccount.EXTERNAL, pathRequest.getIcon());
         }
         if (pathRequest.getType().compareTo("INTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                    TypeAccount.INTERNAL);
+                    TypeAccount.INTERNAL, pathRequest.getIcon());
+        }
+        if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
+            error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
+            throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
         }
         accessabilityRepository
                 .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
@@ -83,7 +89,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         Path path = pathInventory.findPathById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
         return Optional.of(new PathResponse(path.get_id().toString(), path.getLabel(),
-                path.getPath(), path.getType()));
+                path.getPath(), path.getType(), path.getIcon()));
     }
 
 }

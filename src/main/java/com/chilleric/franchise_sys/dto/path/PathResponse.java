@@ -13,4 +13,5 @@ public class PathResponse {
     private String label;
     private String path;
     private TypeAccount type;
+    private String icon;
 }

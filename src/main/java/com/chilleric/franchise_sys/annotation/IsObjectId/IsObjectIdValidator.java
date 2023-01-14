@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.annotation;
+package com.chilleric.franchise_sys.annotation.IsObjectId;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

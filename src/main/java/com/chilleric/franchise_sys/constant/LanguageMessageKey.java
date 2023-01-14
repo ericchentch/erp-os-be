@@ -1,7 +1,6 @@
 package com.chilleric.franchise_sys.constant;
 
-public class
-LanguageMessageKey {
+public class LanguageMessageKey {
 
 	public static final String FORBIDDEN = "forbidden"; // Access denied! - Truy cập bị từ chối
 	public static final String UNAUTHORIZED = "unauthorized"; // Unauthorized - Chưa xác thực tuy
@@ -453,7 +452,10 @@ LanguageMessageKey {
 																						// description
 																						// is
 																						// required
-	public static final String TASK_STATUS_REQUIRED = "taskStatusRequired"; // Task status is required
+	public static final String TASK_STATUS_REQUIRED = "taskStatusRequired"; // Task status is
+																			// required
+	public static final String IS_NOT_BASE64 = "isNotBase64"; // Invalid base64
+	public static final String INVALID_PATH_ICON = "invalidPathIcon"; // Path icon is invalid
 
     public static final String SERVICE_ID_REQUIRED = "serviceIdRequired"; // Service ID iss required
     public static final String SERVICE_NAME_REQUIRED = "serviceNameRequired"; // Service name is required
