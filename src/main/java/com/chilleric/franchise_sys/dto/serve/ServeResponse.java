@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.dto.service;
+package com.chilleric.franchise_sys.dto.serve;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServiceResponse {
+public class ServeResponse {
     private String id;
 
     private String serviceName;

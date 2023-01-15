@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.informationRepository.service;
+package com.chilleric.franchise_sys.repository.informationRepository.serve;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "services")
-public class Service {
+@Document(collection = "serve")
+public class Serve {
     private ObjectId _id;
 
     private String name;
