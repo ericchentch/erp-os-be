@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
+import com.chilleric.franchise_sys.dto.navbar.ContentNavbarResponse;
 import com.chilleric.franchise_sys.dto.navbar.NavbarRequest;
 import com.chilleric.franchise_sys.dto.navbar.NavbarResponse;
 import com.chilleric.franchise_sys.dto.path.PathResponse;
@@ -20,6 +21,7 @@ import com.chilleric.franchise_sys.inventory.navbar.NavbarInventory;
 import com.chilleric.franchise_sys.inventory.path.PathInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
+import com.chilleric.franchise_sys.repository.systemRepository.navbar.ContentNavbar;
 import com.chilleric.franchise_sys.repository.systemRepository.navbar.Navbar;
 import com.chilleric.franchise_sys.repository.systemRepository.navbar.NavbarRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
@@ -49,41 +51,42 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                                                 navbar.getUserIds().stream()
                                                                 .map(thisId -> thisId.toString())
                                                                 .collect(Collectors.toList()),
-                                                navbar.getMainSidebar().stream()
-                                                                .filter(thisPath -> pathInventory
-                                                                                .findPathById(thisPath
+                                                navbar.getContent().stream()
+                                                                .filter(thisMain -> pathInventory
+                                                                                .findPathById(thisMain
                                                                                                 .toString())
                                                                                 .isPresent())
-                                                                .map(thisPath -> {
-                                                                        Path path = pathInventory
-                                                                                        .findPathById(thisPath
+                                                                .map(thisMain -> {
+                                                                        Path mainPath = pathInventory
+                                                                                        .findPathById(thisMain
+                                                                                                        .getMainItem()
                                                                                                         .toString())
                                                                                         .get();
-                                                                        return new PathResponse(path
-                                                                                        .get_id()
-                                                                                        .toString(),
-                                                                                        path.getLabel(),
-                                                                                        path.getPath(),
-                                                                                        path.getType(),
-                                                                                        path.getIcon());
-                                                                }).collect(Collectors.toList()),
-                                                navbar.getChildrenSidebar().stream()
-                                                                .filter(thisPath -> pathInventory
-                                                                                .findPathById(thisPath
-                                                                                                .toString())
-                                                                                .isPresent())
-                                                                .map(thisPath -> {
-                                                                        Path path = pathInventory
-                                                                                        .findPathById(thisPath
-                                                                                                        .toString())
-                                                                                        .get();
-                                                                        return new PathResponse(path
-                                                                                        .get_id()
-                                                                                        .toString(),
-                                                                                        path.getLabel(),
-                                                                                        path.getPath(),
-                                                                                        path.getType(),
-                                                                                        path.getIcon());
+                                                                        List<PathResponse> result =
+                                                                                        new ArrayList<>();
+                                                                        thisMain.getChildrenItem()
+                                                                                        .forEach(thisChild -> {
+                                                                                                pathInventory.findPathById(
+                                                                                                                thisChild.toString())
+                                                                                                                .ifPresent(thisChildId -> {
+                                                                                                                        result.add(new PathResponse(
+                                                                                                                                        thisChildId.get_id()
+                                                                                                                                                        .toString(),
+                                                                                                                                        thisChildId.getLabel(),
+                                                                                                                                        thisChildId.getPath(),
+                                                                                                                                        thisChildId.getType(),
+                                                                                                                                        thisChildId.getIcon()));
+                                                                                                                });;
+                                                                                        });
+                                                                        return new ContentNavbarResponse(
+                                                                                        new PathResponse(
+                                                                                                        mainPath.get_id()
+                                                                                                                        .toString(),
+                                                                                                        mainPath.getLabel(),
+                                                                                                        mainPath.getPath(),
+                                                                                                        mainPath.getType(),
+                                                                                                        mainPath.getIcon()),
+                                                                                        result);
                                                                 }).collect(Collectors.toList())))
                                 .collect(Collectors.toList()), page, pageSize,
                                 repository.getTotal(allParams)));
@@ -97,38 +100,40 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                 return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
                                 navbar.getUserIds().stream().map(thisId -> thisId.toString())
                                                 .collect(Collectors.toList()),
-
-                                navbar.getMainSidebar().stream()
-                                                .filter(thisPath -> pathInventory
-                                                                .findPathById(thisPath.toString())
+                                navbar.getContent().stream()
+                                                .filter(thisMain -> pathInventory
+                                                                .findPathById(thisMain.toString())
                                                                 .isPresent())
-                                                .map(thisPath -> {
-                                                        Path path = pathInventory
-                                                                        .findPathById(thisPath
+                                                .map(thisMain -> {
+                                                        Path mainPath = pathInventory.findPathById(
+                                                                        thisMain.getMainItem()
                                                                                         .toString())
                                                                         .get();
-                                                        return new PathResponse(
-                                                                        path.get_id().toString(),
-                                                                        path.getLabel(),
-                                                                        path.getPath(),
-                                                                        path.getType(),
-                                                                        path.getIcon());
-                                                }).collect(Collectors.toList()),
-                                navbar.getChildrenSidebar().stream()
-                                                .filter(thisPath -> pathInventory
-                                                                .findPathById(thisPath.toString())
-                                                                .isPresent())
-                                                .map(thisPath -> {
-                                                        Path path = pathInventory
-                                                                        .findPathById(thisPath
-                                                                                        .toString())
-                                                                        .get();
-                                                        return new PathResponse(
-                                                                        path.get_id().toString(),
-                                                                        path.getLabel(),
-                                                                        path.getPath(),
-                                                                        path.getType(),
-                                                                        path.getIcon());
+                                                        List<PathResponse> result =
+                                                                        new ArrayList<>();
+                                                        thisMain.getChildrenItem()
+                                                                        .forEach(thisChild -> {
+                                                                                pathInventory.findPathById(
+                                                                                                thisChild.toString())
+                                                                                                .ifPresent(thisChildId -> {
+                                                                                                        result.add(new PathResponse(
+                                                                                                                        thisChildId.get_id()
+                                                                                                                                        .toString(),
+                                                                                                                        thisChildId.getLabel(),
+                                                                                                                        thisChildId.getPath(),
+                                                                                                                        thisChildId.getType(),
+                                                                                                                        thisChildId.getIcon()));
+                                                                                                });;
+                                                                        });
+                                                        return new ContentNavbarResponse(
+                                                                        new PathResponse(mainPath
+                                                                                        .get_id()
+                                                                                        .toString(),
+                                                                                        mainPath.getLabel(),
+                                                                                        mainPath.getPath(),
+                                                                                        mainPath.getType(),
+                                                                                        mainPath.getIcon()),
+                                                                        result);
                                                 }).collect(Collectors.toList())));
         }
 
@@ -140,38 +145,40 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                 return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
                                 navbar.getUserIds().stream().map(thisId -> thisId.toString())
                                                 .collect(Collectors.toList()),
-
-                                navbar.getMainSidebar().stream()
-                                                .filter(thisPath -> pathInventory
-                                                                .findPathById(thisPath.toString())
+                                navbar.getContent().stream()
+                                                .filter(thisMain -> pathInventory
+                                                                .findPathById(thisMain.toString())
                                                                 .isPresent())
-                                                .map(thisPath -> {
-                                                        Path path = pathInventory
-                                                                        .findPathById(thisPath
+                                                .map(thisMain -> {
+                                                        Path mainPath = pathInventory.findPathById(
+                                                                        thisMain.getMainItem()
                                                                                         .toString())
                                                                         .get();
-                                                        return new PathResponse(
-                                                                        path.get_id().toString(),
-                                                                        path.getLabel(),
-                                                                        path.getPath(),
-                                                                        path.getType(),
-                                                                        path.getIcon());
-                                                }).collect(Collectors.toList()),
-                                navbar.getChildrenSidebar().stream()
-                                                .filter(thisPath -> pathInventory
-                                                                .findPathById(thisPath.toString())
-                                                                .isPresent())
-                                                .map(thisPath -> {
-                                                        Path path = pathInventory
-                                                                        .findPathById(thisPath
-                                                                                        .toString())
-                                                                        .get();
-                                                        return new PathResponse(
-                                                                        path.get_id().toString(),
-                                                                        path.getLabel(),
-                                                                        path.getPath(),
-                                                                        path.getType(),
-                                                                        path.getIcon());
+                                                        List<PathResponse> result =
+                                                                        new ArrayList<>();
+                                                        thisMain.getChildrenItem()
+                                                                        .forEach(thisChild -> {
+                                                                                pathInventory.findPathById(
+                                                                                                thisChild.toString())
+                                                                                                .ifPresent(thisChildId -> {
+                                                                                                        result.add(new PathResponse(
+                                                                                                                        thisChildId.get_id()
+                                                                                                                                        .toString(),
+                                                                                                                        thisChildId.getLabel(),
+                                                                                                                        thisChildId.getPath(),
+                                                                                                                        thisChildId.getType(),
+                                                                                                                        thisChildId.getIcon()));
+                                                                                                });;
+                                                                        });
+                                                        return new ContentNavbarResponse(
+                                                                        new PathResponse(mainPath
+                                                                                        .get_id()
+                                                                                        .toString(),
+                                                                                        mainPath.getLabel(),
+                                                                                        mainPath.getPath(),
+                                                                                        mainPath.getType(),
+                                                                                        mainPath.getIcon()),
+                                                                        result);
                                                 }).collect(Collectors.toList())));
         }
 
@@ -193,22 +200,28 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                                 userIdsUpdate.add(new ObjectId(thisId));
                         }
                 });
-                List<ObjectId> mainUpdate = new ArrayList<>();
-                navbarRequest.getMainSidebar().forEach(thisId -> {
-                        if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
-                                        && pathInventory.findPathById(thisId).isPresent()) {
-                                mainUpdate.add(new ObjectId(thisId));
-                        }
-                });
-                List<ObjectId> childrenUpdate = new ArrayList<>();
-                navbarRequest.getChildrenSidebar().forEach(thisId -> {
-                        if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
-                                        && pathInventory.findPathById(thisId).isPresent()) {
-                                childrenUpdate.add(new ObjectId(thisId));
+                List<ContentNavbar> contentUpdate = new ArrayList<>();
+                navbarRequest.getContent().forEach(thisId -> {
+                        if (accessabilityRepository.getAccessability(loginId, thisId.getMainItem())
+                                        .isPresent()
+                                        && pathInventory.findPathById(thisId.getMainItem())
+                                                        .isPresent()) {
+                                List<ObjectId> listChild = new ArrayList<>();
+                                thisId.getChildrenItem().forEach(thisChild -> {
+                                        if (accessabilityRepository
+                                                        .getAccessability(loginId, thisChild)
+                                                        .isPresent()
+                                                        && pathInventory.findPathById(thisChild)
+                                                                        .isPresent()) {
+                                                listChild.add(new ObjectId(thisChild));
+                                        }
+                                });
+                                contentUpdate.add(new ContentNavbar(
+                                                new ObjectId(thisId.getMainItem()), listChild));
                         }
                 });
                 repository.insertAndUpdate(new Navbar(new ObjectId(id), navbarRequest.getName(),
-                                userIdsUpdate, mainUpdate, childrenUpdate));
+                                userIdsUpdate, contentUpdate));
         }
 
         @Override
@@ -227,25 +240,31 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                                 userIdsUpdate.add(new ObjectId(thisId));
                         }
                 });
-                List<ObjectId> mainUpdate = new ArrayList<>();
-                navbarRequest.getMainSidebar().forEach(thisId -> {
-                        if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
-                                        && pathInventory.findPathById(thisId).isPresent()) {
-                                mainUpdate.add(new ObjectId(thisId));
-                        }
-                });
-                List<ObjectId> childrenUpdate = new ArrayList<>();
-                navbarRequest.getChildrenSidebar().forEach(thisId -> {
-                        if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
-                                        && pathInventory.findPathById(thisId).isPresent()) {
-                                childrenUpdate.add(new ObjectId(thisId));
+                List<ContentNavbar> contentUpdate = new ArrayList<>();
+                navbarRequest.getContent().forEach(thisId -> {
+                        if (accessabilityRepository.getAccessability(loginId, thisId.getMainItem())
+                                        .isPresent()
+                                        && pathInventory.findPathById(thisId.getMainItem())
+                                                        .isPresent()) {
+                                List<ObjectId> listChild = new ArrayList<>();
+                                thisId.getChildrenItem().forEach(thisChild -> {
+                                        if (accessabilityRepository
+                                                        .getAccessability(loginId, thisChild)
+                                                        .isPresent()
+                                                        && pathInventory.findPathById(thisChild)
+                                                                        .isPresent()) {
+                                                listChild.add(new ObjectId(thisChild));
+                                        }
+                                });
+                                contentUpdate.add(new ContentNavbar(
+                                                new ObjectId(thisId.getMainItem()), listChild));
                         }
                 });
                 ObjectId newId = new ObjectId();
                 accessabilityRepository.addNewAccessability(
                                 new Accessability(null, new ObjectId(loginId), newId, true));
                 repository.insertAndUpdate(new Navbar(newId, navbarRequest.getName(), userIdsUpdate,
-                                mainUpdate, childrenUpdate));
+                                contentUpdate));
         }
 
         @Override
