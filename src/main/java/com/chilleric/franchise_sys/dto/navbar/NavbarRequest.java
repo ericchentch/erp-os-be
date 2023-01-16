@@ -23,5 +23,8 @@ public class NavbarRequest {
     private List<String> userIds;
 
     @NotNull(message = LanguageMessageKey.CONTENT_NAVBAR_REQUIRED)
-    private List<String> content;
+    private List<String> mainSidebar;
+
+    @NotNull(message = LanguageMessageKey.CONTENT_NAVBAR_REQUIRED)
+    private List<String> childrenSidebar;
 }

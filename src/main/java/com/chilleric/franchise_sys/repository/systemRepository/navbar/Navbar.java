@@ -15,5 +15,6 @@ public class Navbar {
     private ObjectId _id;
     private String name;
     private List<ObjectId> userIds;
-    private List<ObjectId> contents;
+    private List<ObjectId> mainSidebar;
+    private List<ObjectId> childrenSidebar;
 }

@@ -96,8 +96,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
       adminNav = navbarList.get(0);
     } else {
       ObjectId newNavId = new ObjectId();
-      adminNav =
-          new Navbar(newNavId, "admin_nav", Arrays.asList(user.get_id(), usersDev.get_id()), paths);
+      adminNav = new Navbar(newNavId, "admin_nav", Arrays.asList(user.get_id(), usersDev.get_id()),
+          paths, paths);
       navbarRepository.insertAndUpdate(adminNav);
     }
     List<Permission> permissions = permissionRepository
