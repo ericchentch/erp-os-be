@@ -54,6 +54,7 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                                                 navbar.getContent().stream()
                                                                 .filter(thisMain -> pathInventory
                                                                                 .findPathById(thisMain
+                                                                                                .getMainItem()
                                                                                                 .toString())
                                                                                 .isPresent())
                                                                 .map(thisMain -> {
@@ -100,11 +101,9 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                 return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
                                 navbar.getUserIds().stream().map(thisId -> thisId.toString())
                                                 .collect(Collectors.toList()),
-                                navbar.getContent().stream()
-                                                .filter(thisMain -> pathInventory
-                                                                .findPathById(thisMain.toString())
-                                                                .isPresent())
-                                                .map(thisMain -> {
+                                navbar.getContent().stream().filter(thisMain -> pathInventory
+                                                .findPathById(thisMain.getMainItem().toString())
+                                                .isPresent()).map(thisMain -> {
                                                         Path mainPath = pathInventory.findPathById(
                                                                         thisMain.getMainItem()
                                                                                         .toString())
@@ -145,11 +144,9 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                 return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
                                 navbar.getUserIds().stream().map(thisId -> thisId.toString())
                                                 .collect(Collectors.toList()),
-                                navbar.getContent().stream()
-                                                .filter(thisMain -> pathInventory
-                                                                .findPathById(thisMain.toString())
-                                                                .isPresent())
-                                                .map(thisMain -> {
+                                navbar.getContent().stream().filter(thisMain -> pathInventory
+                                                .findPathById(thisMain.getMainItem().toString())
+                                                .isPresent()).map(thisMain -> {
                                                         Path mainPath = pathInventory.findPathById(
                                                                         thisMain.getMainItem()
                                                                                         .toString())
