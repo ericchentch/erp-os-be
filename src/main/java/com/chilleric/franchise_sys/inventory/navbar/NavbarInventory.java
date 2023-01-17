@@ -7,4 +7,6 @@ public interface NavbarInventory {
     Optional<Navbar> findNavbarByName(String name);
 
     Optional<Navbar> findNavbarById(String id);
+
+    Optional<Navbar> findNavbarByUserId(String userId);
 }

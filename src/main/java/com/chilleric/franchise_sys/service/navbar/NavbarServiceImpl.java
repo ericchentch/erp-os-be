@@ -221,6 +221,11 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                         if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
                                         && userInventory.findUserById(thisId.toString())
                                                         .isPresent()) {
+                                if (navbarInventory.findNavbarById(id).isPresent()) {
+                                        error.put("userIds", LanguageMessageKey.NAVBAR_EXISTED);
+                                        throw new InvalidRequestException(error,
+                                                        LanguageMessageKey.NAVBAR_EXISTED);
+                                }
                                 userIdsUpdate.add(new ObjectId(thisId));
                         }
                 });
@@ -261,6 +266,11 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                         if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
                                         && userInventory.findUserById(thisId.toString())
                                                         .isPresent()) {
+                                if (navbarInventory.findNavbarById(thisId).isPresent()) {
+                                        error.put("userIds", LanguageMessageKey.NAVBAR_EXISTED);
+                                        throw new InvalidRequestException(error,
+                                                        LanguageMessageKey.NAVBAR_EXISTED);
+                                }
                                 userIdsUpdate.add(new ObjectId(thisId));
                         }
                 });

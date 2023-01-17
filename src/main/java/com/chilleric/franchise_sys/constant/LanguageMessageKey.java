@@ -457,4 +457,6 @@ public class LanguageMessageKey {
 																			// required
 	public static final String IS_NOT_BASE64 = "isNotBase64"; // Invalid base64
 	public static final String INVALID_PATH_ICON = "invalidPathIcon"; // Path icon is invalid
+	public static final String UNIQUE_USER_ID_NAV = "navbarUserIdUnique"; // User can only assign to
+																			// one nav
 }

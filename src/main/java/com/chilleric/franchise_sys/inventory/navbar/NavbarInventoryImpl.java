@@ -31,4 +31,13 @@ public class NavbarInventoryImpl extends AbstractInventory<NavbarRepository>
         return Optional.of(navbar.get(0));
     }
 
+    @Override
+    public Optional<Navbar> findNavbarByUserId(String userId) {
+        List<Navbar> navbar = repository
+                .getNavbarList(Map.ofEntries(entry("userIds", userId)), "", 0, 0, "").get();
+        if (navbar.size() == 0)
+            return Optional.empty();
+        return Optional.of(navbar.get(0));
+    }
+
 }

@@ -189,6 +189,10 @@ public abstract class AbstractController<s> {
 
 
 	protected void checkAddCondition(Map<String, List<ViewPoint>> editable, Class<?> clazz) {
+		System.out.println(editable.get(clazz.getSimpleName()));
+		if (editable == null || editable.get(clazz.getSimpleName()) == null) {
+			throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+		}
 		if (editable.get(clazz.getSimpleName()).isEmpty()) {
 			throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
 		} else {
