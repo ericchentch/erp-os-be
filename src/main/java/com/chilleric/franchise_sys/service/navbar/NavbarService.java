@@ -10,9 +10,9 @@ public interface NavbarService {
     Optional<ListWrapperResponse<NavbarResponse>> getListNavbar(Map<String, String> allParams,
             String keySort, int page, int pageSize, String sortField, String loginId);
 
-    Optional<NavbarResponse> getNavbarDetailById(String id);
+    Optional<NavbarResponse> getNavbarDetailById(String id, String loginId);
 
-    Optional<NavbarResponse> getNavbarDetailByName(String name);
+    Optional<NavbarResponse> getNavbarDetailByName(String name, String loginId);
 
     void addNewNavbar(NavbarRequest navbarRequest, String loginId);
 
