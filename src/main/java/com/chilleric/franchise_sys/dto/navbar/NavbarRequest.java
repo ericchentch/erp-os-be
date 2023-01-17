@@ -19,9 +19,6 @@ public class NavbarRequest {
   @NotEmpty(message = LanguageMessageKey.NAVBAR_NAME_REQUIRED)
   private String name;
 
-  @NotNull(message = LanguageMessageKey.USER_LIST_REQUIRED)
-  private List<String> userIds;
-
   @NotNull(message = LanguageMessageKey.CONTENT_NAVBAR_REQUIRED)
   private List<ContentNavbarRequest> content;
 }

@@ -14,6 +14,5 @@ import lombok.NoArgsConstructor;
 public class Navbar {
   private ObjectId _id;
   private String name;
-  private List<ObjectId> userIds;
   private List<ContentNavbar> content;
 }
