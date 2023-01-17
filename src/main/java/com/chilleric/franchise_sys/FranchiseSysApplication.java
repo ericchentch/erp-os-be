@@ -12,23 +12,23 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
 public class FranchiseSysApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FranchiseSysApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(FranchiseSysApplication.class, args);
+  }
 
-	@Bean
-	public MessageSource messageSource() {
-		ReloadableResourceBundleMessageSource messageSource =
-				new ReloadableResourceBundleMessageSource();
-		messageSource.setBasenames("classpath:messages");
-		messageSource.setDefaultEncoding("UTF-8");
-		return messageSource;
-	}
+  @Bean
+  public MessageSource messageSource() {
+    ReloadableResourceBundleMessageSource messageSource =
+        new ReloadableResourceBundleMessageSource();
+    messageSource.setBasenames("classpath:messages");
+    messageSource.setDefaultEncoding("UTF-8");
+    return messageSource;
+  }
 
-	@Bean(name = "validator")
-	public LocalValidatorFactoryBean getValidator() {
-		LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-		bean.setValidationMessageSource(messageSource());
-		return bean;
-	}
+  @Bean(name = "validator")
+  public LocalValidatorFactoryBean getValidator() {
+    LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+    bean.setValidationMessageSource(messageSource());
+    return bean;
+  }
 }

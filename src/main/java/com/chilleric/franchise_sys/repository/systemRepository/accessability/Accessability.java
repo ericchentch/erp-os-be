@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Accessability {
-    private ObjectId _id;
-    private ObjectId userId;
-    private ObjectId targetId;
-    private boolean editable;
+  private ObjectId _id;
+  private ObjectId userId;
+  private ObjectId targetId;
+  private boolean editable;
 }

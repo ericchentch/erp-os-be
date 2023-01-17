@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NavbarResponse {
-    private String id;
-    private String name;
-    private List<String> userIds;
-    private List<ContentNavbarResponse> content;
+  private String id;
+  private String name;
+  private List<String> userIds;
+  private List<ContentNavbarResponse> content;
 }

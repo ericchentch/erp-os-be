@@ -14,11 +14,11 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 @Documented
 @Constraint(validatedBy = IsObjectIdValidator.class)
 public @interface IsObjectId {
-    public String message() default LanguageMessageKey.INVALID_OBJECT_ID;
+  public String message() default LanguageMessageKey.INVALID_OBJECT_ID;
 
-    // represents group of constraints
-    public Class<?>[] groups() default {};
+  // represents group of constraints
+  public Class<?>[] groups() default {};
 
-    // represents additional information about annotation
-    public Class<? extends Payload>[] payload() default {};
+  // represents additional information about annotation
+  public Class<? extends Payload>[] payload() default {};
 }

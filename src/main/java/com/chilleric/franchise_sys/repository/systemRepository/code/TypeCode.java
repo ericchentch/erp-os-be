@@ -2,15 +2,15 @@ package com.chilleric.franchise_sys.repository.systemRepository.code;
 
 public enum TypeCode {
 
-    REGISTER("register"), VERIFY2FA("verify2FA");
+  REGISTER("register"), VERIFY2FA("verify2FA");
 
-    private String responseType;
+  private String responseType;
 
-    TypeCode(String type) {
-        this.responseType = type;
-    }
+  TypeCode(String type) {
+    this.responseType = type;
+  }
 
-    public String getResponseType() {
-        return responseType;
-    }
+  public String getResponseType() {
+    return responseType;
+  }
 }

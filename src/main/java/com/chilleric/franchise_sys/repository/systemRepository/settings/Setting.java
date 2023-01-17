@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Setting {
-    private ObjectId _id;
-    private ObjectId userId;
-    private String languageKey;
+  private ObjectId _id;
+  private ObjectId userId;
+  private String languageKey;
 }

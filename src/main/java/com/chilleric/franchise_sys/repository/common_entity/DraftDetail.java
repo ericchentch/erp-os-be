@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DraftDetail {
-    private TypeObjectBill type;
-    private ObjectId id;
-    private int quantity;
+  private TypeObjectBill type;
+  private ObjectId id;
+  private int quantity;
 }

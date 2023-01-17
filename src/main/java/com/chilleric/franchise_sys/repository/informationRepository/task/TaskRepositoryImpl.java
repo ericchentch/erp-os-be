@@ -14,36 +14,35 @@ import com.chilleric.franchise_sys.repository.AbstractRepo;
 @Repository
 public class TaskRepositoryImpl extends AbstractRepo implements TaskRepository {
 
-    @Override
-    public Optional<List<Task>> getTasks(Map<String, String> allParams, String keySort, int page,
-            int pageSize, String sortField) {
-        Query query =
-                generateQueryMongoDB(allParams, Task.class, keySort, sortField, page, pageSize);
-        return informationFind(query, Task.class);
-    }
+  @Override
+  public Optional<List<Task>> getTasks(Map<String, String> allParams, String keySort, int page,
+      int pageSize, String sortField) {
+    Query query = generateQueryMongoDB(allParams, Task.class, keySort, sortField, page, pageSize);
+    return informationFind(query, Task.class);
+  }
 
-    @Override
-    public void insertAndUpdate(Task task) {
-        informationDBTemplate.save(task, "tasks");
-    }
+  @Override
+  public void insertAndUpdate(Task task) {
+    informationDBTemplate.save(task, "tasks");
+  }
 
-    @Override
-    public long getTotalPage(Map<String, String> allParams) {
-        Query query = generateQueryMongoDB(allParams, Task.class, "", "", 0, 0);
-        return informationDBTemplate.count(query, Task.class);
-    }
+  @Override
+  public long getTotalPage(Map<String, String> allParams) {
+    Query query = generateQueryMongoDB(allParams, Task.class, "", "", 0, 0);
+    return informationDBTemplate.count(query, Task.class);
+  }
 
-    @Override
-    public void delete(String taskId) {
-        try {
-            ObjectId task_id = new ObjectId(taskId);
-            Query query = new Query();
-            query.addCriteria(Criteria.where("_id").is(task_id));
-            informationDBTemplate.remove(query, Task.class);
-        } catch (IllegalArgumentException e) {
-            APP_LOGGER.error("Task id is wrong type");
-            throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
-        }
+  @Override
+  public void delete(String taskId) {
+    try {
+      ObjectId task_id = new ObjectId(taskId);
+      Query query = new Query();
+      query.addCriteria(Criteria.where("_id").is(task_id));
+      informationDBTemplate.remove(query, Task.class);
+    } catch (IllegalArgumentException e) {
+      APP_LOGGER.error("Task id is wrong type");
+      throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
     }
+  }
 
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OnlineUserResponse {
-    private String name;
-    private String id;
+  private String name;
+  private String id;
 }

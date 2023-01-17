@@ -13,30 +13,30 @@ import com.chilleric.franchise_sys.log.LoggerType;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-    @Autowired
-    private JavaMailSender javaMailSender;
+  @Autowired
+  private JavaMailSender javaMailSender;
 
-    @Value("${spring.mail.username}")
-    private String sender;
+  @Value("${spring.mail.username}")
+  private String sender;
 
-    protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
+  protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
 
-    @Override
-    public void sendSimpleMail(EmailDetail details) {
-        try {
+  @Override
+  public void sendSimpleMail(EmailDetail details) {
+    try {
 
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
+      SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-            mailMessage.setFrom(sender);
-            mailMessage.setTo(details.getRecipient());
-            mailMessage.setText(details.getMsgBody());
-            mailMessage.setSubject(details.getSubject());
+      mailMessage.setFrom(sender);
+      mailMessage.setTo(details.getRecipient());
+      mailMessage.setText(details.getMsgBody());
+      mailMessage.setSubject(details.getSubject());
 
-            javaMailSender.send(mailMessage);
-        } catch (Exception e) {
-            APP_LOGGER.error(e.getMessage());
-            throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
-        }
+      javaMailSender.send(mailMessage);
+    } catch (Exception e) {
+      APP_LOGGER.error(e.getMessage());
+      throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
     }
+  }
 
 }

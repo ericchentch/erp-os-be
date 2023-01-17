@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface ShiftRepository {
-    Optional<List<Shift>> getShifts(Map<String, String> allParams, String keySort, int page,
-            int pageSize, String sortField);
+  Optional<List<Shift>> getShifts(Map<String, String> allParams, String keySort, int page,
+      int pageSize, String sortField);
 
-    void insertAndUpdate(Shift shift);
+  void insertAndUpdate(Shift shift);
 
-    long getTotalPage(Map<String, String> allParams);
+  long getTotalPage(Map<String, String> allParams);
 
-    void deleteShift(String shiftId);
+  void deleteShift(String shiftId);
 }

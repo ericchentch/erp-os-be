@@ -18,58 +18,55 @@ import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service
 public class AccessabilityServiceImpl extends AbstractService<AccessabilityRepository>
-        implements AccessabilityService {
+    implements AccessabilityService {
 
 
-    @Autowired
-    private AccessabilityInventory accessabilityInventory;
+  @Autowired
+  private AccessabilityInventory accessabilityInventory;
 
-    @Autowired
-    private UserInventory userInventory;
+  @Autowired
+  private UserInventory userInventory;
 
-    @Override
-    public Optional<List<AccessabilityResponse>> getAccessByTargetId(String targetId,
-            String loginId) {
-        List<Accessability> accessability =
-                accessabilityInventory.getAccessByTargetId(targetId).orElseThrow(
-                        () -> new ResourceNotFoundException(LanguageMessageKey.ACCESS_NOT_FOUND));
-        List<AccessabilityResponse> result = new ArrayList<>();
-        accessability.forEach(thisAccess -> {
-            userInventory.getActiveUserById(thisAccess.getUserId().toString())
-                    .ifPresent(thisUser -> {
-                        if (thisUser.get_id().toString().compareTo(loginId) != 0) {
-                            result.add(new AccessabilityResponse(thisAccess.get_id().toString(),
-                                    thisUser.getFirstName(), thisUser.getUsername(),
-                                    thisAccess.isEditable()));
-                        }
-                    });
-        });
-        return Optional.of(result);
-    }
+  @Override
+  public Optional<List<AccessabilityResponse>> getAccessByTargetId(String targetId,
+      String loginId) {
+    List<Accessability> accessability = accessabilityInventory.getAccessByTargetId(targetId)
+        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.ACCESS_NOT_FOUND));
+    List<AccessabilityResponse> result = new ArrayList<>();
+    accessability.forEach(thisAccess -> {
+      userInventory.getActiveUserById(thisAccess.getUserId().toString()).ifPresent(thisUser -> {
+        if (thisUser.get_id().toString().compareTo(loginId) != 0) {
+          result.add(new AccessabilityResponse(thisAccess.get_id().toString(),
+              thisUser.getFirstName(), thisUser.getUsername(), thisAccess.isEditable()));
+        }
+      });
+    });
+    return Optional.of(result);
+  }
 
-    @Override
-    public void shareAccess(AccessabilityRequest accessabilityRequest, String loginId,
-            String targetId) {
-        validate(accessabilityRequest);
-        accessabilityInventory.getAccessByTargetId(targetId).orElseThrow(
-                () -> new ResourceNotFoundException(LanguageMessageKey.ACCESS_NOT_FOUND));
-        accessabilityRequest.getUserIds().forEach(thisUserId -> {
-            userInventory.getActiveUserById(thisUserId).ifPresent(thisUser -> {
-                if (thisUser.get_id().toString().compareTo(loginId) != 0) {
-                    if (repository.getAccessability(thisUserId, targetId).isEmpty()) {
-                        if (accessabilityRequest.getEditable() == 0) {
-                            repository.addNewAccessability(new Accessability(null,
-                                    thisUser.get_id(), new ObjectId(targetId), false));
-                        }
-                        if (accessabilityRequest.getEditable() == 1) {
-                            repository.addNewAccessability(new Accessability(null,
-                                    thisUser.get_id(), new ObjectId(targetId), true));
-                        }
-                    }
-                }
-            });
-        });
+  @Override
+  public void shareAccess(AccessabilityRequest accessabilityRequest, String loginId,
+      String targetId) {
+    validate(accessabilityRequest);
+    accessabilityInventory.getAccessByTargetId(targetId)
+        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.ACCESS_NOT_FOUND));
+    accessabilityRequest.getUserIds().forEach(thisUserId -> {
+      userInventory.getActiveUserById(thisUserId).ifPresent(thisUser -> {
+        if (thisUser.get_id().toString().compareTo(loginId) != 0) {
+          if (repository.getAccessability(thisUserId, targetId).isEmpty()) {
+            if (accessabilityRequest.getEditable() == 0) {
+              repository.addNewAccessability(
+                  new Accessability(null, thisUser.get_id(), new ObjectId(targetId), false));
+            }
+            if (accessabilityRequest.getEditable() == 1) {
+              repository.addNewAccessability(
+                  new Accessability(null, thisUser.get_id(), new ObjectId(targetId), true));
+            }
+          }
+        }
+      });
+    });
 
-    }
+  }
 
 }

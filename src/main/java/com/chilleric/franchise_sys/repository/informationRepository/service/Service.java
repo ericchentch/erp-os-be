@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Document(collection = "services")
 public class Service {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private String name;
-    private float price;
+  private String name;
+  private float price;
 }

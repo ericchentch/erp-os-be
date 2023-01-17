@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomTypeResponse {
-    private String id;
-    private String hotelId;
-    private String name;
-    private List<String> linkImages;
-    private List<String> rooms;
-    private float rate;
-    private float stockPrice;
+  private String id;
+  private String hotelId;
+  private String name;
+  private List<String> linkImages;
+  private List<String> rooms;
+  private float rate;
+  private float stockPrice;
 }

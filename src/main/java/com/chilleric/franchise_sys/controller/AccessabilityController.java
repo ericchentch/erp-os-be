@@ -21,26 +21,25 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @RequestMapping(name = "accesses")
 public class AccessabilityController extends AbstractController<AccessabilityService> {
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping(value = "share-target")
-    public ResponseEntity<CommonResponse<String>> shareTarget(
-            @RequestBody AccessabilityRequest accessabilityRequest, HttpServletRequest request,
-            @RequestParam String targetId) {
-        ValidationResult result = validateToken(request);
-        checkAccessability(result.getLoginId(), targetId, true);
-        service.shareAccess(accessabilityRequest, result.getLoginId(), targetId);
-        return new ResponseEntity<>(new CommonResponse<>(true, null, LanguageMessageKey.SUCCESS,
-                HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()), null,
-                HttpStatus.OK.value());
-    }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PostMapping(value = "share-target")
+  public ResponseEntity<CommonResponse<String>> shareTarget(
+      @RequestBody AccessabilityRequest accessabilityRequest, HttpServletRequest request,
+      @RequestParam String targetId) {
+    ValidationResult result = validateToken(request);
+    checkAccessability(result.getLoginId(), targetId, true);
+    service.shareAccess(accessabilityRequest, result.getLoginId(), targetId);
+    return new ResponseEntity<>(new CommonResponse<>(true, null, LanguageMessageKey.SUCCESS,
+        HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()), null, HttpStatus.OK.value());
+  }
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping(value = "get-access")
-    public ResponseEntity<CommonResponse<List<AccessabilityResponse>>> getAccessByTarget(
-            HttpServletRequest request, @RequestParam String targetId) {
-        ValidationResult result = validateToken(request);
-        checkAccessability(result.getLoginId(), targetId, true);;
-        return response(service.getAccessByTargetId(targetId, result.getLoginId()),
-                LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
-    }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PostMapping(value = "get-access")
+  public ResponseEntity<CommonResponse<List<AccessabilityResponse>>> getAccessByTarget(
+      HttpServletRequest request, @RequestParam String targetId) {
+    ValidationResult result = validateToken(request);
+    checkAccessability(result.getLoginId(), targetId, true);;
+    return response(service.getAccessByTargetId(targetId, result.getLoginId()),
+        LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
+  }
 }

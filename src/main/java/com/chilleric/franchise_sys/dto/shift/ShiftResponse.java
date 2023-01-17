@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShiftResponse {
-    private String id;
+  private String id;
 
-    private String shiftName;
+  private String shiftName;
 
-    private String startTime;
+  private String startTime;
 
-    private String endTime;
+  private String endTime;
 }

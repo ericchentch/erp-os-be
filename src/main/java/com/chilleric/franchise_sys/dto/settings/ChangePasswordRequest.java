@@ -12,18 +12,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChangePasswordRequest {
-    @NotEmpty(message = LanguageMessageKey.OLD_PASSWORD_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.OLD_PASSWORD_REQUIRED)
-    @NotNull(message = LanguageMessageKey.OLD_PASSWORD_REQUIRED)
-    private String oldPassword;
+  @NotEmpty(message = LanguageMessageKey.OLD_PASSWORD_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.OLD_PASSWORD_REQUIRED)
+  @NotNull(message = LanguageMessageKey.OLD_PASSWORD_REQUIRED)
+  private String oldPassword;
 
-    @NotEmpty(message = LanguageMessageKey.NEW_PASSWORD_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.NEW_PASSWORD_REQUIRED)
-    @NotNull(message = LanguageMessageKey.NEW_PASSWORD_REQUIRED)
-    private String newPassword;
+  @NotEmpty(message = LanguageMessageKey.NEW_PASSWORD_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.NEW_PASSWORD_REQUIRED)
+  @NotNull(message = LanguageMessageKey.NEW_PASSWORD_REQUIRED)
+  private String newPassword;
 
-    @NotEmpty(message = LanguageMessageKey.CONFIRM_PASSWORD_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.CONFIRM_PASSWORD_REQUIRED)
-    @NotNull(message = LanguageMessageKey.CONFIRM_PASSWORD_REQUIRED)
-    private String confirmNewPassword;
+  @NotEmpty(message = LanguageMessageKey.CONFIRM_PASSWORD_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.CONFIRM_PASSWORD_REQUIRED)
+  @NotNull(message = LanguageMessageKey.CONFIRM_PASSWORD_REQUIRED)
+  private String confirmNewPassword;
 }

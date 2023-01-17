@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContentNavbar {
-    private ObjectId mainItem;
-    private List<ObjectId> childrenItem;
+  private ObjectId mainItem;
+  private List<ObjectId> childrenItem;
 }

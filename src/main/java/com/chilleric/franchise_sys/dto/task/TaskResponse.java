@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskResponse {
-    private String id;
+  private String id;
 
-    private UserResponse employee;
-    private ShiftResponse shift;
-    private UserResponse reviewer;
+  private UserResponse employee;
+  private ShiftResponse shift;
+  private UserResponse reviewer;
 
-    private String startTime;
-    private String title;
-    private String description;
-    private TaskStatus status;
+  private String startTime;
+  private String title;
+  private String description;
+  private TaskStatus status;
 }

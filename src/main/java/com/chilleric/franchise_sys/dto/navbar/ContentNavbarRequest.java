@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContentNavbarRequest {
-    private String mainItem;
-    private List<String> childrenItem;
+  private String mainItem;
+  private List<String> childrenItem;
 }

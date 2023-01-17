@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListWrapperResponse<T> {
-    private List<T> data;
-    private int page;
-    private int pageSize;
-    private long totalRows;
+  private List<T> data;
+  private int page;
+  private int pageSize;
+  private long totalRows;
 }

@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PathResponse {
-    private String id;
-    private String label;
-    private String path;
-    private TypeAccount type;
-    private List<String> userIds;
-    private String icon;
+  private String id;
+  private String label;
+  private String path;
+  private TypeAccount type;
+  private List<String> userIds;
+  private String icon;
 }

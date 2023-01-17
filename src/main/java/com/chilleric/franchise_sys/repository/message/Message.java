@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Message {
-    private ObjectId _id;
-    private ObjectId sendId;
-    private ObjectId receiveId;
-    private String context;
-    private Date create;
+  private ObjectId _id;
+  private ObjectId sendId;
+  private ObjectId receiveId;
+  private String context;
+  private Date create;
 }

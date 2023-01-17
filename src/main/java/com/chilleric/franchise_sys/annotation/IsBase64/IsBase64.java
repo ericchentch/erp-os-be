@@ -15,9 +15,9 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 @Documented
 @Constraint(validatedBy = IsObjectIdValidator.class)
 public @interface IsBase64 {
-    public String message() default LanguageMessageKey.IS_NOT_BASE64;
+  public String message() default LanguageMessageKey.IS_NOT_BASE64;
 
-    public Class<?>[] groups() default {};
+  public Class<?>[] groups() default {};
 
-    public Class<? extends Payload>[] payload() default {};
+  public Class<? extends Payload>[] payload() default {};
 }
