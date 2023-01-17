@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.controller;
 
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,15 @@ public class PathController extends AbstractController<PathService> {
     return response(
         service.getPaths(allParams, keySort, page, pageSize, sortField, result.getLoginId()),
         LanguageMessageKey.SUCCESS, result.getViewPoints().get(PathResponse.class.getSimpleName()),
+        result.getEditable().get(PathRequest.class.getSimpleName()));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-path-access")
+  public ResponseEntity<CommonResponse<List<String>>> getPathAccess(HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    return response(service.getPathAccess(result.getLoginId()), LanguageMessageKey.SUCCESS,
+        result.getViewPoints().get(PathResponse.class.getSimpleName()),
         result.getEditable().get(PathRequest.class.getSimpleName()));
   }
 

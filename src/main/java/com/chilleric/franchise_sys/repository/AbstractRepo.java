@@ -146,10 +146,14 @@ public abstract class AbstractRepo {
         conditionCriteria.add(Criteria.where(items.getKey()).is(value));
       }
     }
-    if (field.getType() == ArrayList.class) {
+    if (field.getType() == ArrayList.class || field.getType() == List.class) {
       for (String value : values) {
         try {
-          conditionCriteria.add(Criteria.where(items.getKey()).in(value));
+          if (ObjectId.isValid(value)) {
+            conditionCriteria.add(Criteria.where(items.getKey()).in(new ObjectId(value)));
+          } else {
+            conditionCriteria.add(Criteria.where(items.getKey()).in(value));
+          }
         } catch (NullPointerException e) {
           APP_LOGGER.error("error array values");
           throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);

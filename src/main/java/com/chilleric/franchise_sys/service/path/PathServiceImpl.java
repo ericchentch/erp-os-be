@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.service.path;
 
+import static java.util.Map.entry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
 import com.chilleric.franchise_sys.repository.systemRepository.path.PathRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
 import com.chilleric.franchise_sys.service.AbstractService;
 
@@ -109,6 +111,30 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         new PathResponse(path.get_id().toString(), path.getLabel(), path.getPath(), path.getType(),
             path.getUserId().stream().map(thisId -> thisId.toString()).collect(Collectors.toList()),
             path.getIcon()));
+  }
+
+  @Override
+  public Optional<List<String>> getPathAccess(String loginId) {
+    User user = userInventory.getActiveUserById(loginId)
+        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
+    if (user.getType().compareTo(TypeAccount.EXTERNAL) == 0) {
+      List<Path> paths = repository
+          .getPaths(Map.ofEntries(entry("type", TypeAccount.EXTERNAL.toString())), "", 0, 0, "")
+          .get();
+      if (paths.size() == 0) {
+        return Optional.of(new ArrayList<>());
+      }
+      return Optional
+          .of(paths.stream().map(thisPath -> thisPath.getPath()).collect(Collectors.toList()));
+    } else {
+      List<Path> paths =
+          repository.getPaths(Map.ofEntries(entry("userId", loginId)), "", 0, 0, "").get();
+      if (paths.size() == 0) {
+        return Optional.of(new ArrayList<>());
+      }
+      return Optional
+          .of(paths.stream().map(thisPath -> thisPath.getPath()).collect(Collectors.toList()));
+    }
   }
 
 }
