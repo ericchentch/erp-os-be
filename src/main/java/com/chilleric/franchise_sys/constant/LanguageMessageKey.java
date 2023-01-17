@@ -323,8 +323,9 @@ public class LanguageMessageKey {
 
 	public static final String PATH_REQUIRED = "pathRequired"; // Path is required
 
-	public static final String PATH_ICON_REQUIRED = "iconPathRequired"; // Icon path is required
-	public static final String PATH_EXISTED = "pathExisted"; // Path is existed
+    public static final String PATH_ICON_REQUIRED = "iconPathRequired"; // Icon path is required
+
+    public static final String PATH_EXISTED = "pathExisted"; // Path is existed
 
 	public static final String LABEL_EXISTED = "labelExisted"; // Label is existed
 
@@ -457,4 +458,9 @@ public class LanguageMessageKey {
 																			// required
 	public static final String IS_NOT_BASE64 = "isNotBase64"; // Invalid base64
 	public static final String INVALID_PATH_ICON = "invalidPathIcon"; // Path icon is invalid
+
+    public static final String SERVICE_ID_REQUIRED = "serviceIdRequired"; // Service ID iss required
+    public static final String SERVICE_NAME_REQUIRED = "serviceNameRequired"; // Service name is required
+    public static final String SERVICE_PRICE_REQUIRED = "servicePriceRequired"; // service price is required
+    public static final String SERVICE_NOT_FOUND = "serviceNotFound"; // Service is not found
 }
