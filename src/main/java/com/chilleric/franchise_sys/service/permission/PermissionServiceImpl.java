@@ -89,7 +89,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
                 DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
                 removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-                permission.getNavbar().toString(),
                 permission.getPaths().stream().map(thisNav -> thisNav.toString())
                     .collect(Collectors.toList())))
             .collect(Collectors.toList()),
@@ -107,7 +106,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
             DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
             DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
             removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-            permission.getNavbar().toString(),
             permission.getPaths().size() > 0 ? permission.getPaths().stream()
                 .map(thisNav -> thisNav.toString()).collect(Collectors.toList())
                 : new ArrayList<>()));
@@ -145,11 +143,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       permission.setUserId(resultIds);
     } else {
       permission.setUserId(new ArrayList<>());
-    }
-    if (navbarInventory.findNavbarById(permissionRequest.getNavbar()).isEmpty()) {
-      error.put("navbar", LanguageMessageKey.NAVBAR_NOT_FOUND);
-      throw new InvalidRequestException(error, LanguageMessageKey.NAVBAR_NOT_FOUND);
-
     }
     if (permissionRequest.getPaths().size() != 0) {
       List<ObjectId> resultIds = new ArrayList<>();
@@ -199,11 +192,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       permission.setUserId(resultIds);
     } else {
       permission.setUserId(new ArrayList<>());
-    }
-    if (navbarInventory.findNavbarById(permissionRequest.getNavbar()).isEmpty()) {
-      error.put("navbar", LanguageMessageKey.NAVBAR_NOT_FOUND);
-      throw new InvalidRequestException(error, LanguageMessageKey.NAVBAR_NOT_FOUND);
-
     }
     if (permissionRequest.getPaths().size() != 0) {
       List<ObjectId> resultIds = new ArrayList<>();
@@ -280,7 +268,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
                 DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
                 removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-                permission.getNavbar().toString(),
                 permission.getPaths().stream().map(thisNav -> thisNav.toString())
                     .collect(Collectors.toList())))
             .collect(Collectors.toList()),

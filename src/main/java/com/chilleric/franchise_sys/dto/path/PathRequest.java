@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.dto.path;
 
+import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -27,4 +28,7 @@ public class PathRequest {
 
     @NotNull(message = LanguageMessageKey.PATH_ICON_REQUIRED)
     private String icon;
+
+    @NotNull(message = LanguageMessageKey.USER_LIST_REQUIRED)
+    private List<String> userId;
 }

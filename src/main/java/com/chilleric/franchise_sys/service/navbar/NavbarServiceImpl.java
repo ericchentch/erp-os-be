@@ -70,23 +70,32 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                                                                                                 pathInventory.findPathById(
                                                                                                                 thisChild.toString())
                                                                                                                 .ifPresent(thisChildId -> {
-                                                                                                                        result.add(new PathResponse(
-                                                                                                                                        thisChildId.get_id()
-                                                                                                                                                        .toString(),
-                                                                                                                                        thisChildId.getLabel(),
-                                                                                                                                        thisChildId.getPath(),
-                                                                                                                                        thisChildId.getType(),
-                                                                                                                                        thisChildId.getIcon()));
+                                                                                                                        if (thisChildId.getUserId()
+                                                                                                                                        .stream()
+                                                                                                                                        .filter(thisChildItem -> thisChildItem
+                                                                                                                                                        .compareTo(new ObjectId(
+                                                                                                                                                                        loginId)) == 0)
+                                                                                                                                        .findFirst()
+                                                                                                                                        .isPresent()) {
+                                                                                                                                result.add(new PathResponse(
+                                                                                                                                                thisChildId.get_id()
+                                                                                                                                                                .toString(),
+                                                                                                                                                thisChildId.getLabel(),
+                                                                                                                                                thisChildId.getPath(),
+                                                                                                                                                thisChildId.getType(),
+                                                                                                                                                new ArrayList<>(),
+                                                                                                                                                thisChildId.getIcon()));
+                                                                                                                        }
                                                                                                                 });;
                                                                                         });
                                                                         return new ContentNavbarResponse(
-                                                                                        new PathResponse(
-                                                                                                        mainPath.get_id()
-                                                                                                                        .toString(),
-                                                                                                        mainPath.getLabel(),
-                                                                                                        mainPath.getPath(),
-                                                                                                        mainPath.getType(),
-                                                                                                        mainPath.getIcon()),
+                                                                                        mainPath.getUserId()
+                                                                                                        .stream()
+                                                                                                        .filter(thisMainPath -> thisMainPath
+                                                                                                                        .compareTo(new ObjectId(
+                                                                                                                                        loginId)) == 0)
+                                                                                                        .findFirst()
+                                                                                                        .isPresent() ? new PathResponse(mainPath.get_id().toString(), mainPath.getLabel(), mainPath.getPath(), mainPath.getType(), new ArrayList<>(), mainPath.getIcon()) : new PathResponse(),
                                                                                         result);
                                                                 }).collect(Collectors.toList())))
                                 .collect(Collectors.toList()), page, pageSize,
@@ -94,7 +103,7 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
         }
 
         @Override
-        public Optional<NavbarResponse> getNavbarDetailById(String id) {
+        public Optional<NavbarResponse> getNavbarDetailById(String id, String loginId) {
                 Navbar navbar = navbarInventory.findNavbarById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 LanguageMessageKey.NAVBAR_NOT_FOUND));
@@ -115,29 +124,38 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                                                                                 pathInventory.findPathById(
                                                                                                 thisChild.toString())
                                                                                                 .ifPresent(thisChildId -> {
-                                                                                                        result.add(new PathResponse(
-                                                                                                                        thisChildId.get_id()
-                                                                                                                                        .toString(),
-                                                                                                                        thisChildId.getLabel(),
-                                                                                                                        thisChildId.getPath(),
-                                                                                                                        thisChildId.getType(),
-                                                                                                                        thisChildId.getIcon()));
+                                                                                                        if (thisChildId.getUserId()
+                                                                                                                        .stream()
+                                                                                                                        .filter(thisChildItem -> thisChildItem
+                                                                                                                                        .compareTo(new ObjectId(
+                                                                                                                                                        loginId)) == 0)
+                                                                                                                        .findFirst()
+                                                                                                                        .isPresent()) {
+                                                                                                                result.add(new PathResponse(
+                                                                                                                                thisChildId.get_id()
+                                                                                                                                                .toString(),
+                                                                                                                                thisChildId.getLabel(),
+                                                                                                                                thisChildId.getPath(),
+                                                                                                                                thisChildId.getType(),
+                                                                                                                                new ArrayList<>(),
+                                                                                                                                thisChildId.getIcon()));
+                                                                                                        }
                                                                                                 });;
                                                                         });
                                                         return new ContentNavbarResponse(
-                                                                        new PathResponse(mainPath
-                                                                                        .get_id()
-                                                                                        .toString(),
-                                                                                        mainPath.getLabel(),
-                                                                                        mainPath.getPath(),
-                                                                                        mainPath.getType(),
-                                                                                        mainPath.getIcon()),
+                                                                        mainPath.getUserId()
+                                                                                        .stream()
+                                                                                        .filter(thisMainPath -> thisMainPath
+                                                                                                        .compareTo(new ObjectId(
+                                                                                                                        loginId)) == 0)
+                                                                                        .findFirst()
+                                                                                        .isPresent() ? new PathResponse(mainPath.get_id().toString(), mainPath.getLabel(), mainPath.getPath(), mainPath.getType(), new ArrayList<>(), mainPath.getIcon()) : new PathResponse(),
                                                                         result);
                                                 }).collect(Collectors.toList())));
         }
 
         @Override
-        public Optional<NavbarResponse> getNavbarDetailByName(String name) {
+        public Optional<NavbarResponse> getNavbarDetailByName(String name, String loginId) {
                 Navbar navbar = navbarInventory.findNavbarByName(name)
                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                 LanguageMessageKey.NAVBAR_NOT_FOUND));
@@ -158,23 +176,32 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
                                                                                 pathInventory.findPathById(
                                                                                                 thisChild.toString())
                                                                                                 .ifPresent(thisChildId -> {
-                                                                                                        result.add(new PathResponse(
-                                                                                                                        thisChildId.get_id()
-                                                                                                                                        .toString(),
-                                                                                                                        thisChildId.getLabel(),
-                                                                                                                        thisChildId.getPath(),
-                                                                                                                        thisChildId.getType(),
-                                                                                                                        thisChildId.getIcon()));
+                                                                                                        if (thisChildId.getUserId()
+                                                                                                                        .stream()
+                                                                                                                        .filter(thisChildItem -> thisChildItem
+                                                                                                                                        .compareTo(new ObjectId(
+                                                                                                                                                        loginId)) == 0)
+                                                                                                                        .findFirst()
+                                                                                                                        .isPresent()) {
+                                                                                                                result.add(new PathResponse(
+                                                                                                                                thisChildId.get_id()
+                                                                                                                                                .toString(),
+                                                                                                                                thisChildId.getLabel(),
+                                                                                                                                thisChildId.getPath(),
+                                                                                                                                thisChildId.getType(),
+                                                                                                                                new ArrayList<>(),
+                                                                                                                                thisChildId.getIcon()));
+                                                                                                        }
                                                                                                 });;
                                                                         });
                                                         return new ContentNavbarResponse(
-                                                                        new PathResponse(mainPath
-                                                                                        .get_id()
-                                                                                        .toString(),
-                                                                                        mainPath.getLabel(),
-                                                                                        mainPath.getPath(),
-                                                                                        mainPath.getType(),
-                                                                                        mainPath.getIcon()),
+                                                                        mainPath.getUserId()
+                                                                                        .stream()
+                                                                                        .filter(thisMainPath -> thisMainPath
+                                                                                                        .compareTo(new ObjectId(
+                                                                                                                        loginId)) == 0)
+                                                                                        .findFirst()
+                                                                                        .isPresent() ? new PathResponse(mainPath.get_id().toString(), mainPath.getLabel(), mainPath.getPath(), mainPath.getType(), new ArrayList<>(), mainPath.getIcon()) : new PathResponse(),
                                                                         result);
                                                 }).collect(Collectors.toList())));
         }

@@ -30,11 +30,6 @@ public class PermissionRequest {
   @NotNull(message = LanguageMessageKey.VIEW_POINT_REQUIRED)
   private Map<String, List<ViewPoint>> editable;
 
-  @NotNull(message = LanguageMessageKey.NAVBAR_LIST_REQUIRED)
-  @NotBlank(message = LanguageMessageKey.NAVBAR_LIST_REQUIRED)
-  @NotEmpty(message = LanguageMessageKey.NAVBAR_LIST_REQUIRED)
-  private String navbar;
-
   @NotNull(message = LanguageMessageKey.PATH_LIST_REQUIRED)
   private List<String> paths;
 

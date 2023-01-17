@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.service.path;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import com.chilleric.franchise_sys.dto.path.PathResponse;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.path.PathInventory;
+import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
 import com.chilleric.franchise_sys.repository.systemRepository.path.PathRepository;
@@ -28,6 +30,9 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     @Autowired
     private PathInventory pathInventory;
 
+    @Autowired
+    private UserInventory userInventory;
+
     @Override
     public Optional<ListWrapperResponse<PathResponse>> getPaths(Map<String, String> allParams,
             String keySort, int page, int pageSize, String sortField, String loginId) {
@@ -35,7 +40,10 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         return Optional.of(new ListWrapperResponse<>(
                 paths.stream()
                         .map(path -> new PathResponse(path.get_id().toString(), path.getLabel(),
-                                path.getPath(), path.getType(), path.getIcon()))
+                                path.getPath(), path.getType(),
+                                path.getUserId().stream().map(thisId -> thisId.toString())
+                                        .collect(Collectors.toList()),
+                                path.getIcon()))
                         .collect(Collectors.toList()),
                 page, pageSize, repository.getTotal(allParams)));
     }
@@ -59,13 +67,22 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
             throw new InvalidRequestException(error, LanguageMessageKey.TYPE_PATH_INVALID);
         }
         Path path = new Path();
+        List<ObjectId> listUserId = new ArrayList<>();
+        if (pathRequest.getUserId().size() > 0) {
+            pathRequest.getUserId().forEach(thisId -> {
+                if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
+                        && userInventory.findUserById(thisId).isPresent()) {
+                    listUserId.add(new ObjectId(thisId));
+                }
+            });
+        }
         if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                    TypeAccount.EXTERNAL, pathRequest.getIcon());
+                    TypeAccount.EXTERNAL, listUserId, pathRequest.getIcon());
         }
         if (pathRequest.getType().compareTo("INTERNAL") == 0) {
             path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(),
-                    TypeAccount.INTERNAL, pathRequest.getIcon());
+                    TypeAccount.INTERNAL, listUserId, pathRequest.getIcon());
         }
         if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
             error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
@@ -89,7 +106,9 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         Path path = pathInventory.findPathById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
         return Optional.of(new PathResponse(path.get_id().toString(), path.getLabel(),
-                path.getPath(), path.getType(), path.getIcon()));
+                path.getPath(), path.getType(), path.getUserId().stream()
+                        .map(thisId -> thisId.toString()).collect(Collectors.toList()),
+                path.getIcon()));
     }
 
 }

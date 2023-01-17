@@ -94,13 +94,12 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
       List<ObjectId> userIds = Arrays.asList(user.get_id(), usersDev.get_id());
       Permission permission = new Permission(null, "super_admin_permission", userIds,
           DateFormat.getCurrentTime(), null, permissionRepository.getViewPointSelect(),
-          permissionRepository.getEditableSelect(), null, paths, true);
+          permissionRepository.getEditableSelect(), paths, true);
       permissionRepository.insertAndUpdate(permission);
     } else {
       Permission permission = permissions.get(0);
       permission.setViewPoints(permissionRepository.getViewPointSelect());
       permission.setEditable(permissionRepository.getEditableSelect());
-      permission.setNavbar(null);
       permission.setPaths(paths);
       permissionRepository.insertAndUpdate(permission);
     }
