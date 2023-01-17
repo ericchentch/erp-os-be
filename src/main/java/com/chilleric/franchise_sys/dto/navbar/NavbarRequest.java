@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NavbarRequest {
 
-    @NotBlank(message = LanguageMessageKey.NAVBAR_NAME_REQUIRED)
-    @NotNull(message = LanguageMessageKey.NAVBAR_NAME_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.NAVBAR_NAME_REQUIRED)
-    private String name;
+  @NotBlank(message = LanguageMessageKey.NAVBAR_NAME_REQUIRED)
+  @NotNull(message = LanguageMessageKey.NAVBAR_NAME_REQUIRED)
+  @NotEmpty(message = LanguageMessageKey.NAVBAR_NAME_REQUIRED)
+  private String name;
 
-    @NotNull(message = LanguageMessageKey.USER_LIST_REQUIRED)
-    private List<String> userIds;
+  @NotNull(message = LanguageMessageKey.USER_LIST_REQUIRED)
+  private List<String> userIds;
 
-    @NotNull(message = LanguageMessageKey.CONTENT_NAVBAR_REQUIRED)
-    private List<ContentNavbarRequest> content;
+  @NotNull(message = LanguageMessageKey.CONTENT_NAVBAR_REQUIRED)
+  private List<ContentNavbarRequest> content;
 }

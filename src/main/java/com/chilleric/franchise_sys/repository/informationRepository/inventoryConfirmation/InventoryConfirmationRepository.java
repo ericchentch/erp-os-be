@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface InventoryConfirmationRepository {
-    Optional<List<InventoryConfirmation>> getInventoryConfirmations(Map<String, String> allParams,
-            String keySort, int page, int pageSize, String sortField);
+  Optional<List<InventoryConfirmation>> getInventoryConfirmations(Map<String, String> allParams,
+      String keySort, int page, int pageSize, String sortField);
 
-    void insertAndUpdate(InventoryConfirmation inventoryConfirmation);
+  void insertAndUpdate(InventoryConfirmation inventoryConfirmation);
 
-    long getTotalPage(Map<String, String> allParams);
+  long getTotalPage(Map<String, String> allParams);
 }

@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface DiscountRepository {
-    Optional<List<Discount>> getDiscounts(Map<String, String> allParams, String keySort, int page,
-            int pageSize, String sortField);
+  Optional<List<Discount>> getDiscounts(Map<String, String> allParams, String keySort, int page,
+      int pageSize, String sortField);
 
 
-    void insertAndUpdate(Discount discount);
+  void insertAndUpdate(Discount discount);
 
-    long getTotalPage(Map<String, String> allParams);
+  long getTotalPage(Map<String, String> allParams);
 }

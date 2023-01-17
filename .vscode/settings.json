@@ -1,6 +1,10 @@
 {
-  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
   "java.format.settings.profile": "GoogleStyle",
+  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+  // "java.format.settings.url": "../java-google-style.xml",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
   "java.compile.nullAnalysis.mode": "automatic",
   "editor.formatOnSave": true,
   "java.saveActions.organizeImports": true,

@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface LanguageRepository {
-    Optional<List<Language>> getLanguages(Map<String, String> allParams, String keySort, int page,
-            int pageSize, String sortField);
+  Optional<List<Language>> getLanguages(Map<String, String> allParams, String keySort, int page,
+      int pageSize, String sortField);
 
-    void insertAndUpdate(Language language);
+  void insertAndUpdate(Language language);
 
-    long getTotal(Map<String, String> allParams);
+  long getTotal(Map<String, String> allParams);
 }

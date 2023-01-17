@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface TaskRepository {
-    Optional<List<Task>> getTasks(Map<String, String> allParams, String keySort, int page,
-            int pageSize, String sortField);
+  Optional<List<Task>> getTasks(Map<String, String> allParams, String keySort, int page,
+      int pageSize, String sortField);
 
-    void insertAndUpdate(Task task);
+  void insertAndUpdate(Task task);
 
-    long getTotalPage(Map<String, String> allParams);
+  long getTotalPage(Map<String, String> allParams);
 
-    void delete(String taskId);
+  void delete(String taskId);
 }

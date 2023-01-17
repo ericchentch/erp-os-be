@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Document(collection = "variants")
 public class Variant {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private String name;
-    private float price;
-    private List<ObjectId> roomTypeId;
+  private String name;
+  private float price;
+  private List<ObjectId> roomTypeId;
 }

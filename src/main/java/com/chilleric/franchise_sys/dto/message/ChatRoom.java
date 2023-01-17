@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatRoom {
-    private String receiveId;
-    private String receiverName;
+  private String receiveId;
+  private String receiverName;
 }

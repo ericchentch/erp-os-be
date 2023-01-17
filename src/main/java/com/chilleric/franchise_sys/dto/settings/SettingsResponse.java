@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SettingsResponse {
-    private String languageKey;
+  private String languageKey;
 }

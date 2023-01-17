@@ -5,14 +5,14 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface RoomTypeRepository {
-    Optional<List<RoomType>> getRoomTypes(Map<String, String> allParams, String keySort, int page,
-            int pageSize, String sortField);
+  Optional<List<RoomType>> getRoomTypes(Map<String, String> allParams, String keySort, int page,
+      int pageSize, String sortField);
 
-    Optional<List<RoomType>> getRoomTypesByHotel(String hotelId);
+  Optional<List<RoomType>> getRoomTypesByHotel(String hotelId);
 
-    void insertAndUpdate(RoomType roomType);
+  void insertAndUpdate(RoomType roomType);
 
-    void delete(String roomTypeId);
+  void delete(String roomTypeId);
 
-    long getTotalPage(Map<String, String> allParams);
+  long getTotalPage(Map<String, String> allParams);
 }

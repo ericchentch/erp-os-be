@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Path {
-    private ObjectId _id;
-    private String label;
-    private String path;
-    private TypeAccount type;
-    private List<ObjectId> userId;
-    private String icon;
+  private ObjectId _id;
+  private String label;
+  private String path;
+  private TypeAccount type;
+  private List<ObjectId> userId;
+  private String icon;
 }

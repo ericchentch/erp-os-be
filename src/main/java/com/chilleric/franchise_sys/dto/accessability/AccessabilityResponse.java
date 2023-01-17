@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccessabilityResponse {
-    private String id;
-    private String accessAccountName;
-    private String accessUsername;
-    private boolean editable;
+  private String id;
+  private String accessAccountName;
+  private String accessUsername;
+  private boolean editable;
 }

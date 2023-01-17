@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Timeline {
-    private PaymentMethod paymentMethod;
-    private float amountOfPayment;
-    private Date created;
+  private PaymentMethod paymentMethod;
+  private float amountOfPayment;
+  private Date created;
 }

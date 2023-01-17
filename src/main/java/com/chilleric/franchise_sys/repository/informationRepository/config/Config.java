@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Config {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private ObjectId hotelId;
-    private float billDeposit;
-    private float VAT;
+  private ObjectId hotelId;
+  private float billDeposit;
+  private float VAT;
 
 }

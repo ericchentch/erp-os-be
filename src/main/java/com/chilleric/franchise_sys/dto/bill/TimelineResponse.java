@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TimelineResponse {
-    private PaymentMethod paymentMethod;
+  private PaymentMethod paymentMethod;
 
-    private float amountPayment;
-    private String created;
+  private float amountPayment;
+  private String created;
 }

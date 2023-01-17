@@ -24,46 +24,43 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RequestMapping(value = "task-controller")
 public class TaskController extends AbstractController<TaskService> {
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PostMapping(value = "create-new-task")
-    public ResponseEntity<CommonResponse<String>> createTask(@RequestBody TaskRequest taskRequest,
-            HttpServletRequest request) {
-        validateToken(request);
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PostMapping(value = "create-new-task")
+  public ResponseEntity<CommonResponse<String>> createTask(@RequestBody TaskRequest taskRequest,
+      HttpServletRequest request) {
+    validateToken(request);
 
-        service.createTask(taskRequest);
+    service.createTask(taskRequest);
 
+    return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true, null,
+        LanguageMessageKey.SUCCESS, HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
+        null, HttpStatus.OK.value());
+  }
 
-        return new ResponseEntity<CommonResponse<String>>(
-                new CommonResponse<String>(true, null, LanguageMessageKey.SUCCESS,
-                        HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
-                null, HttpStatus.OK.value());
-    }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-tasks")
+  public ResponseEntity<CommonResponse<ListWrapperResponse<TaskResponse>>> getTasks(
+      @RequestParam Map<String, String> allParams,
+      @RequestParam(defaultValue = "asc") String keySort,
+      @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int pageSize,
+      @RequestParam(defaultValue = "title") String sortField, HttpServletRequest request) {
+    validateToken(request);
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @GetMapping(value = "get-tasks")
-    public ResponseEntity<CommonResponse<ListWrapperResponse<TaskResponse>>> getTasks(
-            @RequestParam Map<String, String> allParams,
-            @RequestParam(defaultValue = "asc") String keySort,
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int pageSize,
-            @RequestParam(defaultValue = "title") String sortField, HttpServletRequest request) {
-        validateToken(request);
+    return response(service.getTasks(allParams, pageSize, page, keySort, sortField),
+        LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
+  }
 
-        return response(service.getTasks(allParams, pageSize, page, keySort, sortField),
-                LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
-    }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @DeleteMapping(value = "delete-task")
+  public ResponseEntity<CommonResponse<String>> deleteTask(@RequestParam String taskId,
+      HttpServletRequest request) {
+    validateToken(request);
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @DeleteMapping(value = "delete-task")
-    public ResponseEntity<CommonResponse<String>> deleteTask(@RequestParam String taskId,
-            HttpServletRequest request) {
-        validateToken(request);
+    service.delete(taskId);
 
-        service.delete(taskId);
-
-        return new ResponseEntity<CommonResponse<String>>(
-                new CommonResponse<String>(true, null, LanguageMessageKey.SHIFT_DELETE_SUCCESS,
-                        HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
-                null, HttpStatus.OK.value());
-    }
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.SHIFT_DELETE_SUCCESS,
+            HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
+        null, HttpStatus.OK.value());
+  }
 }

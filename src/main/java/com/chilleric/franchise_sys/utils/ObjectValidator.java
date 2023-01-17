@@ -10,16 +10,16 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 @Component
 public class ObjectValidator {
-    @Autowired
-    @Qualifier("validator")
-    LocalValidatorFactoryBean validatorFactory;
+  @Autowired
+  @Qualifier("validator")
+  LocalValidatorFactoryBean validatorFactory;
 
-    public <T> Map<String, String> validateRequestThenReturnMessage(Map<String, String> errorResult,
-            T t) {
-        Set<ConstraintViolation<T>> violations = validatorFactory.getValidator().validate(t);
-        for (ConstraintViolation<T> violation : violations) {
-            errorResult.put(violation.getPropertyPath().toString(), violation.getMessage());
-        }
-        return errorResult;
+  public <T> Map<String, String> validateRequestThenReturnMessage(Map<String, String> errorResult,
+      T t) {
+    Set<ConstraintViolation<T>> violations = validatorFactory.getValidator().validate(t);
+    for (ConstraintViolation<T> violation : violations) {
+      errorResult.put(violation.getPropertyPath().toString(), violation.getMessage());
     }
+    return errorResult;
+  }
 }

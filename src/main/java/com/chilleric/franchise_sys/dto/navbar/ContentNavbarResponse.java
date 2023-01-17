@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContentNavbarResponse {
-    private PathResponse mainItem;
-    private List<PathResponse> childrenItem;
+  private PathResponse mainItem;
+  private List<PathResponse> childrenItem;
 }

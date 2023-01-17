@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Document(collection = "shifts")
 public class Shift {
-    private ObjectId _id;
-    private String shiftName;
-    private Date startTime;
-    private Date endTime;
+  private ObjectId _id;
+  private String shiftName;
+  private Date startTime;
+  private Date endTime;
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SelectLanguage {
-    private String label;
-    private String value;
+  private String label;
+  private String value;
 }

@@ -12,19 +12,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillResponse {
-    private String id;
+  private String id;
 
-    private UserResponse customer;
+  private UserResponse customer;
 
-    private UserResponse paidCustomer;
-    private List<DraftDetailResponse> draftDetails;
-    private List<DraftDetailResponse> confirmedDetail;
-    private DiscountResponse discount;
-    private float deposit;
-    private float total;
+  private UserResponse paidCustomer;
+  private List<DraftDetailResponse> draftDetails;
+  private List<DraftDetailResponse> confirmedDetail;
+  private DiscountResponse discount;
+  private float deposit;
+  private float total;
 
-    private List<TimelineResponse> timeline;
+  private List<TimelineResponse> timeline;
 
-    private float paidTotal;
-    private BillStatus status;
+  private float paidTotal;
+  private BillStatus status;
 }

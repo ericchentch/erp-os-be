@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LanguageFileRequest {
-    @NotNull(message = LanguageMessageKey.ID_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.ID_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.ID_REQUIRED)
-    private String id;
+  @NotNull(message = LanguageMessageKey.ID_REQUIRED)
+  @NotEmpty(message = LanguageMessageKey.ID_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.ID_REQUIRED)
+  private String id;
 
-    private Map<String, String> dictionary;
+  private Map<String, String> dictionary;
 }

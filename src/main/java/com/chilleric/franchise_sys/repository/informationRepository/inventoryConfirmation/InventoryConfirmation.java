@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Document(collection = "inventory_confirmations")
 public class InventoryConfirmation {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private ObjectId inventoryId;
-    private ObjectId reviewerId;
-    private int realQuantity;
-    private Date confirmDate;
+  private ObjectId inventoryId;
+  private ObjectId reviewerId;
+  private int realQuantity;
+  private Date confirmDate;
 
 }

@@ -27,140 +27,117 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RequestMapping(value = "permission")
 public class PermissionController extends AbstractController<PermissionService> {
 
-        @SecurityRequirement(name = "Bearer Authentication")
-        @GetMapping(value = "get-list-your-permissions")
-        public ResponseEntity<CommonResponse<ListWrapperResponse<PermissionResponse>>> getListYourPermissions(
-                        @RequestParam(required = false, defaultValue = "1") int page,
-                        @RequestParam(required = false, defaultValue = "10") int pageSize,
-                        @RequestParam Map<String, String> allParams,
-                        @RequestParam(defaultValue = "asc") String keySort,
-                        @RequestParam(defaultValue = "modified") String sortField,
-                        HttpServletRequest request) {
-                ValidationResult result = validateToken(request);
-                return response(service.getYourPermissions(
-                                allParams, keySort, page, pageSize, sortField, result.getLoginId()),
-                                LanguageMessageKey.SUCCESS,
-                                result.getViewPoints()
-                                                .get(PermissionResponse.class.getSimpleName()),
-                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
-        }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-list-your-permissions")
+  public ResponseEntity<CommonResponse<ListWrapperResponse<PermissionResponse>>> getListYourPermissions(
+      @RequestParam(required = false, defaultValue = "1") int page,
+      @RequestParam(required = false, defaultValue = "10") int pageSize,
+      @RequestParam Map<String, String> allParams,
+      @RequestParam(defaultValue = "asc") String keySort,
+      @RequestParam(defaultValue = "modified") String sortField, HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    return response(
+        service.getYourPermissions(allParams, keySort, page, pageSize, sortField,
+            result.getLoginId()),
+        LanguageMessageKey.SUCCESS,
+        result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+  }
 
-        @SecurityRequirement(name = "Bearer Authentication")
-        @GetMapping(value = "get-list-permissions")
-        public ResponseEntity<CommonResponse<ListWrapperResponse<PermissionResponse>>> getListPermissions(
-                        @RequestParam(required = false, defaultValue = "1") int page,
-                        @RequestParam(required = false, defaultValue = "10") int pageSize,
-                        @RequestParam Map<String, String> allParams,
-                        @RequestParam(defaultValue = "asc") String keySort,
-                        @RequestParam(defaultValue = "modified") String sortField,
-                        HttpServletRequest request) {
-                ValidationResult result = validateToken(request);
-                return response(service.getAllPermissions(
-                                allParams, keySort, page, pageSize, sortField, result.getLoginId()),
-                                LanguageMessageKey.SUCCESS,
-                                result.getViewPoints()
-                                                .get(PermissionResponse.class.getSimpleName()),
-                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
-        }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-list-permissions")
+  public ResponseEntity<CommonResponse<ListWrapperResponse<PermissionResponse>>> getListPermissions(
+      @RequestParam(required = false, defaultValue = "1") int page,
+      @RequestParam(required = false, defaultValue = "10") int pageSize,
+      @RequestParam Map<String, String> allParams,
+      @RequestParam(defaultValue = "asc") String keySort,
+      @RequestParam(defaultValue = "modified") String sortField, HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    return response(
+        service.getAllPermissions(allParams, keySort, page, pageSize, sortField,
+            result.getLoginId()),
+        LanguageMessageKey.SUCCESS,
+        result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+  }
 
-        @SecurityRequirement(name = "Bearer Authentication")
-        @GetMapping(value = "get-detail-permission")
-        public ResponseEntity<CommonResponse<PermissionResponse>> getPermissionDetail(
-                        @RequestParam(required = true) String id, HttpServletRequest request) {
-                ValidationResult result = validateToken(request);
-                checkAccessability(result.getLoginId(), id, false);
-                return response(service.getPermissionById(id, result.getLoginId()),
-                                LanguageMessageKey.SUCCESS,
-                                result.getViewPoints()
-                                                .get(PermissionResponse.class.getSimpleName()),
-                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
-        }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-detail-permission")
+  public ResponseEntity<CommonResponse<PermissionResponse>> getPermissionDetail(
+      @RequestParam(required = true) String id, HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    checkAccessability(result.getLoginId(), id, false);
+    return response(service.getPermissionById(id, result.getLoginId()), LanguageMessageKey.SUCCESS,
+        result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+  }
 
-        @SecurityRequirement(name = "Bearer Authentication")
-        @GetMapping(value = "get-view-points-select")
-        public ResponseEntity<CommonResponse<Map<String, List<ViewPoint>>>> getViewPointSelect(
-                        HttpServletRequest request) {
-                ValidationResult result = validateToken(request);
-                return response(Optional.of(service.getViewPointSelect(result.getLoginId())),
-                                LanguageMessageKey.SUCCESS,
-                                result.getViewPoints()
-                                                .get(PermissionResponse.class.getSimpleName()),
-                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
-        }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-view-points-select")
+  public ResponseEntity<CommonResponse<Map<String, List<ViewPoint>>>> getViewPointSelect(
+      HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    return response(Optional.of(service.getViewPointSelect(result.getLoginId())),
+        LanguageMessageKey.SUCCESS,
+        result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+  }
 
-        @SecurityRequirement(name = "Bearer Authentication")
-        @GetMapping(value = "get-editable-select")
-        public ResponseEntity<CommonResponse<Map<String, List<ViewPoint>>>> getEditableSelect(
-                        HttpServletRequest request) {
-                ValidationResult result = validateToken(request);
-                return response(Optional.of(service.getEditableSelect(result.getLoginId())),
-                                LanguageMessageKey.SUCCESS,
-                                result.getViewPoints()
-                                                .get(PermissionResponse.class.getSimpleName()),
-                                result.getEditable().get(PermissionRequest.class.getSimpleName()));
-        }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-editable-select")
+  public ResponseEntity<CommonResponse<Map<String, List<ViewPoint>>>> getEditableSelect(
+      HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    return response(Optional.of(service.getEditableSelect(result.getLoginId())),
+        LanguageMessageKey.SUCCESS,
+        result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+  }
 
-        @SecurityRequirement(name = "Bearer Authentication")
-        @PostMapping(value = "add-new-permission")
-        public ResponseEntity<CommonResponse<String>> addNewPermission(
-                        @RequestBody PermissionRequest permissionRequest,
-                        HttpServletRequest request) {
-                ValidationResult result = validateToken(request);
-                checkAddCondition(result.getEditable(), PermissionRequest.class);
-                service.addNewPermissions(permissionRequest, result.getLoginId());
-                return new ResponseEntity<CommonResponse<String>>(
-                                new CommonResponse<String>(true, null,
-                                                LanguageMessageKey.ADD_PERMISSION_SUCCESS,
-                                                HttpStatus.OK.value(),
-                                                result.getViewPoints()
-                                                                .get(PermissionResponse.class
-                                                                                .getSimpleName()),
-                                                result.getEditable()
-                                                                .get(PermissionRequest.class
-                                                                                .getSimpleName())),
-                                null, HttpStatus.OK.value());
-        }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PostMapping(value = "add-new-permission")
+  public ResponseEntity<CommonResponse<String>> addNewPermission(
+      @RequestBody PermissionRequest permissionRequest, HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    checkAddCondition(result.getEditable(), PermissionRequest.class);
+    service.addNewPermissions(permissionRequest, result.getLoginId());
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.ADD_PERMISSION_SUCCESS,
+            HttpStatus.OK.value(),
+            result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+            result.getEditable().get(PermissionRequest.class.getSimpleName())),
+        null, HttpStatus.OK.value());
+  }
 
-        @SecurityRequirement(name = "Bearer Authentication")
-        @PutMapping(value = "update-permission")
-        public ResponseEntity<CommonResponse<String>> updatePermission(
-                        @RequestBody PermissionRequest permissionRequest,
-                        @RequestParam(required = true) String id, HttpServletRequest request) {
-                ValidationResult result = validateToken(request);
-                checkAccessability(result.getLoginId(), id, true);
-                service.editPermission(permissionRequest, id,
-                                result.getEditable().get(PermissionResponse.class.getSimpleName()),
-                                result.getLoginId());
-                return new ResponseEntity<CommonResponse<String>>(
-                                new CommonResponse<String>(true, null,
-                                                LanguageMessageKey.UPDATE_PERMISSION_SUCCESS,
-                                                HttpStatus.OK.value(),
-                                                result.getViewPoints()
-                                                                .get(PermissionResponse.class
-                                                                                .getSimpleName()),
-                                                result.getEditable()
-                                                                .get(PermissionRequest.class
-                                                                                .getSimpleName())),
-                                null, HttpStatus.OK.value());
-        }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PutMapping(value = "update-permission")
+  public ResponseEntity<CommonResponse<String>> updatePermission(
+      @RequestBody PermissionRequest permissionRequest, @RequestParam(required = true) String id,
+      HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    checkAccessability(result.getLoginId(), id, true);
+    service.editPermission(permissionRequest, id,
+        result.getEditable().get(PermissionResponse.class.getSimpleName()), result.getLoginId());
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.UPDATE_PERMISSION_SUCCESS,
+            HttpStatus.OK.value(),
+            result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+            result.getEditable().get(PermissionRequest.class.getSimpleName())),
+        null, HttpStatus.OK.value());
+  }
 
-        @SecurityRequirement(name = "Bearer Authentication")
-        @PutMapping(value = "delete-permission")
-        public ResponseEntity<CommonResponse<String>> deletePermission(
-                        @RequestParam(required = true) String id, HttpServletRequest request) {
-                ValidationResult result = validateToken(request);
-                checkAccessability(result.getLoginId(), id, true);
-                service.deletePermission(id);
-                return new ResponseEntity<CommonResponse<String>>(
-                                new CommonResponse<String>(true, null,
-                                                LanguageMessageKey.DELETE_PERMISSION_SUCCESS,
-                                                HttpStatus.OK.value(),
-                                                result.getViewPoints()
-                                                                .get(PermissionResponse.class
-                                                                                .getSimpleName()),
-                                                result.getEditable()
-                                                                .get(PermissionRequest.class
-                                                                                .getSimpleName())),
-                                null, HttpStatus.OK.value());
-        }
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PutMapping(value = "delete-permission")
+  public ResponseEntity<CommonResponse<String>> deletePermission(
+      @RequestParam(required = true) String id, HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    checkAccessability(result.getLoginId(), id, true);
+    service.deletePermission(id);
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.DELETE_PERMISSION_SUCCESS,
+            HttpStatus.OK.value(),
+            result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+            result.getEditable().get(PermissionRequest.class.getSimpleName())),
+        null, HttpStatus.OK.value());
+  }
 }

@@ -10,14 +10,14 @@ import com.chilleric.franchise_sys.repository.common_enum.BillStatus;
 import com.chilleric.franchise_sys.repository.crmRepository.bill.Bill;
 
 public interface BillService {
-    void createBill(BillRequest billRequest);
+  void createBill(BillRequest billRequest);
 
-    void updateBill(BillRequest billRequest, String billId);
+  void updateBill(BillRequest billRequest, String billId);
 
-    Optional<BillResponse> getBillResponseById(String billId);
+  Optional<BillResponse> getBillResponseById(String billId);
 
-    Optional<Bill> findBillById(String billId);
+  Optional<Bill> findBillById(String billId);
 
-    BillStatus getBillStatus(List<Timeline> timelineList, List<DraftDetail> draftDetailList);
+  BillStatus getBillStatus(List<Timeline> timelineList, List<DraftDetail> draftDetailList);
 
 }

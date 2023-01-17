@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Document(collection = "tasks")
 public class Task {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private ObjectId employeeId;
-    private ObjectId reviewerId;
-    private ObjectId shiftId;
+  private ObjectId employeeId;
+  private ObjectId reviewerId;
+  private ObjectId shiftId;
 
-    private Date startTime;
-    private String title;
-    private String description;
-    private TaskStatus status;
+  private Date startTime;
+  private String title;
+  private String description;
+  private TaskStatus status;
 }

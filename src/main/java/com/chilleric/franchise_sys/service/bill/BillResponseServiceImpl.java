@@ -17,56 +17,54 @@ import com.chilleric.franchise_sys.service.roomType.RoomTypeService;
 
 @Service
 public class BillResponseServiceImpl extends AbstractService<BillRepository>
-        implements BillResponseService {
+    implements BillResponseService {
 
-    protected final RoomTypeService roomTypeService;
+  protected final RoomTypeService roomTypeService;
 
-    public BillResponseServiceImpl(RoomTypeService roomTypeService) {
-        this.roomTypeService = roomTypeService;
-    }
+  public BillResponseServiceImpl(RoomTypeService roomTypeService) {
+    this.roomTypeService = roomTypeService;
+  }
 
-    @Override
-    public List<DraftDetailResponse> getListDraftDetailResponse(List<DraftDetail> draftDetailList) {
-        return draftDetailList.stream().map(draftDetail -> {
-            Object objectResponse = new Object();
-            if (draftDetail.getType() == TypeObjectBill.ROOMTYPE) {
-                objectResponse = roomTypeService.getRoomTypeById(draftDetail.getId().toString())
-                        .orElse(null);
-            }
-            // # TODO: need to complete this when having case: Variants and Services.
-            return new DraftDetailResponse(draftDetail.getType(), objectResponse,
-                    draftDetail.getQuantity());
-        }).filter(e -> e.getObjectResponse() != null).collect(Collectors.toList());
-    }
+  @Override
+  public List<DraftDetailResponse> getListDraftDetailResponse(List<DraftDetail> draftDetailList) {
+    return draftDetailList.stream().map(draftDetail -> {
+      Object objectResponse = new Object();
+      if (draftDetail.getType() == TypeObjectBill.ROOMTYPE) {
+        objectResponse =
+            roomTypeService.getRoomTypeById(draftDetail.getId().toString()).orElse(null);
+      }
+      // # TODO: need to complete this when having case: Variants and Services.
+      return new DraftDetailResponse(draftDetail.getType(), objectResponse,
+          draftDetail.getQuantity());
+    }).filter(e -> e.getObjectResponse() != null).collect(Collectors.toList());
+  }
 
-    @Override
-    public List<TimelineResponse> getListTimelineResponse(List<Timeline> timelineList) {
-        return timelineList.stream()
-                .map(timeline -> new TimelineResponse(timeline.getPaymentMethod(),
-                        timeline.getAmountOfPayment(), timeline.getCreated().toString()))
-                .collect(Collectors.toList());
-    }
+  @Override
+  public List<TimelineResponse> getListTimelineResponse(List<Timeline> timelineList) {
+    return timelineList.stream()
+        .map(timeline -> new TimelineResponse(timeline.getPaymentMethod(),
+            timeline.getAmountOfPayment(), timeline.getCreated().toString()))
+        .collect(Collectors.toList());
+  }
 
-    @Override
-    public float getBillTotal(List<DraftDetail> draftDetailList) {
-        // TODO: need add discount workflow
-        return draftDetailList.stream().map(element -> {
-            float price = 0;
-            if (element.getType() == TypeObjectBill.ROOMTYPE) {
-                RoomTypeResponse roomTypeResponse =
-                        roomTypeService.getRoomTypeById(element.getId().toString())
-                                .orElseThrow(() -> new ResourceNotFoundException(
-                                        LanguageMessageKey.ROOM_TYPE_NOT_FOUND));
-                price = roomTypeResponse.getStockPrice();
-            }
-            return price * element.getQuantity();
-        }).reduce((float) 0, Float::sum);
-    }
+  @Override
+  public float getBillTotal(List<DraftDetail> draftDetailList) {
+    // TODO: need add discount workflow
+    return draftDetailList.stream().map(element -> {
+      float price = 0;
+      if (element.getType() == TypeObjectBill.ROOMTYPE) {
+        RoomTypeResponse roomTypeResponse =
+            roomTypeService.getRoomTypeById(element.getId().toString()).orElseThrow(
+                () -> new ResourceNotFoundException(LanguageMessageKey.ROOM_TYPE_NOT_FOUND));
+        price = roomTypeResponse.getStockPrice();
+      }
+      return price * element.getQuantity();
+    }).reduce((float) 0, Float::sum);
+  }
 
-    @Override
-    public float getPaidTotal(List<Timeline> timelineList) {
-        return timelineList.stream().map(Timeline::getAmountOfPayment).reduce((float) 0,
-                Float::sum);
-    }
+  @Override
+  public float getPaidTotal(List<Timeline> timelineList) {
+    return timelineList.stream().map(Timeline::getAmountOfPayment).reduce((float) 0, Float::sum);
+  }
 
 }

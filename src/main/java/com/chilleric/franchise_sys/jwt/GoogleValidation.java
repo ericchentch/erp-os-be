@@ -19,54 +19,53 @@ import com.google.api.client.json.gson.GsonFactory;
 @Component
 public class GoogleValidation {
 
-    @Value("${gg.client.id}")
-    protected String CLIENT_ID;
+  @Value("${gg.client.id}")
+  protected String CLIENT_ID;
 
-    protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
+  protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
 
-    public Payload validateTokenId(String idTokenString) {
+  public Payload validateTokenId(String idTokenString) {
 
-        JsonFactory jsonFactory = new GsonFactory();
-        NetHttpTransport transport = new NetHttpTransport();
+    JsonFactory jsonFactory = new GsonFactory();
+    NetHttpTransport transport = new NetHttpTransport();
 
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                // Specify the CLIENT_ID of the app that accesses the backend:
-                .setAudience(Collections.singletonList(CLIENT_ID))
-                // Or, if multiple clients access the backend:
-                // .setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
-                .build();
+    GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+        // Specify the CLIENT_ID of the app that accesses the backend:
+        .setAudience(Collections.singletonList(CLIENT_ID))
+        // Or, if multiple clients access the backend:
+        // .setAudience(Arrays.asList(CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3))
+        .build();
 
-        // (Receive idTokenString by HTTPS POST)
+    // (Receive idTokenString by HTTPS POST)
 
-        try {
-            GoogleIdToken idToken = verifier.verify(idTokenString);
-            if (idToken != null) {
-                Payload payload = idToken.getPayload();
+    try {
+      GoogleIdToken idToken = verifier.verify(idTokenString);
+      if (idToken != null) {
+        Payload payload = idToken.getPayload();
 
-                // Print user identifier
-                // String userId = payload.getSubject();
+        // Print user identifier
+        // String userId = payload.getSubject();
 
-                // Get profile information from payload
-                // String email = payload.getEmail();
-                // boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-                // String name = (String) payload.get("name");
-                // String pictureUrl = (String) payload.get("picture");
-                // String locale = (String) payload.get("locale");
-                // String familyName = (String) payload.get("family_name");
-                // String givenName = (String) payload.get("given_name");
+        // Get profile information from payload
+        // String email = payload.getEmail();
+        // boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+        // String name = (String) payload.get("name");
+        // String pictureUrl = (String) payload.get("picture");
+        // String locale = (String) payload.get("locale");
+        // String familyName = (String) payload.get("family_name");
+        // String givenName = (String) payload.get("given_name");
 
-                return payload;
+        return payload;
 
-                // Use or store profile information
-                // ...
+        // Use or store profile information
+        // ...
 
-            } else {
-                throw new InvalidRequestException(new HashMap<>(),
-                        LanguageMessageKey.INVALID_TOKEN_GG);
-            }
-        } catch (Exception e) {
-            APP_LOGGER.error(e.getMessage());
-            throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_TOKEN_GG);
-        }
+      } else {
+        throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_TOKEN_GG);
+      }
+    } catch (Exception e) {
+      APP_LOGGER.error(e.getMessage());
+      throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_TOKEN_GG);
     }
+  }
 }

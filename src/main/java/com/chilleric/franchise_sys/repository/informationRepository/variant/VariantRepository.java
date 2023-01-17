@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface VariantRepository {
-    Optional<List<Variant>> getVariants(Map<String, String> allParams, String keySort, int page,
-            int pageSize, String sortField);
+  Optional<List<Variant>> getVariants(Map<String, String> allParams, String keySort, int page,
+      int pageSize, String sortField);
 
-    void insertAndUpdate(Variant varian);
+  void insertAndUpdate(Variant varian);
 
-    long getTotalPage(Map<String, String> allParams);
+  long getTotalPage(Map<String, String> allParams);
 }

@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Document(collection = "discounts")
 public class Discount {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private String name;
-    private float discount;
-    private float maximum;
-    private float minimumApply;
-    private List<ObjectId> targetIds;
+  private String name;
+  private float discount;
+  private float maximum;
+  private float minimumApply;
+  private List<ObjectId> targetIds;
 }

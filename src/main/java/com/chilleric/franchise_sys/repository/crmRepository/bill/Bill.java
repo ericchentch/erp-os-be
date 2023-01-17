@@ -18,20 +18,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Document(collection = "bills")
 public class Bill {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private ObjectId customerId;
-    private UserResponse paidCustomer;
+  private ObjectId customerId;
+  private UserResponse paidCustomer;
 
-    private List<DraftDetail> draftDetails;
-    private List<DraftDetailResponse> confirmedDetail;
+  private List<DraftDetail> draftDetails;
+  private List<DraftDetailResponse> confirmedDetail;
 
-    private DiscountResponse discount;
-    private float deposit;
-    private float total;
+  private DiscountResponse discount;
+  private float deposit;
+  private float total;
 
-    private List<Timeline> timeline;
+  private List<Timeline> timeline;
 
-    private BillStatus status;
+  private BillStatus status;
 
 }
