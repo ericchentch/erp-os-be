@@ -19,7 +19,6 @@ import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.navbar.NavbarInventory;
 import com.chilleric.franchise_sys.inventory.path.PathInventory;
-import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.navbar.ContentNavbar;
 import com.chilleric.franchise_sys.repository.systemRepository.navbar.Navbar;
@@ -36,9 +35,6 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
   @Autowired
   private PathInventory pathInventory;
 
-  @Autowired
-  private UserInventory userInventory;
-
   @Override
   public Optional<ListWrapperResponse<NavbarResponse>> getListNavbar(Map<String, String> allParams,
       String keySort, int page, int pageSize, String sortField, String loginId) {
@@ -47,8 +43,6 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
     return Optional
         .of(new ListWrapperResponse<>(navbarList.stream()
             .map(navbar -> new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
-                navbar.getUserIds().stream().map(thisId -> thisId.toString())
-                    .collect(Collectors.toList()),
                 navbar.getContent().stream()
                     .filter(thisMain -> pathInventory
                         .findPathById(thisMain.getMainItem().toString()).isPresent())
@@ -85,7 +79,6 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
     Navbar navbar = navbarInventory.findNavbarById(id)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NAVBAR_NOT_FOUND));
     return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
-        navbar.getUserIds().stream().map(thisId -> thisId.toString()).collect(Collectors.toList()),
         navbar.getContent().stream().filter(
             thisMain -> pathInventory.findPathById(thisMain.getMainItem().toString()).isPresent())
             .map(thisMain -> {
@@ -118,7 +111,6 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
     Navbar navbar = navbarInventory.findNavbarByName(name)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NAVBAR_NOT_FOUND));
     return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
-        navbar.getUserIds().stream().map(thisId -> thisId.toString()).collect(Collectors.toList()),
         navbar.getContent().stream().filter(
             thisMain -> pathInventory.findPathById(thisMain.getMainItem().toString()).isPresent())
             .map(thisMain -> {
@@ -156,17 +148,6 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
       error.put("name", LanguageMessageKey.NAVBAR_EXISTED);
       throw new InvalidRequestException(error, LanguageMessageKey.NAVBAR_EXISTED);
     });
-    List<ObjectId> userIdsUpdate = new ArrayList<>();
-    navbarRequest.getUserIds().forEach(thisId -> {
-      if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
-          && userInventory.findUserById(thisId.toString()).isPresent()) {
-        if (navbarInventory.findNavbarById(id).isPresent()) {
-          error.put("userIds", LanguageMessageKey.NAVBAR_EXISTED);
-          throw new InvalidRequestException(error, LanguageMessageKey.NAVBAR_EXISTED);
-        }
-        userIdsUpdate.add(new ObjectId(thisId));
-      }
-    });
     List<ContentNavbar> contentUpdate = new ArrayList<>();
     navbarRequest.getContent().forEach(thisId -> {
       if (accessabilityRepository.getAccessability(loginId, thisId.getMainItem()).isPresent()
@@ -181,8 +162,8 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
         contentUpdate.add(new ContentNavbar(new ObjectId(thisId.getMainItem()), listChild));
       }
     });
-    repository.insertAndUpdate(
-        new Navbar(new ObjectId(id), navbarRequest.getName(), userIdsUpdate, contentUpdate));
+    repository
+        .insertAndUpdate(new Navbar(new ObjectId(id), navbarRequest.getName(), contentUpdate));
   }
 
   @Override
@@ -192,17 +173,6 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
     navbarInventory.findNavbarByName(navbarRequest.getName()).ifPresent(thisNav -> {
       error.put("name", LanguageMessageKey.NAVBAR_EXISTED);
       throw new InvalidRequestException(error, LanguageMessageKey.NAVBAR_EXISTED);
-    });
-    List<ObjectId> userIdsUpdate = new ArrayList<>();
-    navbarRequest.getUserIds().forEach(thisId -> {
-      if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
-          && userInventory.findUserById(thisId.toString()).isPresent()) {
-        if (navbarInventory.findNavbarById(thisId).isPresent()) {
-          error.put("userIds", LanguageMessageKey.NAVBAR_EXISTED);
-          throw new InvalidRequestException(error, LanguageMessageKey.NAVBAR_EXISTED);
-        }
-        userIdsUpdate.add(new ObjectId(thisId));
-      }
     });
     List<ContentNavbar> contentUpdate = new ArrayList<>();
     navbarRequest.getContent().forEach(thisId -> {
@@ -221,8 +191,7 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
     ObjectId newId = new ObjectId();
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
-    repository
-        .insertAndUpdate(new Navbar(newId, navbarRequest.getName(), userIdsUpdate, contentUpdate));
+    repository.insertAndUpdate(new Navbar(newId, navbarRequest.getName(), contentUpdate));
   }
 
   @Override
