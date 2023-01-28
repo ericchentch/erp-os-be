@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Code {
-    private ObjectId _id;
-    private ObjectId userId;
-    private TypeCode type;
-    private String code;
-    private Date expiredDate;
+  private ObjectId _id;
+  private ObjectId userId;
+  private TypeCode type;
+  private String code;
+  private Date expiredDate;
 }

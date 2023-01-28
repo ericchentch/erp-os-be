@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.repository.systemRepository.path;
 
+import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
@@ -12,9 +13,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Path {
-    private ObjectId _id;
-    private String label;
-    private String path;
-    private TypeAccount type;
-    private String icon;
+  private ObjectId _id;
+  private String label;
+  private String path;
+  private TypeAccount type;
+  private List<ObjectId> userId;
+  private String icon;
 }

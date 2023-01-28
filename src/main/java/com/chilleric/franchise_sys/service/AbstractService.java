@@ -38,7 +38,6 @@ public abstract class AbstractService<r> {
 
   protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
 
-
   @Autowired
   protected AccessabilityRepository accessabilityRepository;
 

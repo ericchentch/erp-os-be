@@ -11,22 +11,22 @@ import com.chilleric.franchise_sys.repository.systemRepository.language.Language
 
 @Service
 public class LanguageInventoryImpl extends AbstractInventory<LanguageRepository>
-        implements LanguageInventory {
-    @Override
-    public Optional<Language> findLanguageById(String id) {
-        List<Language> languages =
-                repository.getLanguages(Map.ofEntries(entry("_id", id)), "", 0, 0, "").get();
-        if (languages.size() == 0)
-            return Optional.empty();
-        return Optional.of(languages.get(0));
-    }
+    implements LanguageInventory {
+  @Override
+  public Optional<Language> findLanguageById(String id) {
+    List<Language> languages =
+        repository.getLanguages(Map.ofEntries(entry("_id", id)), "", 0, 0, "").get();
+    if (languages.size() == 0)
+      return Optional.empty();
+    return Optional.of(languages.get(0));
+  }
 
-    @Override
-    public Optional<Language> findLanguageByKey(String key) {
-        List<Language> languages =
-                repository.getLanguages(Map.ofEntries(entry("key", key)), "", 0, 0, "").get();
-        if (languages.size() == 0)
-            return Optional.empty();
-        return Optional.of(languages.get(0));
-    }
+  @Override
+  public Optional<Language> findLanguageByKey(String key) {
+    List<Language> languages =
+        repository.getLanguages(Map.ofEntries(entry("key", key)), "", 0, 0, "").get();
+    if (languages.size() == 0)
+      return Optional.empty();
+    return Optional.of(languages.get(0));
+  }
 }

@@ -11,16 +11,15 @@ import com.chilleric.franchise_sys.repository.systemRepository.accessability.Acc
 
 @Service
 public class AccessabilityInventoryImpl extends AbstractInventory<AccessabilityRepository>
-        implements AccessabilityInventory {
+    implements AccessabilityInventory {
 
-    @Override
-    public Optional<List<Accessability>> getAccessByTargetId(String targetId) {
-        List<Accessability> accesses = repository
-                .getListAccessability(Map.ofEntries(entry("targetId", targetId)), "", 0, 0, "")
-                .get();
-        if (accesses.size() == 0)
-            return Optional.empty();
-        return Optional.of(accesses);
-    }
+  @Override
+  public Optional<List<Accessability>> getAccessByTargetId(String targetId) {
+    List<Accessability> accesses = repository
+        .getListAccessability(Map.ofEntries(entry("targetId", targetId)), "", 0, 0, "").get();
+    if (accesses.size() == 0)
+      return Optional.empty();
+    return Optional.of(accesses);
+  }
 
 }

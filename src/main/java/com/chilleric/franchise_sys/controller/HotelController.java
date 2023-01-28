@@ -23,55 +23,53 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @RequestMapping(value = "hotel")
 public class HotelController extends AbstractController<HotelService> {
-	@SecurityRequirement(name = "Bearer Authentication")
-	@GetMapping(value = "get-hotel-by-id")
-	public ResponseEntity<CommonResponse<HotelResponse>> getHotel(
-			@RequestParam(required = true) String hotelId, HttpServletRequest request) {
-		validateToken(request);
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-hotel-by-id")
+  public ResponseEntity<CommonResponse<HotelResponse>> getHotel(
+      @RequestParam(required = true) String hotelId, HttpServletRequest request) {
+    validateToken(request);
 
-		return response(service.getHotelById(hotelId), LanguageMessageKey.SUCCESS,
-				new ArrayList<>(), new ArrayList<>());
-	}
+    return response(service.getHotelById(hotelId), LanguageMessageKey.SUCCESS, new ArrayList<>(),
+        new ArrayList<>());
+  }
 
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PostMapping(value = "create-hotel")
-	public ResponseEntity<CommonResponse<String>> createHotel(
-			@RequestBody(required = true) HotelRequest hotelRequest, HttpServletRequest request) {
-		ValidationResult result = validateToken(request);
-		service.createNewHotel(hotelRequest);
-		return new ResponseEntity<CommonResponse<String>>(
-				new CommonResponse<String>(true, null, LanguageMessageKey.HOTEL_ADD_SUCCESS,
-						HttpStatus.OK.value(),
-						result.getViewPoints().get(HotelResponse.class.getSimpleName()),
-						result.getEditable().get(HotelResponse.class.getSimpleName())),
-				null, HttpStatus.OK.value());
-	}
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PostMapping(value = "create-hotel")
+  public ResponseEntity<CommonResponse<String>> createHotel(
+      @RequestBody(required = true) HotelRequest hotelRequest, HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    service.createNewHotel(hotelRequest);
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.HOTEL_ADD_SUCCESS,
+            HttpStatus.OK.value(), result.getViewPoints().get(HotelResponse.class.getSimpleName()),
+            result.getEditable().get(HotelResponse.class.getSimpleName())),
+        null, HttpStatus.OK.value());
+  }
 
-	@SecurityRequirement(name = "Bearer Authentication")
-	@PutMapping(value = "update-hotel")
-	public ResponseEntity<CommonResponse<String>> updateHotel(@RequestParam String hotelId,
-			@RequestBody HotelRequest hotelRequest, HttpServletRequest httpServletRequest) {
-		validateToken(httpServletRequest);
-		service.updateHotel(hotelId, hotelRequest);
-		return new ResponseEntity<CommonResponse<String>>(
-				new CommonResponse<String>(true, null, LanguageMessageKey.HOTEL_UPDATE_SUCCESS,
-						HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
-				null, HttpStatus.OK.value());
-	}
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PutMapping(value = "update-hotel")
+  public ResponseEntity<CommonResponse<String>> updateHotel(@RequestParam String hotelId,
+      @RequestBody HotelRequest hotelRequest, HttpServletRequest httpServletRequest) {
+    validateToken(httpServletRequest);
+    service.updateHotel(hotelId, hotelRequest);
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.HOTEL_UPDATE_SUCCESS,
+            HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
+        null, HttpStatus.OK.value());
+  }
 
-	@SecurityRequirement(name = "Bearer Authentication")
-	@DeleteMapping(value = "delete-hotel-by-id")
-	public ResponseEntity<CommonResponse<String>> deleteHotel(@RequestParam String hotelId,
-			HttpServletRequest httpServletRequest) {
-		validateToken(httpServletRequest);
+  @SecurityRequirement(name = "Bearer Authentication")
+  @DeleteMapping(value = "delete-hotel-by-id")
+  public ResponseEntity<CommonResponse<String>> deleteHotel(@RequestParam String hotelId,
+      HttpServletRequest httpServletRequest) {
+    validateToken(httpServletRequest);
 
-		service.deleteHotel(hotelId);
+    service.deleteHotel(hotelId);
 
-		return new ResponseEntity<CommonResponse<String>>(
-				new CommonResponse<String>(true, null, LanguageMessageKey.HOTEL_DELETE_SUCCESS,
-						HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
-				null, HttpStatus.OK.value());
-	}
-
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.HOTEL_DELETE_SUCCESS,
+            HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
+        null, HttpStatus.OK.value());
+  }
 
 }

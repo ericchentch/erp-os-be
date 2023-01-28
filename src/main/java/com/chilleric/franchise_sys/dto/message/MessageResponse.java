@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageResponse {
-    private String id;
-    private String sendId;
-    private String receiveId;
-    private String context;
-    private Date created;
+  private String id;
+  private String sendId;
+  private String receiveId;
+  private String context;
+  private Date created;
 }

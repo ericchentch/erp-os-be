@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SettingsRequest {
 
-    @NotEmpty(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
-    @NotNull(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
-    private String languageKey;
+  @NotEmpty(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
+  @NotNull(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
+  private String languageKey;
 }

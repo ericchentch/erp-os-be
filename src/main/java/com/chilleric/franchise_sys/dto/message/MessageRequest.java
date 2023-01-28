@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MessageRequest {
 
-    @NotEmpty(message = LanguageMessageKey.MESSAGE_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.MESSAGE_REQUIRED)
-    @NotNull(message = LanguageMessageKey.MESSAGE_REQUIRED)
-    private String message;
+  @NotEmpty(message = LanguageMessageKey.MESSAGE_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.MESSAGE_REQUIRED)
+  @NotNull(message = LanguageMessageKey.MESSAGE_REQUIRED)
+  private String message;
 }

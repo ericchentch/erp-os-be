@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Document(collection = "calendars")
 public class Calendar {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private ObjectId roomTypeId;
-    private String position;
-    private ObjectId billId;
-    private Date checkoutTime;
-    private Date checkinTime;
+  private ObjectId roomTypeId;
+  private String position;
+  private ObjectId billId;
+  private Date checkoutTime;
+  private Date checkinTime;
 }

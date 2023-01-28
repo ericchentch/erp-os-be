@@ -13,15 +13,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LanguageRequest {
-    @NotEmpty(message = LanguageMessageKey.LANGUAGE_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.LANGUAGE_REQUIRED)
-    @NotNull(message = LanguageMessageKey.LANGUAGE_REQUIRED)
-    private String language;
+  @NotEmpty(message = LanguageMessageKey.LANGUAGE_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.LANGUAGE_REQUIRED)
+  @NotNull(message = LanguageMessageKey.LANGUAGE_REQUIRED)
+  private String language;
 
-    @NotEmpty(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
-    @NotBlank(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
-    @NotNull(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
-    private String key;
+  @NotEmpty(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
+  @NotBlank(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
+  @NotNull(message = LanguageMessageKey.LANGUAGE_KEY_REQUIRED)
+  private String key;
 
-    private Map<String, String> dictionary;
+  private Map<String, String> dictionary;
 }

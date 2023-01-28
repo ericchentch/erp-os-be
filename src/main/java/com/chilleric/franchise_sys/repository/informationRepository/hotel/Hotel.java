@@ -13,17 +13,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Hotel {
-	private ObjectId _id;
+  private ObjectId _id;
 
-	private String description;
-	private String name;
-	private List<String> linkImages;
-	private List<ClientInfomation> client;
+  private String description;
+  private String name;
+  private List<String> linkImages;
+  private List<ClientInfomation> client;
 
-	private float billDeposit;
-	private float VAT;
-	private float maxRefund;
-	private int maxDaysRefund;
+  private float billDeposit;
+  private float VAT;
+  private float maxRefund;
+  private int maxDaysRefund;
 
 	private float maxWorkHours;
 	private float maxShift;

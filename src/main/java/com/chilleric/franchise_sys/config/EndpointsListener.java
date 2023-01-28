@@ -16,8 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.chilleric.franchise_sys.repository.systemRepository.language.Language;
 import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.navbar.Navbar;
-import com.chilleric.franchise_sys.repository.systemRepository.navbar.NavbarRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.path.PathRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
@@ -40,9 +38,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
   @Autowired
   private PathRepository pathRepository;
-
-  @Autowired
-  private NavbarRepository navbarRepository;
 
   @Value("${spring.mail.username}")
   protected String email;
@@ -89,30 +84,18 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     }
     List<ObjectId> paths = pathRepository.getPaths(new HashMap<>(), "", 0, 0, "").get().stream()
         .map(thisPath -> thisPath.get_id()).collect(Collectors.toList());
-    List<Navbar> navbarList = navbarRepository
-        .getNavbarList(Map.ofEntries(entry("name", "admin_nav")), "", 0, 0, "").get();
-    Navbar adminNav = new Navbar();
-    if (navbarList.size() > 0) {
-      adminNav = navbarList.get(0);
-    } else {
-      ObjectId newNavId = new ObjectId();
-      adminNav =
-          new Navbar(newNavId, "admin_nav", Arrays.asList(user.get_id(), usersDev.get_id()), paths);
-      navbarRepository.insertAndUpdate(adminNav);
-    }
     List<Permission> permissions = permissionRepository
         .getPermissions(Map.ofEntries(entry("name", "super_admin_permission")), "", 0, 0, "").get();
     if (permissions.size() == 0) {
       List<ObjectId> userIds = Arrays.asList(user.get_id(), usersDev.get_id());
       Permission permission = new Permission(null, "super_admin_permission", userIds,
           DateFormat.getCurrentTime(), null, permissionRepository.getViewPointSelect(),
-          permissionRepository.getEditableSelect(), adminNav.get_id(), paths, true);
+          permissionRepository.getEditableSelect(), paths, true);
       permissionRepository.insertAndUpdate(permission);
     } else {
       Permission permission = permissions.get(0);
       permission.setViewPoints(permissionRepository.getViewPointSelect());
       permission.setEditable(permissionRepository.getEditableSelect());
-      permission.setNavbar(adminNav.get_id());
       permission.setPaths(paths);
       permissionRepository.insertAndUpdate(permission);
     }

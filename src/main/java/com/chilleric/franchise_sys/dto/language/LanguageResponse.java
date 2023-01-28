@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LanguageResponse {
-    private String id;
-    private String language;
-    private String key;
-    private Map<String, String> dictionary;
+  private String id;
+  private String language;
+  private String key;
+  private Map<String, String> dictionary;
 }

@@ -5,5 +5,5 @@ import java.util.Optional;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 
 public interface AccessabilityInventory {
-    Optional<List<Accessability>> getAccessByTargetId(String targetId);
+  Optional<List<Accessability>> getAccessByTargetId(String targetId);
 }

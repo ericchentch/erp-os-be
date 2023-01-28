@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponse {
-    private String userId;
-    private String token;
-    private TypeAccount type;
-    private boolean isVerify2Fa;
-    private boolean needVerify;
+  private String userId;
+  private String token;
+  private TypeAccount type;
+  private boolean isVerify2Fa;
+  private boolean needVerify;
 }

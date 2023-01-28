@@ -15,33 +15,33 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomTypeRequest {
-    @NotBlank(message = LanguageMessageKey.ROOM_TYPE_HOTELID_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.ROOM_TYPE_HOTELID_REQUIRED)
-    @NotNull(message = LanguageMessageKey.ROOM_TYPE_HOTELID_REQUIRED)
-    private String hotelId;
+  @NotBlank(message = LanguageMessageKey.ROOM_TYPE_HOTELID_REQUIRED)
+  @NotEmpty(message = LanguageMessageKey.ROOM_TYPE_HOTELID_REQUIRED)
+  @NotNull(message = LanguageMessageKey.ROOM_TYPE_HOTELID_REQUIRED)
+  private String hotelId;
 
 
-    @NotBlank(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED)
-    @NotNull(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED)
-    private String name;
+  @NotBlank(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED)
+  @NotEmpty(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED)
+  @NotNull(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED)
+  private String name;
 
-    @NotNull(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED)
-    private List<@NotBlank(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED) @NotEmpty(
-            message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED) String> linkImages;
+  @NotNull(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED)
+  private List<@NotBlank(message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED) @NotEmpty(
+      message = LanguageMessageKey.ROOM_TYPE_NAME_REQUIRED) String> linkImages;
 
-    @NotNull(message = LanguageMessageKey.ROOM_TYPE_ROOMS_REQUIRED)
-    @NotEmpty(message = LanguageMessageKey.ROOM_TYPE_ROOMS_REQUIRED)
-    private List<@NotEmpty(message = LanguageMessageKey.ROOM_TYPE_ROOMS_REQUIRED) @NotBlank(
-            message = LanguageMessageKey.ROOM_TYPE_ROOMS_REQUIRED) String> rooms;
+  @NotNull(message = LanguageMessageKey.ROOM_TYPE_ROOMS_REQUIRED)
+  @NotEmpty(message = LanguageMessageKey.ROOM_TYPE_ROOMS_REQUIRED)
+  private List<@NotEmpty(message = LanguageMessageKey.ROOM_TYPE_ROOMS_REQUIRED) @NotBlank(
+      message = LanguageMessageKey.ROOM_TYPE_ROOMS_REQUIRED) String> rooms;
 
-    @NotNull(message = LanguageMessageKey.ROOM_TYPE_RATE_REQUIRED)
-    @Min(0)
-    @Max(5)
-    private float rate;
+  @NotNull(message = LanguageMessageKey.ROOM_TYPE_RATE_REQUIRED)
+  @Min(0)
+  @Max(5)
+  private float rate;
 
-    @NotNull(message = LanguageMessageKey.ROOM_TYPE_STOCK_PRICE_REQUIRED)
-    @Min(0)
-    private float stockPrice;
+  @NotNull(message = LanguageMessageKey.ROOM_TYPE_STOCK_PRICE_REQUIRED)
+  @Min(0)
+  private float stockPrice;
 
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClientRequest {
-    private String address;
-    private String phone;
+  private String address;
+  private String phone;
 }

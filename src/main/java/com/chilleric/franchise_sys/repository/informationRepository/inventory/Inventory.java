@@ -11,10 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Document(collection = "inventories")
 public class Inventory {
-    private ObjectId _id;
+  private ObjectId _id;
 
-    private ObjectId belongToId;
-    private String name;
-    private float price;
-    private int quantity;
+  private ObjectId belongToId;
+  private String name;
+  private float price;
+  private int quantity;
 }

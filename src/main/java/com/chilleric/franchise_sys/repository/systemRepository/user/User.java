@@ -12,25 +12,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    public enum TypeAccount {
-        INTERNAL, EXTERNAL
-    }
+  public enum TypeAccount {
+    INTERNAL, EXTERNAL
+  }
 
-    private ObjectId _id;
-    private TypeAccount type;
-    private String username;
-    private String password;
-    private int gender;
-    private String dob;
-    private String address;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phone;
-    private String tokens;
-    private Date created;
-    private Date modified;
-    private boolean verified;
-    private boolean verify2FA;
-    private int deleted;
+  private ObjectId _id;
+  private TypeAccount type;
+  private String username;
+  private String password;
+  private int gender;
+  private String dob;
+  private String address;
+  private String firstName;
+  private String lastName;
+  private String email;
+  private String phone;
+  private String tokens;
+  private Date created;
+  private Date modified;
+  private boolean verified;
+  private boolean verify2FA;
+  private int deleted;
 }

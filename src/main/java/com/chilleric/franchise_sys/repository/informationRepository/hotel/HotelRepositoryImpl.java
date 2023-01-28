@@ -10,32 +10,31 @@ import com.chilleric.franchise_sys.repository.AbstractRepo;
 @Repository
 public class HotelRepositoryImpl extends AbstractRepo implements HotelRepository {
 
-    @Override
-    public void insertAndUpdate(Hotel hotel) {
-        informationDBTemplate.save(hotel, "hotels");
-    }
+  @Override
+  public void insertAndUpdate(Hotel hotel) {
+    informationDBTemplate.save(hotel, "hotels");
+  }
 
-    @Override
-    public long getTotalPage(Map<String, String> allParams) {
-        Query query = generateQueryMongoDB(allParams, Hotel.class, "", "", 0, 0);
-        informationDBTemplate.count(query, Hotel.class);
-        return 0;
-    }
+  @Override
+  public long getTotalPage(Map<String, String> allParams) {
+    Query query = generateQueryMongoDB(allParams, Hotel.class, "", "", 0, 0);
+    informationDBTemplate.count(query, Hotel.class);
+    return 0;
+  }
 
-    @Override
-    public Optional<List<Hotel>> getHotels(Map<String, String> allParams, String keySort, int page,
-            int pageSize, String sortField) {
-        Query query =
-                generateQueryMongoDB(allParams, Hotel.class, keySort, sortField, page, pageSize);
+  @Override
+  public Optional<List<Hotel>> getHotels(Map<String, String> allParams, String keySort, int page,
+      int pageSize, String sortField) {
+    Query query = generateQueryMongoDB(allParams, Hotel.class, keySort, sortField, page, pageSize);
 
-        return informationFind(query, Hotel.class);
-    }
+    return informationFind(query, Hotel.class);
+  }
 
-    @Override
-    public void delete(String hotelId) {
-        Query query = generateQueryMongoDB(Map.ofEntries(Map.entry("_id", hotelId)), Hotel.class,
-                "", "", 0, 0);
-        informationDBTemplate.remove(query, Hotel.class);
-    }
+  @Override
+  public void delete(String hotelId) {
+    Query query =
+        generateQueryMongoDB(Map.ofEntries(Map.entry("_id", hotelId)), Hotel.class, "", "", 0, 0);
+    informationDBTemplate.remove(query, Hotel.class);
+  }
 
 }

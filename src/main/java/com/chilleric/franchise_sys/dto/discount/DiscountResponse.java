@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiscountResponse {
-    private String id;
-    private String name;
-    private float maximum;
-    private float minimumApply;
-    private List<String> userIds;
+  private String id;
+  private String name;
+  private float maximum;
+  private float minimumApply;
+  private List<String> userIds;
 }

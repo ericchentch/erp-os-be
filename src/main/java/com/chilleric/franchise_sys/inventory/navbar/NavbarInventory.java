@@ -4,7 +4,9 @@ import java.util.Optional;
 import com.chilleric.franchise_sys.repository.systemRepository.navbar.Navbar;
 
 public interface NavbarInventory {
-    Optional<Navbar> findNavbarByName(String name);
+  Optional<Navbar> findNavbarByName(String name);
 
-    Optional<Navbar> findNavbarById(String id);
+  Optional<Navbar> findNavbarById(String id);
+
+  Optional<Navbar> findNavbarByUserId(String userId);
 }

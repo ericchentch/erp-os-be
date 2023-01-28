@@ -12,19 +12,19 @@ import reactor.core.publisher.Flux;
 
 public interface MessageService {
 
-        Optional<ListWrapperResponse<MessageResponse>> getOldMessage(String userId, String sendId,
-                        int page);
+  Optional<ListWrapperResponse<MessageResponse>> getOldMessage(String userId, String sendId,
+      int page);
 
-        Optional<List<ChatRoom>> getChatroom(String loginId, int page);
+  Optional<List<ChatRoom>> getChatroom(String loginId, int page);
 
-        Optional<MessageResponse> sendMessage(MessageRequest messageRequest, String loginId,
-                        String receiveId);
+  Optional<MessageResponse> sendMessage(MessageRequest messageRequest, String loginId,
+      String receiveId);
 
-        void addOnlineUser(String userId);
+  void addOnlineUser(String userId);
 
-        void removeOnlineUser(String userId);
+  void removeOnlineUser(String userId);
 
-        Flux<ServerSentEvent<List<OnlineUserResponse>>> getOnlineUsers(String userId);
+  Flux<ServerSentEvent<List<OnlineUserResponse>>> getOnlineUsers(String userId);
 
-        Flux<ServerSentEvent<MessageResponse>> getLastUserMessage(String userId);
+  Flux<ServerSentEvent<MessageResponse>> getLastUserMessage(String userId);
 }

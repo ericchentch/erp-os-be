@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DraftDetailResponse {
-    private TypeObjectBill type;
-    private Object objectResponse;
-    private int quantity;
+  private TypeObjectBill type;
+  private Object objectResponse;
+  private int quantity;
 }
