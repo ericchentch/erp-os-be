@@ -25,7 +25,7 @@ public class Hotel {
   private float maxRefund;
   private int maxDaysRefund;
 
-	private float maxWorkHours;
-	private float maxShift;
-	private ObjectId permissionId;
+  private float maxWorkHours;
+  private float maxShift;
+  private ObjectId permissionId;
 }

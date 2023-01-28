@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HotelResponse {
-	private String hotelId;
-	private String name;
-	private String description;
-	private List<String> linkImages;
-	private List<ClientRequest> client;
+  private String hotelId;
+  private String name;
+  private String description;
+  private List<String> linkImages;
+  private List<ClientRequest> client;
 
-	private float billDeposit;
-	private float VAT;
-	private float maxRefund;
-	private int maxDaysRefund;
+  private float billDeposit;
+  private float VAT;
+  private float maxRefund;
+  private int maxDaysRefund;
 
-	private float maxWorkHours;
-	private float maxShift;
-	private String permissionId;
+  private float maxWorkHours;
+  private float maxShift;
+  private String permissionId;
 }
