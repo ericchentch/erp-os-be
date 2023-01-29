@@ -6,7 +6,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,21 +81,18 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     } else {
       usersDev = userDevs.get(0);
     }
-    List<ObjectId> paths = pathRepository.getPaths(new HashMap<>(), "", 0, 0, "").get().stream()
-        .map(thisPath -> thisPath.get_id()).collect(Collectors.toList());
     List<Permission> permissions = permissionRepository
         .getPermissions(Map.ofEntries(entry("name", "super_admin_permission")), "", 0, 0, "").get();
     if (permissions.size() == 0) {
       List<ObjectId> userIds = Arrays.asList(user.get_id(), usersDev.get_id());
       Permission permission = new Permission(null, "super_admin_permission", userIds,
           DateFormat.getCurrentTime(), null, permissionRepository.getViewPointSelect(),
-          permissionRepository.getEditableSelect(), paths, true);
+          permissionRepository.getEditableSelect(), true);
       permissionRepository.insertAndUpdate(permission);
     } else {
       Permission permission = permissions.get(0);
       permission.setViewPoints(permissionRepository.getViewPointSelect());
       permission.setEditable(permissionRepository.getEditableSelect());
-      permission.setPaths(paths);
       permissionRepository.insertAndUpdate(permission);
     }
     List<Language> defLanguages =

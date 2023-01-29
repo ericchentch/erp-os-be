@@ -23,8 +23,6 @@ import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
-import com.chilleric.franchise_sys.inventory.navbar.NavbarInventory;
-import com.chilleric.franchise_sys.inventory.path.PathInventory;
 import com.chilleric.franchise_sys.inventory.permission.PermissionInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
@@ -45,11 +43,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
 
   @Autowired
   private PermissionInventory permissionInventory;
-
-  @Autowired
-  private NavbarInventory navbarInventory;
-  @Autowired
-  private PathInventory pathInventory;
 
   @Override
   public Optional<ListWrapperResponse<PermissionResponse>> getYourPermissions(
@@ -138,7 +131,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       permission.setUserId(new ArrayList<>());
     }
 
-    permission.setPaths(new ArrayList<>());
     permission.setUserId(new ArrayList<>());
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
@@ -177,7 +169,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       permission.setUserId(new ArrayList<>());
     }
 
-    permission.setPaths(new ArrayList<>());
     permission.setUserId(new ArrayList<>());
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());

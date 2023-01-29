@@ -23,6 +23,5 @@ public class Permission {
   private Date modified;
   private Map<String, List<ViewPoint>> viewPoints;
   private Map<String, List<ViewPoint>> editable;
-  private List<ObjectId> paths;
   private boolean isDev;
 }
