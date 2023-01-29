@@ -6,6 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import com.chilleric.franchise_sys.annotation.IsObjectId.IsObjectId;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +35,10 @@ public class HotelRequest {
   @NotEmpty(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
   private List<ClientRequest> client;
 
+  @NotNull(message = LanguageMessageKey.HOTEL_BILL_DEPOSIT_REQUIRED)
+  @Min(0)
+  private float billDeposit;
+
   @NotNull(message = LanguageMessageKey.HOTEL_VAT_REQUIRED)
   @Min(0)
   @Max(100)
@@ -47,4 +52,16 @@ public class HotelRequest {
   @NotNull(message = LanguageMessageKey.HOTEL_VAT_REQUIRED)
   @Min(0)
   private int maxDaysRefund;
+
+  @NotNull(message = LanguageMessageKey.HOTEL_MAX_WORK_HOURS_REQUIRED)
+  @Min(0)
+  private float maxWorkHours;
+
+  @NotNull(message = LanguageMessageKey.HOTEL_MAX_SHIFT_REQUIRED)
+  @Min(1)
+  private float maxShift;
+
+  @IsObjectId
+  @NotNull(message = LanguageMessageKey.HOTEL_PERMISSION_ID_REQUIRED)
+  private String permissionId;
 }

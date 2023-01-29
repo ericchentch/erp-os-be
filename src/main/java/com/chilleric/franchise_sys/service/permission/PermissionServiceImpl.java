@@ -80,19 +80,15 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     }
     List<Permission> permissions =
         repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<PermissionResponse>(
-        permissions.stream()
-            .map(permission -> new PermissionResponse(permission.get_id().toString(),
-                permission.getName(),
-                permission.getUserId().size() > 0 ? permission.getUserId().stream()
-                    .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
-                DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
-                DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-                removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-                permission.getPaths().stream().map(thisNav -> thisNav.toString())
-                    .collect(Collectors.toList())))
-            .collect(Collectors.toList()),
-        page, pageSize, repository.getTotal(allParams)));
+    return Optional.of(new ListWrapperResponse<PermissionResponse>(permissions.stream()
+        .map(permission -> new PermissionResponse(permission.get_id().toString(),
+            permission.getName(),
+            permission.getUserId().size() > 0 ? permission.getUserId().stream()
+                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+            DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
+            DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
+            removeId(permission.getViewPoints()), removeId(permission.getEditable())))
+        .collect(Collectors.toList()), page, pageSize, repository.getTotal(allParams)));
   }
 
   @Override
@@ -105,10 +101,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
             DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
             DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-            removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-            permission.getPaths().size() > 0 ? permission.getPaths().stream()
-                .map(thisNav -> thisNav.toString()).collect(Collectors.toList())
-                : new ArrayList<>()));
+            removeId(permission.getViewPoints()), removeId(permission.getEditable())));
   }
 
   @Override
@@ -144,19 +137,9 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     } else {
       permission.setUserId(new ArrayList<>());
     }
-    if (permissionRequest.getPaths().size() != 0) {
-      List<ObjectId> resultIds = new ArrayList<>();
-      permissionRequest.getPaths().forEach(thisId -> {
-        pathInventory.findPathById(thisId).ifPresent(thisNav -> {
-          accessabilityRepository.getAccessability(loginId, thisId).ifPresent(thisAccess -> {
-            resultIds.add(new ObjectId(thisId));
-          });
-        });
-      });
-      permission.setPaths(resultIds);
-    } else {
-      permission.setUserId(new ArrayList<>());
-    }
+
+    permission.setPaths(new ArrayList<>());
+    permission.setUserId(new ArrayList<>());
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
     accessabilityRepository
@@ -193,19 +176,9 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     } else {
       permission.setUserId(new ArrayList<>());
     }
-    if (permissionRequest.getPaths().size() != 0) {
-      List<ObjectId> resultIds = new ArrayList<>();
-      permissionRequest.getPaths().forEach(thisId -> {
-        pathInventory.findPathById(thisId).ifPresent(thisNav -> {
-          accessabilityRepository.getAccessability(loginId, thisId).ifPresent(thisAccess -> {
-            resultIds.add(new ObjectId(thisId));
-          });
-        });
-      });
-      permission.setPaths(resultIds);
-    } else {
-      permission.setUserId(new ArrayList<>());
-    }
+
+    permission.setPaths(new ArrayList<>());
+    permission.setUserId(new ArrayList<>());
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
     permission.setModified(DateFormat.getCurrentTime());
@@ -259,19 +232,15 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       String loginId) {
     List<Permission> permissions =
         repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<PermissionResponse>(
-        permissions.stream()
-            .map(permission -> new PermissionResponse(permission.get_id().toString(),
-                permission.getName(),
-                permission.getUserId().size() > 0 ? permission.getUserId().stream()
-                    .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
-                DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
-                DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-                removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-                permission.getPaths().stream().map(thisNav -> thisNav.toString())
-                    .collect(Collectors.toList())))
-            .collect(Collectors.toList()),
-        page, pageSize, repository.getTotal(allParams)));
+    return Optional.of(new ListWrapperResponse<PermissionResponse>(permissions.stream()
+        .map(permission -> new PermissionResponse(permission.get_id().toString(),
+            permission.getName(),
+            permission.getUserId().size() > 0 ? permission.getUserId().stream()
+                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+            DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
+            DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
+            removeId(permission.getViewPoints()), removeId(permission.getEditable())))
+        .collect(Collectors.toList()), page, pageSize, repository.getTotal(allParams)));
   }
 
   private void checkDeleteAndEdit(Permission permission) {

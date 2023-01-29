@@ -14,6 +14,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.dto.hotel.HotelRequest;
+import com.chilleric.franchise_sys.dto.hotel.HotelResponse;
 import com.chilleric.franchise_sys.dto.navbar.NavbarRequest;
 import com.chilleric.franchise_sys.dto.navbar.NavbarResponse;
 import com.chilleric.franchise_sys.dto.path.PathRequest;
@@ -71,7 +73,7 @@ public class PermissionRepositoryImpl extends AbstractRepo implements Permission
   @Override
   public Map<String, List<ViewPoint>> getViewPointSelect() {
     List<Class<?>> viewPointList = List.of(UserResponse.class, PermissionResponse.class,
-        PathResponse.class, NavbarResponse.class);
+        PathResponse.class, HotelResponse.class, NavbarResponse.class);
     Map<String, List<ViewPoint>> result = new HashMap<>();
     viewPointList.forEach(clazz -> {
       List<ViewPoint> attributes = new ArrayList<>();
@@ -85,8 +87,8 @@ public class PermissionRepositoryImpl extends AbstractRepo implements Permission
 
   @Override
   public Map<String, List<ViewPoint>> getEditableSelect() {
-    List<Class<?>> viewPointList =
-        List.of(UserRequest.class, PermissionRequest.class, PathRequest.class, NavbarRequest.class);
+    List<Class<?>> viewPointList = List.of(UserRequest.class, PermissionRequest.class,
+        PathRequest.class, HotelRequest.class, NavbarRequest.class);
     Map<String, List<ViewPoint>> result = new HashMap<>();
     viewPointList.forEach(clazz -> {
       List<ViewPoint> attributes = new ArrayList<>();

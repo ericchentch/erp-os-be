@@ -358,6 +358,8 @@ public class LanguageMessageKey {
                                                                                  // is required
   public static final String HOTEL_LINK_IMAGE_REQUIRED = "linkImageRequired"; // Link images are
                                                                               // required
+  public static final String HOTEL_BILL_DEPOSIT_REQUIRED = "billDepositRequired"; // Bill deposit
+                                                                                  // is required
   public static final String HOTEL_VAT_REQUIRED = "VATRequired"; // VAT is required
   public static final String HOTEL_MAX_REFUND_REQUIRED = "maxRefundRequired"; // Hotel max refund
                                                                               // is required
@@ -366,6 +368,15 @@ public class LanguageMessageKey {
                                                                                       // required
   public static final String HOTEL_CLIENT_REQUIRED = "hotelClientRequired"; // Hotel client is
                                                                             // required
+  public static final String HOTEL_MAX_WORK_HOURS_REQUIRED = "maxWorkShiftRequired"; // Hotel max
+                                                                                     // work
+                                                                                     // shift is
+                                                                                     // required
+  public static final String HOTEL_MAX_SHIFT_REQUIRED = "maxShiftRequired"; // Hotel max shift is
+                                                                            // required
+  public static final String HOTEL_PERMISSION_ID_REQUIRED = "permissionIdRequired"; // Permission
+                                                                                    // Id is
+                                                                                    // required
   public static final String HOTEL_ADD_SUCCESS = "addHotelSuccess"; // A new hotel is added
                                                                     // successfully
   public static final String HOTEL_UPDATE_SUCCESS = "updateHotelSuccess"; // Hotel is updated
