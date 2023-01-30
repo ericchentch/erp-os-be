@@ -1,9 +1,7 @@
 package com.chilleric.franchise_sys.controller;
 
-import static java.util.Map.entry;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,14 +35,6 @@ import com.chilleric.franchise_sys.repository.systemRepository.user.User;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
 
 public abstract class AbstractController<s> {
-
-  protected static final Map<String, List<String>> IgnoreView = Map.ofEntries(
-      entry("PermissionResponse", Arrays.asList("id")), entry("UserResponse", Arrays.asList("id")),
-      entry("PathResponse", Arrays.asList("id", "userIds")));
-
-  protected static final Map<String, List<String>> IgnoreEdit =
-      Map.ofEntries(entry("PermissionRequest", Arrays.asList("id")),
-          entry("UserRequest", Arrays.asList("id")), entry("PathRequest", Arrays.asList("id")));
 
   protected static boolean isDev = false;
 
@@ -104,8 +94,7 @@ public abstract class AbstractController<s> {
     });
     if (isDev) {
       isDev = false;
-      return new ValidationResult(user.get_id().toString(), removeAttributes(thisView, IgnoreView),
-          removeAttributes(thisEdit, IgnoreEdit));
+      return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit));
     }
     if (user.getTokens().compareTo(token) != 0) {
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
@@ -122,36 +111,8 @@ public abstract class AbstractController<s> {
       }
     }
     isDev = false;
-    return new ValidationResult(user.get_id().toString(), removeAttributes(thisView, IgnoreView),
-        removeAttributes(thisEdit, IgnoreEdit));
+    return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit));
 
-  }
-
-  protected Map<String, List<ViewPoint>> removeAttributes(Map<String, List<ViewPoint>> thisView,
-      Map<String, List<String>> ignoreView) {
-    return thisView.entrySet().stream().map((key) -> {
-      List<ViewPoint> newValue = new ArrayList<>();
-      if (ignoreView.get(key.getKey()) != null) {
-        key.getValue().forEach(thisViewKey -> {
-          boolean isFound = false;
-          for (int i = 0; i < ignoreView.get(key.getKey()).size(); i++) {
-            if (thisViewKey.getKey().compareTo(ignoreView.get(key.getKey()).get(i)) == 0) {
-              isFound = true;
-              break;
-            }
-          }
-          if (isFound == false) {
-            newValue.add(thisViewKey);
-          }
-        });
-      } else {
-        key.getValue().forEach(thisViewKey -> {
-          newValue.add(thisViewKey);
-        });
-      }
-      return entry(key.getKey(), newValue);
-    }).collect(
-        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
   }
 
   protected <T> ResponseEntity<CommonResponse<T>> response(Optional<T> response,
@@ -239,5 +200,14 @@ public abstract class AbstractController<s> {
       }
     }
     return input;
+  }
+
+  private Map<String, List<ViewPoint>> removeId(Map<String, List<ViewPoint>> thisView) {
+    return thisView.entrySet().stream().map((key) -> {
+      List<ViewPoint> newValue = key.getValue().stream()
+          .filter(viewList -> viewList.getKey().compareTo("id") != 0).collect(Collectors.toList());
+      return Map.entry(key.getKey(), newValue);
+    }).collect(
+        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
   }
 }
