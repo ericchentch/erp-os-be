@@ -130,8 +130,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     } else {
       permission.setUserId(new ArrayList<>());
     }
-
-    permission.setUserId(new ArrayList<>());
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
     accessabilityRepository
@@ -168,8 +166,6 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     } else {
       permission.setUserId(new ArrayList<>());
     }
-
-    permission.setUserId(new ArrayList<>());
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
     permission.setModified(DateFormat.getCurrentTime());
