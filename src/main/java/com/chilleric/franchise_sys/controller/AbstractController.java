@@ -2,6 +2,7 @@ package com.chilleric.franchise_sys.controller;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,6 +36,16 @@ import com.chilleric.franchise_sys.repository.systemRepository.user.User;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
 
 public abstract class AbstractController<s> {
+
+
+  protected static final Map<String, List<String>> IgnoreView =
+      Map.ofEntries(Map.entry("PermissionResponse", Arrays.asList("id")),
+          Map.entry("UserResponse", Arrays.asList("id", "password")),
+          Map.entry("PathResponse", Arrays.asList("id", "userIds", "icon")));
+
+  protected static final Map<String, List<String>> IgnoreEdit = Map.ofEntries(
+      Map.entry("PermissionRequest", Arrays.asList("id")),
+      Map.entry("UserRequest", Arrays.asList("id")), Map.entry("PathRequest", Arrays.asList("id")));
 
   protected static boolean isDev = false;
 
@@ -135,6 +146,33 @@ public abstract class AbstractController<s> {
       }
     }
 
+  }
+
+  protected Map<String, List<ViewPoint>> removeAttributes(Map<String, List<ViewPoint>> thisView,
+      Map<String, List<String>> ignoreView) {
+    return thisView.entrySet().stream().map((key) -> {
+      List<ViewPoint> newValue = new ArrayList<>();
+      if (ignoreView.get(key.getKey()) != null) {
+        key.getValue().forEach(thisViewKey -> {
+          boolean isFound = false;
+          for (int i = 0; i < ignoreView.get(key.getKey()).size(); i++) {
+            if (thisViewKey.getKey().compareTo(ignoreView.get(key.getKey()).get(i)) == 0) {
+              isFound = true;
+              break;
+            }
+          }
+          if (isFound == false) {
+            newValue.add(thisViewKey);
+          }
+        });
+      } else {
+        key.getValue().forEach(thisViewKey -> {
+          newValue.add(thisViewKey);
+        });
+      }
+      return Map.entry(key.getKey(), newValue);
+    }).collect(
+        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
   }
 
   protected void preventItSelf(String loginId, String targetId) {
