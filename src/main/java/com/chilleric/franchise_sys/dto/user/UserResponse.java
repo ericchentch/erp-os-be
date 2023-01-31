@@ -24,5 +24,5 @@ public class UserResponse {
   private String modified;
   private boolean verified;
   private boolean verify2FA;
-  private int deleted;
+  private int active;
 }
