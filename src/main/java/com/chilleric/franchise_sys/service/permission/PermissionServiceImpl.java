@@ -82,7 +82,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
                 DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
                 removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-                permission.isServer()))
+                permission.isServer() ? 1 : 0))
             .collect(Collectors.toList()),
         page, pageSize, repository.getTotal(allParams)));
   }
@@ -98,7 +98,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
             DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
             DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
             removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-            permission.isServer()));
+            permission.isServer() ? 1 : 0));
   }
 
   @Override
@@ -277,7 +277,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
                 DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
                 removeId(permission.getViewPoints()), removeId(permission.getEditable()),
-                permission.isServer()))
+                permission.isServer() ? 1 : 0))
             .collect(Collectors.toList()),
         page, pageSize, repository.getTotal(allParams)));
   }
