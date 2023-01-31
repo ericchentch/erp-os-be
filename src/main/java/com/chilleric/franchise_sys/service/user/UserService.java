@@ -10,7 +10,7 @@ import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 
 public interface UserService {
 
-  void createNewUser(UserRequest userRequest, String loginId);
+  void createNewUser(UserRequest userRequest, String loginId, boolean isServer);
 
   void updateUserById(String userId, UserRequest userRequest, List<ViewPoint> viewPoints);
 

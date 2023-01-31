@@ -15,4 +15,5 @@ public class Accessability {
   private ObjectId userId;
   private ObjectId targetId;
   private boolean editable;
+  private boolean isServer;
 }

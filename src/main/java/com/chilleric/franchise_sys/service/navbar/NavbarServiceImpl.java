@@ -175,7 +175,7 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
   }
 
   @Override
-  public void addNewNavbar(NavbarRequest navbarRequest, String loginId) {
+  public void addNewNavbar(NavbarRequest navbarRequest, String loginId, boolean isServer) {
     validate(navbarRequest);
     Map<String, String> error = new HashMap<>();
     navbarInventory.findNavbarByName(navbarRequest.getName()).ifPresent(thisNav -> {
@@ -198,7 +198,7 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
     });
     ObjectId newId = new ObjectId();
     accessabilityRepository
-        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
+        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(new Navbar(newId, navbarRequest.getName(), contentUpdate));
   }
 

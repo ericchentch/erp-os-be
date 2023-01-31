@@ -46,6 +46,8 @@ public abstract class AbstractController<s> {
       Map.entry("PermissionRequest", Arrays.asList("id")),
       Map.entry("UserRequest", Arrays.asList("id")), Map.entry("PathRequest", Arrays.asList("id")));
 
+  public static boolean isServer = false;
+
   @Autowired
   protected s service;
 
@@ -93,14 +95,20 @@ public abstract class AbstractController<s> {
     List<Permission> permissions =
         permissionRepository.getPermissionByUserId(user.get_id().toString())
             .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
+
     permissions.forEach(thisPerm -> {
+      if (thisPerm.isServer()) {
+        isServer = true;
+      }
       thisView.putAll(ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
       thisEdit.putAll(ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
     });
     if (user.getTokens().compareTo(token) != 0) {
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
-    return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit));
+    isServer = false;
+    return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit),
+        isServer);
   }
 
   protected <T> ResponseEntity<CommonResponse<T>> response(Optional<T> response,
@@ -110,16 +118,19 @@ public abstract class AbstractController<s> {
         editable == null ? new ArrayList<>() : editable), HttpStatus.OK);
   }
 
-  protected void checkAccessability(String loginId, String targetId, boolean isCheckEdit) {
-    if (!isCheckEdit && loginId.compareTo(targetId) != 0) {
-      accessabilityRepository.getAccessability(loginId, targetId)
-          .orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
-    }
-    if (isCheckEdit) {
+  protected void checkAccessability(String loginId, String targetId, boolean isCheckEdit,
+      boolean isServer) {
+    if (loginId.compareTo(targetId) != 0) {
       Accessability accessability = accessabilityRepository.getAccessability(loginId, targetId)
           .orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
-      if (!accessability.isEditable()) {
-        throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+      if (isServer) {
+        if (accessability.isServer() && isCheckEdit && !accessability.isEditable()) {
+          throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+        }
+      } else {
+        if (isCheckEdit && !accessability.isEditable()) {
+          throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+        }
       }
     }
   }

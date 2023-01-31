@@ -14,7 +14,7 @@ public interface NavbarService {
 
   Optional<NavbarResponse> getNavbarDetailByName(String name, String loginId);
 
-  void addNewNavbar(NavbarRequest navbarRequest, String loginId);
+  void addNewNavbar(NavbarRequest navbarRequest, String loginId, boolean isServer);
 
   void updateNavbar(NavbarRequest navbarRequest, String loginId, String id);
 

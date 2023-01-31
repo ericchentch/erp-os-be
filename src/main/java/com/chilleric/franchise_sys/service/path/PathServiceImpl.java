@@ -51,7 +51,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
   }
 
   @Override
-  public void addNewPath(PathRequest pathRequest, String loginId) {
+  public void addNewPath(PathRequest pathRequest, String loginId, boolean isServer) {
     validate(pathRequest);
     Map<String, String> error = generateError(PathRequest.class);
     pathInventory.findPathByLabel(pathRequest.getLabel()).ifPresent(path -> {
@@ -91,7 +91,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
       throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
     }
     accessabilityRepository
-        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
+        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(path);
 
   }

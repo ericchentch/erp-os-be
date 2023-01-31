@@ -40,7 +40,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
   private UserInventory userInventory;
 
   @Override
-  public void createNewUser(UserRequest userRequest, String loginId) {
+  public void createNewUser(UserRequest userRequest, String loginId, boolean isServer) {
     validate(userRequest);
     Map<String, String> error = generateError(UserRequest.class);
     userInventory.findUserByUsername(userRequest.getUsername()).ifPresent(thisName -> {
@@ -58,7 +58,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setCreated(currentTime);
     user.setModified(currentTime);
     accessabilityRepository
-        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
+        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(user);
   }
 

@@ -27,8 +27,8 @@ public class AccessabilityController extends AbstractController<AccessabilitySer
       @RequestBody AccessabilityRequest accessabilityRequest, HttpServletRequest request,
       @RequestParam String targetId) {
     ValidationResult result = validateToken(request);
-    checkAccessability(result.getLoginId(), targetId, true);
-    service.shareAccess(accessabilityRequest, result.getLoginId(), targetId);
+    checkAccessability(result.getLoginId(), targetId, true, result.isServer());
+    service.shareAccess(accessabilityRequest, result.getLoginId(), targetId, result.isServer());
     return new ResponseEntity<>(new CommonResponse<>(true, null, LanguageMessageKey.SUCCESS,
         HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()), null, HttpStatus.OK.value());
   }
@@ -38,7 +38,7 @@ public class AccessabilityController extends AbstractController<AccessabilitySer
   public ResponseEntity<CommonResponse<List<AccessabilityResponse>>> getAccessByTarget(
       HttpServletRequest request, @RequestParam String targetId) {
     ValidationResult result = validateToken(request);
-    checkAccessability(result.getLoginId(), targetId, true);;
+    checkAccessability(result.getLoginId(), targetId, true, result.isServer());;
     return response(service.getAccessByTargetId(targetId, result.getLoginId()),
         LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
   }

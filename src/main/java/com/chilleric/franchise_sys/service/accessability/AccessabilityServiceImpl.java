@@ -46,7 +46,7 @@ public class AccessabilityServiceImpl extends AbstractService<AccessabilityRepos
 
   @Override
   public void shareAccess(AccessabilityRequest accessabilityRequest, String loginId,
-      String targetId) {
+      String targetId, boolean isServer) {
     validate(accessabilityRequest);
     accessabilityInventory.getAccessByTargetId(targetId)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.ACCESS_NOT_FOUND));
@@ -55,12 +55,12 @@ public class AccessabilityServiceImpl extends AbstractService<AccessabilityRepos
         if (thisUser.get_id().toString().compareTo(loginId) != 0) {
           if (repository.getAccessability(thisUserId, targetId).isEmpty()) {
             if (accessabilityRequest.getEditable() == 0) {
-              repository.addNewAccessability(
-                  new Accessability(null, thisUser.get_id(), new ObjectId(targetId), false));
+              repository.addNewAccessability(new Accessability(null, thisUser.get_id(),
+                  new ObjectId(targetId), false, isServer));
             }
             if (accessabilityRequest.getEditable() == 1) {
-              repository.addNewAccessability(
-                  new Accessability(null, thisUser.get_id(), new ObjectId(targetId), true));
+              repository.addNewAccessability(new Accessability(null, thisUser.get_id(),
+                  new ObjectId(targetId), true, isServer));
             }
           }
         }
