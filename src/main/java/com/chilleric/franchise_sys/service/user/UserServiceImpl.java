@@ -170,7 +170,32 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
 
   @Override
   public Optional<ListWrapperResponse<UserResponse>> getAllUsers(Map<String, String> allParams,
-      String keySort, int page, int pageSize, String sortField, String loginId) {
+      String keySort, int page, int pageSize, String sortField, String loginId, boolean isServer) {
+    if (!isServer) {
+      List<String> targets = accessabilityRepository.getListTargetId(loginId)
+          .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).stream()
+          .map(access -> access.getTargetId().toString()).collect(Collectors.toList());
+      if (targets.size() == 0) {
+        return Optional
+            .of(new ListWrapperResponse<UserResponse>(new ArrayList<>(), page, pageSize, 0));
+      }
+      if (allParams.containsKey("_id")) {
+        String[] idList = allParams.get("_id").split(",");
+        ArrayList<String> check = new ArrayList<>(Arrays.asList(idList));
+        for (int i = 0; i < check.size(); i++) {
+          if (targets.contains(idList[i])) {
+            check.add(idList[i]);
+          }
+        }
+        if (check.size() == 0) {
+          return Optional
+              .of(new ListWrapperResponse<UserResponse>(new ArrayList<>(), page, pageSize, 0));
+        }
+        allParams.put("_id", generateParamsValue(check));
+      } else {
+        allParams.put("_id", generateParamsValue(targets));
+      }
+    }
     List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
     return Optional.of(new ListWrapperResponse<UserResponse>(
         users.stream()

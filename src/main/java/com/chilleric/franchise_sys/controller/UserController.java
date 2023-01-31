@@ -66,7 +66,8 @@ public class UserController extends AbstractController<UserService> {
       @RequestParam(defaultValue = "modified") String sortField, HttpServletRequest request) {
     ValidationResult result = validateToken(request);
     return response(
-        service.getAllUsers(allParams, keySort, page, pageSize, "", result.getLoginId()),
+        service.getAllUsers(allParams, keySort, page, pageSize, "", result.getLoginId(),
+            result.isServer()),
         LanguageMessageKey.SUCCESS, result.getViewPoints().get(UserResponse.class.getSimpleName()),
         result.getEditable().get(UserRequest.class.getSimpleName()));
   }

@@ -15,7 +15,7 @@ public interface PermissionService {
       String loginId);
 
   Optional<ListWrapperResponse<PermissionResponse>> getAllPermissions(Map<String, String> allParams,
-      String keySort, int page, int pageSize, String sortField, String loginId);
+      String keySort, int page, int pageSize, String sortField, String loginId, boolean isServer);
 
   Optional<PermissionResponse> getPermissionById(String id, String loginId);
 

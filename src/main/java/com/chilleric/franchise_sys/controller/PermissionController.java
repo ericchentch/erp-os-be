@@ -55,7 +55,7 @@ public class PermissionController extends AbstractController<PermissionService> 
     ValidationResult result = validateToken(request);
     return response(
         service.getAllPermissions(allParams, keySort, page, pageSize, sortField,
-            result.getLoginId()),
+            result.getLoginId(), result.isServer()),
         LanguageMessageKey.SUCCESS,
         result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
         result.getEditable().get(PermissionRequest.class.getSimpleName()));
