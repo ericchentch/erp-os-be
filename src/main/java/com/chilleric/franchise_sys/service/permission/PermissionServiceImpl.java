@@ -126,7 +126,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
         permission.setServer(false);
       }
       if (permissionRequest.getIsServer() == 1) {
-        permission.setServer(false);
+        permission.setServer(true);
       }
     } else {
       permission.setServer(isServer);
@@ -185,7 +185,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
         permission.setServer(false);
       }
       if (permissionRequest.getIsServer() == 1) {
-        permission.setServer(false);
+        permission.setServer(true);
       }
     } else {
       permission.setServer(isServer);
