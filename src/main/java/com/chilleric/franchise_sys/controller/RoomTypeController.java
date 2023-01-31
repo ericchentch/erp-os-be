@@ -55,7 +55,6 @@ public class RoomTypeController extends AbstractController<RoomTypeService> {
   public ResponseEntity<CommonResponse<RoomTypeResponse>> getDetailedRoomType(
       @RequestParam(required = true) String roomTypeId, HttpServletRequest request) {
     validateToken(request);
-    System.out.println("9999 " + roomTypeId);
     return response(service.getRoomTypeById(roomTypeId), LanguageMessageKey.SUCCESS,
         new ArrayList<>(), new ArrayList<>());
   }

@@ -17,6 +17,7 @@ import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
 
 public abstract class AbstractRepo {
 
@@ -109,6 +110,11 @@ public abstract class AbstractRepo {
   List<Criteria> generateConditionCriterias(Field field, Map.Entry<String, String> items) {
     String[] values = items.getValue().split(",");
     List<Criteria> conditionCriteria = new ArrayList<>();
+    if (field.getType() == TypeAccount.class) {
+      for (String value : values) {
+        conditionCriteria.add(Criteria.where(items.getKey()).is(value));
+      }
+    }
     if (field.getType() == ObjectId.class) {
       for (String value : values) {
         try {
