@@ -87,6 +87,7 @@ public abstract class AbstractController<s> {
   }
 
   protected ValidationResult checkAuthentication(String token) {
+    isServer = false;
     String userId = jwtValidation.getUserIdFromJwt(token);
     User user = userInventory.getActiveUserById(userId)
         .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
@@ -106,7 +107,6 @@ public abstract class AbstractController<s> {
     if (user.getTokens().compareTo(token) != 0) {
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
-    isServer = false;
     return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit),
         isServer);
   }
