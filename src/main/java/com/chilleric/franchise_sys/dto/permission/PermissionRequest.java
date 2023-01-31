@@ -2,6 +2,8 @@ package com.chilleric.franchise_sys.dto.permission;
 
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -29,5 +31,10 @@ public class PermissionRequest {
 
   @NotNull(message = LanguageMessageKey.VIEW_POINT_REQUIRED)
   private Map<String, List<ViewPoint>> editable;
+
+  @NotNull(message = LanguageMessageKey.IS_SERVER_REQURIED)
+  @Min(value = 0, message = LanguageMessageKey.ONLY_0_1)
+  @Max(value = 1, message = LanguageMessageKey.ONLY_0_1)
+  private int isServer;
 
 }

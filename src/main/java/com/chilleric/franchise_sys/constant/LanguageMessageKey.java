@@ -470,4 +470,5 @@ public class LanguageMessageKey {
   public static final String INVALID_PATH_ICON = "invalidPathIcon"; // Path icon is invalid
   public static final String UNIQUE_USER_ID_NAV = "navbarUserIdUnique"; // User can only assign to
                                                                         // one nav
+  public static final String IS_SERVER_REQURIED = "isServerRequried"; // Server side is required
 }
