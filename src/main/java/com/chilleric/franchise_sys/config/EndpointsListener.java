@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.chilleric.franchise_sys.repository.systemRepository.language.Language;
 import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.path.PathRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User;
@@ -34,9 +33,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
 
   @Autowired
   private LanguageRepository languageRepository;
-
-  @Autowired
-  private PathRepository pathRepository;
 
   @Value("${spring.mail.username}")
   protected String email;

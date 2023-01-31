@@ -67,7 +67,7 @@ public class NavbarController extends AbstractController<NavbarService> {
       @RequestBody NavbarRequest navbarRequest, HttpServletRequest httpServletRequest) {
     ValidationResult result = validateToken(httpServletRequest);
     checkAddCondition(result.getEditable(), NavbarRequest.class);
-    service.addNewNavbar(navbarRequest, result.getLoginId());
+    service.addNewNavbar(navbarRequest, result.getLoginId(), result.isServer());
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.NAVBAR_ADDED,
             HttpStatus.OK.value(), result.getViewPoints().get(NavbarResponse.class.getSimpleName()),
@@ -95,7 +95,7 @@ public class NavbarController extends AbstractController<NavbarService> {
   public ResponseEntity<CommonResponse<String>> deleteNavbar(@RequestParam String id,
       HttpServletRequest httpServletRequest) {
     ValidationResult result = validateToken(httpServletRequest);
-    checkAccessability(result.getLoginId(), id, true);
+    checkAccessability(result.getLoginId(), id, true, result.isServer());
     service.deleteNavbar(id);
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.NAVBAR_DELETED,

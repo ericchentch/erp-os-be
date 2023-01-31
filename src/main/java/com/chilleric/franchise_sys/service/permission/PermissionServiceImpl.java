@@ -98,7 +98,8 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
   }
 
   @Override
-  public void addNewPermissions(PermissionRequest permissionRequest, String loginId) {
+  public void addNewPermissions(PermissionRequest permissionRequest, String loginId,
+      boolean isServer) {
     validate(permissionRequest);
     permissionRequest.setEditable(removeId(permissionRequest.getEditable()));
     permissionRequest.setViewPoints(removeId(permissionRequest.getViewPoints()));
@@ -116,7 +117,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     permission.setName(permissionRequest.getName());
     permission.setCreated(DateFormat.getCurrentTime());
     permission.setViewPoints(permissionRequest.getViewPoints());
-    permission.setDev(false);
+    permission.setServer(isServer);
     if (permissionRequest.getUserId().size() != 0) {
       List<ObjectId> resultIds = new ArrayList<>();
       permissionRequest.getUserId().forEach(thisId -> {
@@ -133,7 +134,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
     accessabilityRepository
-        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true));
+        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(permission);
   }
 

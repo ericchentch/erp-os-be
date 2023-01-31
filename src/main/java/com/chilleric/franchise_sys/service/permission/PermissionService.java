@@ -19,7 +19,7 @@ public interface PermissionService {
 
   Optional<PermissionResponse> getPermissionById(String id, String loginId);
 
-  void addNewPermissions(PermissionRequest permissionRequest, String loginId);
+  void addNewPermissions(PermissionRequest permissionRequest, String loginId, boolean isServer);
 
   void editPermission(PermissionRequest permissionRequest, String id, List<ViewPoint> viewPoints,
       String loginId);

@@ -63,7 +63,7 @@ public class PathController extends AbstractController<PathService> {
   public ResponseEntity<CommonResponse<String>> addNewPath(@RequestBody PathRequest pathRequest,
       HttpServletRequest httpServletRequest) {
     ValidationResult result = validateToken(httpServletRequest);
-    service.addNewPath(pathRequest, result.getLoginId());
+    service.addNewPath(pathRequest, result.getLoginId(), result.isServer());
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.PATH_ADD_SUCCESS,
             HttpStatus.OK.value(), result.getViewPoints().get(PathResponse.class.getSimpleName()),
@@ -76,7 +76,7 @@ public class PathController extends AbstractController<PathService> {
   public ResponseEntity<CommonResponse<String>> deletePath(@RequestParam String id,
       HttpServletRequest httpServletRequest) {
     ValidationResult result = validateToken(httpServletRequest);
-    checkAccessability(result.getLoginId(), id, true);
+    checkAccessability(result.getLoginId(), id, true, result.isServer());
     service.deletePath(id);
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.DELETE_PATH_SUCCESS,

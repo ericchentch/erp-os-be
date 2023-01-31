@@ -15,7 +15,7 @@ public interface PathService {
 
   Optional<List<String>> getPathAccess(String loginId);
 
-  void addNewPath(PathRequest pathRequest, String loginId);
+  void addNewPath(PathRequest pathRequest, String loginId, boolean isServer);
 
   void deletePath(String id);
 

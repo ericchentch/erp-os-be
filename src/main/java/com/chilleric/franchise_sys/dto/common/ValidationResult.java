@@ -15,5 +15,6 @@ public class ValidationResult {
   private String loginId;
   private Map<String, List<ViewPoint>> viewPoints;
   private Map<String, List<ViewPoint>> editable;
+  private boolean isServer;
 
 }

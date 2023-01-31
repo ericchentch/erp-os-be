@@ -8,5 +8,6 @@ import com.chilleric.franchise_sys.dto.accessability.AccessabilityResponse;
 public interface AccessabilityService {
   Optional<List<AccessabilityResponse>> getAccessByTargetId(String targetId, String loginId);
 
-  void shareAccess(AccessabilityRequest accessabilityRequest, String loginId, String targetId);
+  void shareAccess(AccessabilityRequest accessabilityRequest, String loginId, String targetId,
+      boolean isServer);
 }

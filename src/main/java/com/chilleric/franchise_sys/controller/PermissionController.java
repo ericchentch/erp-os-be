@@ -66,7 +66,7 @@ public class PermissionController extends AbstractController<PermissionService> 
   public ResponseEntity<CommonResponse<PermissionResponse>> getPermissionDetail(
       @RequestParam(required = true) String id, HttpServletRequest request) {
     ValidationResult result = validateToken(request);
-    checkAccessability(result.getLoginId(), id, false);
+    checkAccessability(result.getLoginId(), id, false, result.isServer());
     return response(service.getPermissionById(id, result.getLoginId()), LanguageMessageKey.SUCCESS,
         result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
         result.getEditable().get(PermissionRequest.class.getSimpleName()));
@@ -100,7 +100,7 @@ public class PermissionController extends AbstractController<PermissionService> 
       @RequestBody PermissionRequest permissionRequest, HttpServletRequest request) {
     ValidationResult result = validateToken(request);
     checkAddCondition(result.getEditable(), PermissionRequest.class);
-    service.addNewPermissions(permissionRequest, result.getLoginId());
+    service.addNewPermissions(permissionRequest, result.getLoginId(), result.isServer());
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.ADD_PERMISSION_SUCCESS,
             HttpStatus.OK.value(),
@@ -115,7 +115,7 @@ public class PermissionController extends AbstractController<PermissionService> 
       @RequestBody PermissionRequest permissionRequest, @RequestParam(required = true) String id,
       HttpServletRequest request) {
     ValidationResult result = validateToken(request);
-    checkAccessability(result.getLoginId(), id, true);
+    checkAccessability(result.getLoginId(), id, true, result.isServer());
     service.editPermission(permissionRequest, id,
         result.getEditable().get(PermissionResponse.class.getSimpleName()), result.getLoginId());
     return new ResponseEntity<CommonResponse<String>>(
@@ -131,7 +131,7 @@ public class PermissionController extends AbstractController<PermissionService> 
   public ResponseEntity<CommonResponse<String>> deletePermission(
       @RequestParam(required = true) String id, HttpServletRequest request) {
     ValidationResult result = validateToken(request);
-    checkAccessability(result.getLoginId(), id, true);
+    checkAccessability(result.getLoginId(), id, true, result.isServer());
     service.deletePermission(id);
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.DELETE_PERMISSION_SUCCESS,
