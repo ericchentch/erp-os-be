@@ -29,7 +29,6 @@ import com.chilleric.franchise_sys.log.LoggerType;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User;
@@ -46,8 +45,6 @@ public abstract class AbstractController<s> {
   protected static final Map<String, List<String>> IgnoreEdit = Map.ofEntries(
       Map.entry("PermissionRequest", Arrays.asList("id")),
       Map.entry("UserRequest", Arrays.asList("id")), Map.entry("PathRequest", Arrays.asList("id")));
-
-  protected static boolean isDev = false;
 
   @Autowired
   protected s service;
@@ -74,21 +71,20 @@ public abstract class AbstractController<s> {
     if (token == null) {
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     } else {
-      return checkAuthentication(token, Optional.of(request));
+      return checkAuthentication(token);
     }
   }
 
   protected ValidationResult validateSSE(String token) {
     if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-      return checkAuthentication(token.substring(7), Optional.empty());
+      return checkAuthentication(token.substring(7));
     } else {
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
 
   }
 
-  protected ValidationResult checkAuthentication(String token,
-      Optional<HttpServletRequest> request) {
+  protected ValidationResult checkAuthentication(String token) {
     String userId = jwtValidation.getUserIdFromJwt(token);
     User user = userInventory.getActiveUserById(userId)
         .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
@@ -98,32 +94,13 @@ public abstract class AbstractController<s> {
         permissionRepository.getPermissionByUserId(user.get_id().toString())
             .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
     permissions.forEach(thisPerm -> {
-      if (thisPerm.isDev())
-        isDev = true;
       thisView.putAll(ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
       thisEdit.putAll(ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
     });
-    if (isDev) {
-      isDev = false;
-      return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit));
-    }
     if (user.getTokens().compareTo(token) != 0) {
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
-    if (request.isPresent()) {
-      String path = request.get().getHeader("pathName");
-      if (!StringUtils.hasText(path)) {
-        throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
-      }
-      Path thisPath = pathInventory.findPathByPath(path)
-          .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
-      if (thisPath.getType().toString().compareTo(user.getType().toString()) != 0) {
-        throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
-      }
-    }
-    isDev = false;
     return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit));
-
   }
 
   protected <T> ResponseEntity<CommonResponse<T>> response(Optional<T> response,
@@ -145,7 +122,6 @@ public abstract class AbstractController<s> {
         throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
       }
     }
-
   }
 
   protected Map<String, List<ViewPoint>> removeAttributes(Map<String, List<ViewPoint>> thisView,
