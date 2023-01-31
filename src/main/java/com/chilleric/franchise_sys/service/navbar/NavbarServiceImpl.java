@@ -78,64 +78,72 @@ public class NavbarServiceImpl extends AbstractService<NavbarRepository> impleme
   public Optional<NavbarResponse> getNavbarDetailById(String id, String loginId) {
     Navbar navbar = navbarInventory.findNavbarById(id)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NAVBAR_NOT_FOUND));
-    return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
-        navbar.getContent().stream().filter(
+    List<ContentNavbarResponse> resultContent = new ArrayList<>();
+    navbar.getContent().stream()
+        .filter(
             thisMain -> pathInventory.findPathById(thisMain.getMainItem().toString()).isPresent())
-            .map(thisMain -> {
-              Path mainPath = pathInventory.findPathById(thisMain.getMainItem().toString()).get();
-              List<PathResponse> result = new ArrayList<>();
-              thisMain.getChildrenItem().forEach(thisChild -> {
-                pathInventory.findPathById(thisChild.toString()).ifPresent(thisChildId -> {
-                  if (thisChildId.getUserId().stream()
-                      .filter(thisChildItem -> thisChildItem.compareTo(new ObjectId(loginId)) == 0)
-                      .findFirst().isPresent()) {
-                    result.add(new PathResponse(thisChildId.get_id().toString(),
-                        thisChildId.getLabel(), thisChildId.getPath(), thisChildId.getType(),
-                        new ArrayList<>(), thisChildId.getIcon()));
-                  }
-                });;
+        .forEach(thisMain -> {
+          Path mainPath = pathInventory.findPathById(thisMain.getMainItem().toString()).get();
+          List<PathResponse> result = new ArrayList<>();
+          thisMain.getChildrenItem().forEach(thisChild -> {
+            pathInventory.findPathById(thisChild.toString()).ifPresent(thisChildId -> {
+              if (thisChildId.getUserId().stream()
+                  .filter(thisChildItem -> thisChildItem.compareTo(new ObjectId(loginId)) == 0)
+                  .findFirst().isPresent()) {
+                result.add(new PathResponse(thisChildId.get_id().toString(), thisChildId.getLabel(),
+                    thisChildId.getPath(), thisChildId.getType(), new ArrayList<>(),
+                    thisChildId.getIcon()));
+              }
+            });;
+          });
+          mainPath.getUserId().stream()
+              .filter(thisMainPath -> thisMainPath.compareTo(new ObjectId(loginId)) == 0)
+              .findFirst().ifPresent(thisMainPath -> {
+                resultContent
+                    .add(new ContentNavbarResponse(new PathResponse(mainPath.get_id().toString(),
+                        mainPath.getLabel(), mainPath.getPath(), mainPath.getType(),
+                        new ArrayList<>(), mainPath.getIcon()), result));
               });
-              return new ContentNavbarResponse(mainPath.getUserId().stream()
-                  .filter(thisMainPath -> thisMainPath.compareTo(new ObjectId(loginId)) == 0)
-                  .findFirst().isPresent()
-                      ? new PathResponse(mainPath.get_id().toString(), mainPath.getLabel(),
-                          mainPath.getPath(), mainPath.getType(), new ArrayList<>(),
-                          mainPath.getIcon())
-                      : new PathResponse(),
-                  result);
-            }).collect(Collectors.toList())));
+
+        });
+    return Optional
+        .of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(), resultContent));
   }
 
   @Override
   public Optional<NavbarResponse> getNavbarDetailByName(String name, String loginId) {
     Navbar navbar = navbarInventory.findNavbarByName(name)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NAVBAR_NOT_FOUND));
-    return Optional.of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(),
-        navbar.getContent().stream().filter(
+    List<ContentNavbarResponse> resultContent = new ArrayList<>();
+    navbar.getContent().stream()
+        .filter(
             thisMain -> pathInventory.findPathById(thisMain.getMainItem().toString()).isPresent())
-            .map(thisMain -> {
-              Path mainPath = pathInventory.findPathById(thisMain.getMainItem().toString()).get();
-              List<PathResponse> result = new ArrayList<>();
-              thisMain.getChildrenItem().forEach(thisChild -> {
-                pathInventory.findPathById(thisChild.toString()).ifPresent(thisChildId -> {
-                  if (thisChildId.getUserId().stream()
-                      .filter(thisChildItem -> thisChildItem.compareTo(new ObjectId(loginId)) == 0)
-                      .findFirst().isPresent()) {
-                    result.add(new PathResponse(thisChildId.get_id().toString(),
-                        thisChildId.getLabel(), thisChildId.getPath(), thisChildId.getType(),
-                        new ArrayList<>(), thisChildId.getIcon()));
-                  }
-                });;
+        .forEach(thisMain -> {
+          Path mainPath = pathInventory.findPathById(thisMain.getMainItem().toString()).get();
+          List<PathResponse> result = new ArrayList<>();
+          thisMain.getChildrenItem().forEach(thisChild -> {
+            pathInventory.findPathById(thisChild.toString()).ifPresent(thisChildId -> {
+              if (thisChildId.getUserId().stream()
+                  .filter(thisChildItem -> thisChildItem.compareTo(new ObjectId(loginId)) == 0)
+                  .findFirst().isPresent()) {
+                result.add(new PathResponse(thisChildId.get_id().toString(), thisChildId.getLabel(),
+                    thisChildId.getPath(), thisChildId.getType(), new ArrayList<>(),
+                    thisChildId.getIcon()));
+              }
+            });;
+          });
+          mainPath.getUserId().stream()
+              .filter(thisMainPath -> thisMainPath.compareTo(new ObjectId(loginId)) == 0)
+              .findFirst().ifPresent(thisMainPath -> {
+                resultContent
+                    .add(new ContentNavbarResponse(new PathResponse(mainPath.get_id().toString(),
+                        mainPath.getLabel(), mainPath.getPath(), mainPath.getType(),
+                        new ArrayList<>(), mainPath.getIcon()), result));
               });
-              return new ContentNavbarResponse(mainPath.getUserId().stream()
-                  .filter(thisMainPath -> thisMainPath.compareTo(new ObjectId(loginId)) == 0)
-                  .findFirst().isPresent()
-                      ? new PathResponse(mainPath.get_id().toString(), mainPath.getLabel(),
-                          mainPath.getPath(), mainPath.getType(), new ArrayList<>(),
-                          mainPath.getIcon())
-                      : new PathResponse(),
-                  result);
-            }).collect(Collectors.toList())));
+
+        });
+    return Optional
+        .of(new NavbarResponse(navbar.get_id().toString(), navbar.getName(), resultContent));
   }
 
   @Override
