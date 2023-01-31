@@ -73,15 +73,18 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     }
     List<Permission> permissions =
         repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<PermissionResponse>(permissions.stream()
-        .map(permission -> new PermissionResponse(permission.get_id().toString(),
-            permission.getName(),
-            permission.getUserId().size() > 0 ? permission.getUserId().stream()
-                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
-            DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
-            DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-            removeId(permission.getViewPoints()), removeId(permission.getEditable())))
-        .collect(Collectors.toList()), page, pageSize, repository.getTotal(allParams)));
+    return Optional.of(new ListWrapperResponse<PermissionResponse>(
+        permissions.stream()
+            .map(permission -> new PermissionResponse(permission.get_id().toString(),
+                permission.getName(),
+                permission.getUserId().size() > 0 ? permission.getUserId().stream()
+                    .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+                DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
+                DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
+                removeId(permission.getViewPoints()), removeId(permission.getEditable()),
+                permission.isServer()))
+            .collect(Collectors.toList()),
+        page, pageSize, repository.getTotal(allParams)));
   }
 
   @Override
@@ -94,7 +97,8 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
             DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
             DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-            removeId(permission.getViewPoints()), removeId(permission.getEditable())));
+            removeId(permission.getViewPoints()), removeId(permission.getEditable()),
+            permission.isServer()));
   }
 
   @Override
@@ -264,15 +268,18 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     }
     List<Permission> permissions =
         repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<PermissionResponse>(permissions.stream()
-        .map(permission -> new PermissionResponse(permission.get_id().toString(),
-            permission.getName(),
-            permission.getUserId().size() > 0 ? permission.getUserId().stream()
-                .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
-            DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
-            DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
-            removeId(permission.getViewPoints()), removeId(permission.getEditable())))
-        .collect(Collectors.toList()), page, pageSize, repository.getTotal(allParams)));
+    return Optional.of(new ListWrapperResponse<PermissionResponse>(
+        permissions.stream()
+            .map(permission -> new PermissionResponse(permission.get_id().toString(),
+                permission.getName(),
+                permission.getUserId().size() > 0 ? permission.getUserId().stream()
+                    .map(ObjectId::toString).collect(Collectors.toList()) : new ArrayList<>(),
+                DateFormat.toDateString(permission.getCreated(), DateTime.YYYY_MM_DD),
+                DateFormat.toDateString(permission.getModified(), DateTime.YYYY_MM_DD),
+                removeId(permission.getViewPoints()), removeId(permission.getEditable()),
+                permission.isServer()))
+            .collect(Collectors.toList()),
+        page, pageSize, repository.getTotal(allParams)));
   }
 
   private void checkDeleteAndEdit(Permission permission) {

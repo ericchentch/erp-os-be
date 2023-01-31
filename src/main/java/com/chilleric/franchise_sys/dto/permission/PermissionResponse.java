@@ -19,4 +19,5 @@ public class PermissionResponse {
   private String modified;
   private Map<String, List<ViewPoint>> viewPoints;
   private Map<String, List<ViewPoint>> editable;
+  private boolean isServer;
 }
