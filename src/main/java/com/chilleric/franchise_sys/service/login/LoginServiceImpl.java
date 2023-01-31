@@ -16,12 +16,14 @@ import com.chilleric.franchise_sys.dto.login.LoginRequest;
 import com.chilleric.franchise_sys.dto.login.LoginResponse;
 import com.chilleric.franchise_sys.email.EmailDetail;
 import com.chilleric.franchise_sys.email.EmailService;
+import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.jwt.GoogleValidation;
 import com.chilleric.franchise_sys.jwt.JwtValidation;
+import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.code.Code;
 import com.chilleric.franchise_sys.repository.systemRepository.code.CodeRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.code.TypeCode;
@@ -351,6 +353,10 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", givenName, familyName, email, "", newTokens, now, null, emailVerified, false,
           0);
+      User userAdmin = userInventory.findUserByUsername("super_admin_dev")
+          .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
+      accessabilityRepository
+          .addNewAccessability(new Accessability(null, userAdmin.get_id(), newId, true, false));
       repository.insertAndUpdate(user);
       return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
           user.getType(), false, false));

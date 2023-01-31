@@ -117,7 +117,16 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     permission.setName(permissionRequest.getName());
     permission.setCreated(DateFormat.getCurrentTime());
     permission.setViewPoints(permissionRequest.getViewPoints());
-    permission.setServer(isServer);
+    if (isServer) {
+      if (permissionRequest.getIsServer() == 0) {
+        permission.setServer(false);
+      }
+      if (permissionRequest.getIsServer() == 1) {
+        permission.setServer(false);
+      }
+    } else {
+      permission.setServer(isServer);
+    }
     if (permissionRequest.getUserId().size() != 0) {
       List<ObjectId> resultIds = new ArrayList<>();
       permissionRequest.getUserId().forEach(thisId -> {
@@ -140,7 +149,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
 
   @Override
   public void editPermission(PermissionRequest permissionRequest, String id,
-      List<ViewPoint> viewPoints, String loginId) {
+      List<ViewPoint> viewPoints, String loginId, boolean isServer) {
     Permission permission = repository.getPermissionById(id)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PERMISSION_NOT_FOUND));
     validate(permissionRequest);
@@ -166,6 +175,16 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       permission.setUserId(resultIds);
     } else {
       permission.setUserId(new ArrayList<>());
+    }
+    if (isServer) {
+      if (permissionRequest.getIsServer() == 0) {
+        permission.setServer(false);
+      }
+      if (permissionRequest.getIsServer() == 1) {
+        permission.setServer(false);
+      }
+    } else {
+      permission.setServer(isServer);
     }
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());

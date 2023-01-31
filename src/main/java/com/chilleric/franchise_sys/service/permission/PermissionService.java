@@ -22,7 +22,7 @@ public interface PermissionService {
   void addNewPermissions(PermissionRequest permissionRequest, String loginId, boolean isServer);
 
   void editPermission(PermissionRequest permissionRequest, String id, List<ViewPoint> viewPoints,
-      String loginId);
+      String loginId, boolean isServer);
 
   void deletePermission(String id);
 
