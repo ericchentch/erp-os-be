@@ -217,7 +217,32 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
   @Override
   public Optional<ListWrapperResponse<PermissionResponse>> getAllPermissions(
       Map<String, String> allParams, String keySort, int page, int pageSize, String sortField,
-      String loginId) {
+      String loginId, boolean isServer) {
+    if (!isServer) {
+      List<String> targets = accessabilityRepository.getListTargetId(loginId)
+          .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).stream()
+          .map(access -> access.getTargetId().toString()).collect(Collectors.toList());
+      if (targets.size() == 0) {
+        return Optional
+            .of(new ListWrapperResponse<PermissionResponse>(new ArrayList<>(), page, pageSize, 0));
+      }
+      if (allParams.containsKey("_id")) {
+        String[] idList = allParams.get("_id").split(",");
+        ArrayList<String> check = new ArrayList<>(Arrays.asList(idList));
+        for (int i = 0; i < check.size(); i++) {
+          if (targets.contains(idList[i])) {
+            check.add(idList[i]);
+          }
+        }
+        if (check.size() == 0) {
+          return Optional.of(
+              new ListWrapperResponse<PermissionResponse>(new ArrayList<>(), page, pageSize, 0));
+        }
+        allParams.put("_id", generateParamsValue(check));
+      } else {
+        allParams.put("_id", generateParamsValue(targets));
+      }
+    }
     List<Permission> permissions =
         repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
     return Optional.of(new ListWrapperResponse<PermissionResponse>(permissions.stream()

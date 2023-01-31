@@ -20,7 +20,7 @@ public interface UserService {
       String keySort, int page, int pageSize, String sortField, String loginId);
 
   Optional<ListWrapperResponse<UserResponse>> getAllUsers(Map<String, String> allParams,
-      String keySort, int page, int pageSize, String sortField, String loginId);
+      String keySort, int page, int pageSize, String sortField, String loginId, boolean isServer);
 
   void changeStatusUser(String userId);
 }
