@@ -13,6 +13,7 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.path.PathRequest;
 import com.chilleric.franchise_sys.dto.path.PathResponse;
+import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.path.PathInventory;
@@ -28,6 +29,8 @@ import com.chilleric.franchise_sys.service.AbstractService;
 public class PathServiceImpl extends AbstractService<PathRepository> implements PathService {
 
   private static String PATH_PRE_FIX = "data:image/svg+xml;base64,";
+
+  private static int foundAdmin = 0;
 
   @Autowired
   private PathInventory pathInventory;
@@ -68,15 +71,24 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
       error.put("type", LanguageMessageKey.TYPE_PATH_INVALID);
       throw new InvalidRequestException(error, LanguageMessageKey.TYPE_PATH_INVALID);
     }
+    User adminUser = userInventory.findUserByUsername("super_admin_dev")
+        .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
     Path path = new Path();
     List<ObjectId> listUserId = new ArrayList<>();
+    foundAdmin = 0;
     if (pathRequest.getUserId().size() > 0) {
       pathRequest.getUserId().forEach(thisId -> {
+        if (thisId.compareTo(adminUser.get_id().toString()) == 0) {
+          foundAdmin++;
+        }
         if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
             && userInventory.findUserById(thisId).isPresent()) {
           listUserId.add(new ObjectId(thisId));
         }
       });
+    }
+    if (foundAdmin == 0) {
+      listUserId.add(adminUser.get_id());
     }
     if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
       path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(), TypeAccount.EXTERNAL,
