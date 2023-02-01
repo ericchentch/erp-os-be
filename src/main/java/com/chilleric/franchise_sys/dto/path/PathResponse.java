@@ -14,6 +14,6 @@ public class PathResponse {
   private String label;
   private String path;
   private TypeAccount type;
-  private List<String> userIds;
+  private List<String> userId;
   private String icon;
 }
