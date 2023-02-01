@@ -152,14 +152,20 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
   @Override
   public void updatePath(PathRequest pathRequest, String loginId, String id) {
     validate(pathRequest);
+    Path path = pathInventory.findPathById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
     Map<String, String> error = generateError(PathRequest.class);
-    pathInventory.findPathByLabel(pathRequest.getLabel()).ifPresent(path -> {
-      error.put("label", LanguageMessageKey.LABEL_EXISTED);
-      throw new InvalidRequestException(error, LanguageMessageKey.LABEL_EXISTED);
+    pathInventory.findPathByLabel(pathRequest.getLabel()).ifPresent(thisPath -> {
+      if (thisPath.get_id().toString().compareTo(id) != 0) {
+        error.put("label", LanguageMessageKey.LABEL_EXISTED);
+        throw new InvalidRequestException(error, LanguageMessageKey.LABEL_EXISTED);
+      }
     });
-    pathInventory.findPathByPath(pathRequest.getPath()).ifPresent(path -> {
-      error.put("path", LanguageMessageKey.PATH_EXISTED);
-      throw new InvalidRequestException(error, LanguageMessageKey.PATH_EXISTED);
+    pathInventory.findPathByPath(pathRequest.getPath()).ifPresent(thisPath -> {
+      if (thisPath.get_id().toString().compareTo(id) != 0) {
+        error.put("path", LanguageMessageKey.PATH_EXISTED);
+        throw new InvalidRequestException(error, LanguageMessageKey.PATH_EXISTED);
+      }
     });
     if (pathRequest.getType().compareTo("EXTERNAL") != 0
         && pathRequest.getType().compareTo("INTERNAL") != 0) {
@@ -168,8 +174,6 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     }
     User adminUser = userInventory.findUserByUsername("super_admin_dev")
         .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
-    Path path = pathInventory.findPathById(id)
-        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
     List<ObjectId> listUserId = new ArrayList<>();
     foundAdmin = 0;
     if (pathRequest.getUserId().size() > 0) {
@@ -199,6 +203,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     path.setUserId(listUserId);
     path.setLabel(pathRequest.getLabel());
     path.setIcon(pathRequest.getIcon());
+    path.setPath(pathRequest.getPath());
     repository.insertAndUpdate(path);
   }
 
