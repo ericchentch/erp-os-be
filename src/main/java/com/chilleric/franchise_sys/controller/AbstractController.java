@@ -37,10 +37,10 @@ import com.chilleric.franchise_sys.utils.ObjectUtilities;
 public abstract class AbstractController<s> {
 
 
-  protected static final Map<String, List<String>> IgnoreView =
-      Map.ofEntries(Map.entry("PermissionResponse", Arrays.asList("id")),
-          Map.entry("UserResponse", Arrays.asList("id", "password")),
-          Map.entry("PathResponse", Arrays.asList("id", "userIds", "icon")));
+  protected static final Map<String, List<String>> IgnoreView = Map.ofEntries(
+      Map.entry("PermissionResponse", Arrays.asList("id", "userId", "viewPoints", "editable")),
+      Map.entry("UserResponse", Arrays.asList("id", "password")),
+      Map.entry("PathResponse", Arrays.asList("id", "userIds", "icon")));
 
   protected static final Map<String, List<String>> IgnoreEdit = Map.ofEntries(
       Map.entry("PermissionRequest", Arrays.asList("id")),
