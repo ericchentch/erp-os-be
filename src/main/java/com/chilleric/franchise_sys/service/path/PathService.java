@@ -17,6 +17,8 @@ public interface PathService {
 
   void addNewPath(PathRequest pathRequest, String loginId, boolean isServer);
 
+  void updatePath(PathRequest pathRequest, String loginId, String id);
+
   void deletePath(String id);
 
 }

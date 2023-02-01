@@ -90,6 +90,10 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     if (foundAdmin == 0) {
       listUserId.add(adminUser.get_id());
     }
+    if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
+      error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
+      throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
+    }
     if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
       path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(), TypeAccount.EXTERNAL,
           listUserId, pathRequest.getIcon());
@@ -97,10 +101,6 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     if (pathRequest.getType().compareTo("INTERNAL") == 0) {
       path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(), TypeAccount.INTERNAL,
           listUserId, pathRequest.getIcon());
-    }
-    if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
-      error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
-      throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
     }
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
@@ -147,6 +147,59 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
       return Optional
           .of(paths.stream().map(thisPath -> thisPath.getPath()).collect(Collectors.toList()));
     }
+  }
+
+  @Override
+  public void updatePath(PathRequest pathRequest, String loginId, String id) {
+    validate(pathRequest);
+    Map<String, String> error = generateError(PathRequest.class);
+    pathInventory.findPathByLabel(pathRequest.getLabel()).ifPresent(path -> {
+      error.put("label", LanguageMessageKey.LABEL_EXISTED);
+      throw new InvalidRequestException(error, LanguageMessageKey.LABEL_EXISTED);
+    });
+    pathInventory.findPathByPath(pathRequest.getPath()).ifPresent(path -> {
+      error.put("path", LanguageMessageKey.PATH_EXISTED);
+      throw new InvalidRequestException(error, LanguageMessageKey.PATH_EXISTED);
+    });
+    if (pathRequest.getType().compareTo("EXTERNAL") != 0
+        && pathRequest.getType().compareTo("INTERNAL") != 0) {
+      error.put("type", LanguageMessageKey.TYPE_PATH_INVALID);
+      throw new InvalidRequestException(error, LanguageMessageKey.TYPE_PATH_INVALID);
+    }
+    User adminUser = userInventory.findUserByUsername("super_admin_dev")
+        .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
+    Path path = pathInventory.findPathById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PATH_NOTFOUND));
+    List<ObjectId> listUserId = new ArrayList<>();
+    foundAdmin = 0;
+    if (pathRequest.getUserId().size() > 0) {
+      pathRequest.getUserId().forEach(thisId -> {
+        if (thisId.compareTo(adminUser.get_id().toString()) == 0) {
+          foundAdmin++;
+        }
+        if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
+            && userInventory.findUserById(thisId).isPresent()) {
+          listUserId.add(new ObjectId(thisId));
+        }
+      });
+    }
+    if (foundAdmin == 0) {
+      listUserId.add(adminUser.get_id());
+    }
+    if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
+      path.setType(TypeAccount.EXTERNAL);
+    }
+    if (pathRequest.getType().compareTo("INTERNAL") == 0) {
+      path.setType(TypeAccount.INTERNAL);
+    }
+    if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
+      error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
+      throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
+    }
+    path.setUserId(listUserId);
+    path.setLabel(pathRequest.getLabel());
+    path.setIcon(pathRequest.getIcon());
+    repository.insertAndUpdate(path);
   }
 
 }
