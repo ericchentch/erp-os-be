@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.path.PathRequest;
 import com.chilleric.franchise_sys.dto.path.PathResponse;
@@ -26,8 +27,6 @@ import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service
 public class PathServiceImpl extends AbstractService<PathRepository> implements PathService {
-
-  private static String PATH_PRE_FIX = "data:image/svg+xml;base64,";
 
   @Autowired
   private PathInventory pathInventory;
@@ -86,7 +85,8 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
       path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(), TypeAccount.INTERNAL,
           listUserId, pathRequest.getIcon());
     }
-    if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
+    if (pathRequest.getIcon().length() > 0
+        && !pathRequest.getIcon().startsWith(TypeValidation.PATH_PRE_FIX)) {
       error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
       throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
     }

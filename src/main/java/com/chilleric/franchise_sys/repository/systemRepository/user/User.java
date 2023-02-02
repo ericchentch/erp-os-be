@@ -33,4 +33,5 @@ public class User {
   private boolean verified;
   private boolean verify2FA;
   private int deleted;
+  private String avatar;
 }

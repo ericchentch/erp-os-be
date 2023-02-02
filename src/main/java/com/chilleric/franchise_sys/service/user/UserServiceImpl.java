@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.DateTime;
+import com.chilleric.franchise_sys.constant.DefaultValue;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.user.UserRequest;
@@ -57,6 +58,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setType(TypeAccount.INTERNAL);
     user.setCreated(currentTime);
     user.setModified(currentTime);
+    user.setAvatar(DefaultValue.DEFAULT_AVATAR);
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(user);
@@ -70,7 +72,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
         user.getLastName(), user.getEmail(), user.getPhone(),
         DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
         DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-        user.isVerify2FA(), user.getDeleted()));
+        user.isVerify2FA(), user.getDeleted(), user.getAvatar()));
   }
 
   @Override
@@ -156,16 +158,14 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     }
 
     List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<UserResponse>(
-        users.stream()
-            .map(user -> new UserResponse(user.get_id().toString(), user.getType(),
-                user.getUsername(), user.getGender(), user.getDob(), user.getAddress(),
-                user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhone(),
-                DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
-                DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-                user.isVerify2FA(), user.getDeleted()))
-            .collect(Collectors.toList()),
-        page, pageSize, repository.getTotalPage(allParams)));
+    return Optional.of(new ListWrapperResponse<UserResponse>(users.stream()
+        .map(user -> new UserResponse(user.get_id().toString(), user.getType(), user.getUsername(),
+            user.getGender(), user.getDob(), user.getAddress(), user.getFirstName(),
+            user.getLastName(), user.getEmail(), user.getPhone(),
+            DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
+            DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
+            user.isVerify2FA(), user.getDeleted(), user.getAvatar()))
+        .collect(Collectors.toList()), page, pageSize, repository.getTotalPage(allParams)));
   }
 
   @Override
@@ -197,15 +197,13 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
       }
     }
     List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<UserResponse>(
-        users.stream()
-            .map(user -> new UserResponse(user.get_id().toString(), user.getType(),
-                user.getUsername(), user.getGender(), user.getDob(), user.getAddress(),
-                user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhone(),
-                DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
-                DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-                user.isVerify2FA(), user.getDeleted()))
-            .collect(Collectors.toList()),
-        page, pageSize, repository.getTotalPage(allParams)));
+    return Optional.of(new ListWrapperResponse<UserResponse>(users.stream()
+        .map(user -> new UserResponse(user.get_id().toString(), user.getType(), user.getUsername(),
+            user.getGender(), user.getDob(), user.getAddress(), user.getFirstName(),
+            user.getLastName(), user.getEmail(), user.getPhone(),
+            DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
+            DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
+            user.isVerify2FA(), user.getDeleted(), user.getAvatar()))
+        .collect(Collectors.toList()), page, pageSize, repository.getTotalPage(allParams)));
   }
 }
