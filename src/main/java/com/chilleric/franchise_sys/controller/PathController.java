@@ -53,6 +53,7 @@ public class PathController extends AbstractController<PathService> {
   public ResponseEntity<CommonResponse<PathResponse>> getPathsDetail(@RequestParam String id,
       HttpServletRequest request) {
     ValidationResult result = validateToken(request);
+    checkAccessability(result.getLoginId(), id, false, result.isServer());
     return response(service.getPathDetail(id), LanguageMessageKey.SUCCESS,
         result.getViewPoints().get(PathResponse.class.getSimpleName()),
         result.getEditable().get(PathRequest.class.getSimpleName()));
@@ -63,9 +64,24 @@ public class PathController extends AbstractController<PathService> {
   public ResponseEntity<CommonResponse<String>> addNewPath(@RequestBody PathRequest pathRequest,
       HttpServletRequest httpServletRequest) {
     ValidationResult result = validateToken(httpServletRequest);
+    checkAddCondition(result.getEditable(), PathRequest.class);
     service.addNewPath(pathRequest, result.getLoginId(), result.isServer());
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.PATH_ADD_SUCCESS,
+            HttpStatus.OK.value(), result.getViewPoints().get(PathResponse.class.getSimpleName()),
+            result.getEditable().get(PathRequest.class.getSimpleName())),
+        null, HttpStatus.OK.value());
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PutMapping(value = "update-path")
+  public ResponseEntity<CommonResponse<String>> updatePath(@RequestBody PathRequest pathRequest,
+      HttpServletRequest httpServletRequest, @RequestParam String id) {
+    ValidationResult result = validateToken(httpServletRequest);
+    checkAccessability(result.getLoginId(), id, true, result.isServer());
+    service.updatePath(pathRequest, result.getLoginId(), id);
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.UPDATE_PATH_SUCCESS,
             HttpStatus.OK.value(), result.getViewPoints().get(PathResponse.class.getSimpleName()),
             result.getEditable().get(PathRequest.class.getSimpleName())),
         null, HttpStatus.OK.value());

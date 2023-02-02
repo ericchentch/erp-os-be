@@ -329,7 +329,7 @@ public class LanguageMessageKey {
   public static final String LABEL_EXISTED = "labelExisted"; // Label is existed
 
   public static final String PATH_NOTFOUND = "pathNotfound"; // Path is not found
-
+  public static final String UPDATE_PATH_SUCCESS = "updatePathSuccess"; // This path is successfully
   public static final String PATH_ADD_SUCCESS = "addPathSuccess"; // New path is added
                                                                   // successfully
 

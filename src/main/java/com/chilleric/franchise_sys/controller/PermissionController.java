@@ -3,6 +3,7 @@ package com.chilleric.franchise_sys.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,9 @@ public class PermissionController extends AbstractController<PermissionService> 
             result.getLoginId()),
         LanguageMessageKey.SUCCESS,
         result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
-        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+        result.getEditable().get(PermissionRequest.class.getSimpleName()).stream()
+            .filter(thisEdit -> thisEdit.getKey().compareTo("isServer") != 0 || result.isServer())
+            .collect(Collectors.toList()));
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
@@ -58,7 +61,9 @@ public class PermissionController extends AbstractController<PermissionService> 
             result.getLoginId(), result.isServer()),
         LanguageMessageKey.SUCCESS,
         result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
-        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+        result.getEditable().get(PermissionRequest.class.getSimpleName()).stream()
+            .filter(thisEdit -> thisEdit.getKey().compareTo("isServer") != 0 || result.isServer())
+            .collect(Collectors.toList()));
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
@@ -69,7 +74,9 @@ public class PermissionController extends AbstractController<PermissionService> 
     checkAccessability(result.getLoginId(), id, false, result.isServer());
     return response(service.getPermissionById(id, result.getLoginId()), LanguageMessageKey.SUCCESS,
         result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
-        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+        result.getEditable().get(PermissionRequest.class.getSimpleName()).stream()
+            .filter(thisEdit -> thisEdit.getKey().compareTo("isServer") != 0 || result.isServer())
+            .collect(Collectors.toList()));
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
@@ -80,7 +87,9 @@ public class PermissionController extends AbstractController<PermissionService> 
     return response(Optional.of(service.getViewPointSelect(result.getLoginId())),
         LanguageMessageKey.SUCCESS,
         result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
-        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+        result.getEditable().get(PermissionRequest.class.getSimpleName()).stream()
+            .filter(thisEdit -> thisEdit.getKey().compareTo("isServer") != 0 || result.isServer())
+            .collect(Collectors.toList()));
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
@@ -91,7 +100,9 @@ public class PermissionController extends AbstractController<PermissionService> 
     return response(Optional.of(service.getEditableSelect(result.getLoginId())),
         LanguageMessageKey.SUCCESS,
         result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
-        result.getEditable().get(PermissionRequest.class.getSimpleName()));
+        result.getEditable().get(PermissionRequest.class.getSimpleName()).stream()
+            .filter(thisEdit -> thisEdit.getKey().compareTo("isServer") != 0 || result.isServer())
+            .collect(Collectors.toList()));
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
@@ -101,11 +112,12 @@ public class PermissionController extends AbstractController<PermissionService> 
     ValidationResult result = validateToken(request);
     checkAddCondition(result.getEditable(), PermissionRequest.class);
     service.addNewPermissions(permissionRequest, result.getLoginId(), result.isServer());
-    return new ResponseEntity<CommonResponse<String>>(
-        new CommonResponse<String>(true, null, LanguageMessageKey.ADD_PERMISSION_SUCCESS,
-            HttpStatus.OK.value(),
-            result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
-            result.getEditable().get(PermissionRequest.class.getSimpleName())),
+    return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true, null,
+        LanguageMessageKey.ADD_PERMISSION_SUCCESS, HttpStatus.OK.value(),
+        result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+        result.getEditable().get(PermissionRequest.class.getSimpleName()).stream()
+            .filter(thisEdit -> thisEdit.getKey().compareTo("isServer") != 0 || result.isServer())
+            .collect(Collectors.toList())),
         null, HttpStatus.OK.value());
   }
 
@@ -119,11 +131,12 @@ public class PermissionController extends AbstractController<PermissionService> 
     service.editPermission(permissionRequest, id,
         result.getEditable().get(PermissionResponse.class.getSimpleName()), result.getLoginId(),
         result.isServer());
-    return new ResponseEntity<CommonResponse<String>>(
-        new CommonResponse<String>(true, null, LanguageMessageKey.UPDATE_PERMISSION_SUCCESS,
-            HttpStatus.OK.value(),
-            result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
-            result.getEditable().get(PermissionRequest.class.getSimpleName())),
+    return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true, null,
+        LanguageMessageKey.UPDATE_PERMISSION_SUCCESS, HttpStatus.OK.value(),
+        result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+        result.getEditable().get(PermissionRequest.class.getSimpleName()).stream()
+            .filter(thisEdit -> thisEdit.getKey().compareTo("isServer") != 0 || result.isServer())
+            .collect(Collectors.toList())),
         null, HttpStatus.OK.value());
   }
 
@@ -134,11 +147,12 @@ public class PermissionController extends AbstractController<PermissionService> 
     ValidationResult result = validateToken(request);
     checkAccessability(result.getLoginId(), id, true, result.isServer());
     service.deletePermission(id);
-    return new ResponseEntity<CommonResponse<String>>(
-        new CommonResponse<String>(true, null, LanguageMessageKey.DELETE_PERMISSION_SUCCESS,
-            HttpStatus.OK.value(),
-            result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
-            result.getEditable().get(PermissionRequest.class.getSimpleName())),
+    return new ResponseEntity<CommonResponse<String>>(new CommonResponse<String>(true, null,
+        LanguageMessageKey.DELETE_PERMISSION_SUCCESS, HttpStatus.OK.value(),
+        result.getViewPoints().get(PermissionResponse.class.getSimpleName()),
+        result.getEditable().get(PermissionRequest.class.getSimpleName()).stream()
+            .filter(thisEdit -> thisEdit.getKey().compareTo("isServer") != 0 || result.isServer())
+            .collect(Collectors.toList())),
         null, HttpStatus.OK.value());
   }
 }
