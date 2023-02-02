@@ -67,12 +67,12 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
   public Optional<UserResponse> findOneUserById(String userId) {
     User user = userInventory.findUserById(userId)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
-    return Optional.of(new UserResponse(user.get_id().toString(), user.getType(),
+    return Optional.of(new UserResponse(user.get_id().toString(), user.getAvatar(), user.getType(),
         user.getUsername(), user.getGender(), user.getDob(), user.getAddress(), user.getFirstName(),
         user.getLastName(), user.getEmail(), user.getPhone(),
         DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
         DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-        user.isVerify2FA(), user.getDeleted(), user.getAvatar()));
+        user.isVerify2FA(), user.getDeleted()));
   }
 
   @Override
@@ -158,14 +158,16 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     }
 
     List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<UserResponse>(users.stream()
-        .map(user -> new UserResponse(user.get_id().toString(), user.getType(), user.getUsername(),
-            user.getGender(), user.getDob(), user.getAddress(), user.getFirstName(),
-            user.getLastName(), user.getEmail(), user.getPhone(),
-            DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
-            DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-            user.isVerify2FA(), user.getDeleted(), user.getAvatar()))
-        .collect(Collectors.toList()), page, pageSize, repository.getTotalPage(allParams)));
+    return Optional.of(new ListWrapperResponse<UserResponse>(
+        users.stream()
+            .map(user -> new UserResponse(user.get_id().toString(), user.getAvatar(),
+                user.getType(), user.getUsername(), user.getGender(), user.getDob(),
+                user.getAddress(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                user.getPhone(), DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
+                DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
+                user.isVerify2FA(), user.getDeleted()))
+            .collect(Collectors.toList()),
+        page, pageSize, repository.getTotalPage(allParams)));
   }
 
   @Override
@@ -197,13 +199,15 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
       }
     }
     List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<UserResponse>(users.stream()
-        .map(user -> new UserResponse(user.get_id().toString(), user.getType(), user.getUsername(),
-            user.getGender(), user.getDob(), user.getAddress(), user.getFirstName(),
-            user.getLastName(), user.getEmail(), user.getPhone(),
-            DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
-            DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-            user.isVerify2FA(), user.getDeleted(), user.getAvatar()))
-        .collect(Collectors.toList()), page, pageSize, repository.getTotalPage(allParams)));
+    return Optional.of(new ListWrapperResponse<UserResponse>(
+        users.stream()
+            .map(user -> new UserResponse(user.get_id().toString(), user.getAvatar(),
+                user.getType(), user.getUsername(), user.getGender(), user.getDob(),
+                user.getAddress(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                user.getPhone(), DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
+                DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
+                user.isVerify2FA(), user.getDeleted()))
+            .collect(Collectors.toList()),
+        page, pageSize, repository.getTotalPage(allParams)));
   }
 }
