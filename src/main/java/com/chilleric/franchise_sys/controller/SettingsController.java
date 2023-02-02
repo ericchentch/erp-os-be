@@ -54,7 +54,7 @@ public class SettingsController extends AbstractController<SettingService> {
   public ResponseEntity<CommonResponse<String>> updateAvatar(HttpServletRequest request,
       @RequestParam String id, @RequestBody AvatarRequest avatar) {
     ValidationResult result = validateToken(request);
-    service.updateAvatar(id, avatar);
+    service.updateAvatar(result.getLoginId(), avatar);
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.UPDATE_AVATAR_SUCCESS,
             HttpStatus.OK.value(),

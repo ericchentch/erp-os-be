@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class UserResponse {
 
   private String id;
+  private String avatar;
   private TypeAccount type;
   private String username;
   private int gender;
@@ -25,5 +26,4 @@ public class UserResponse {
   private boolean verified;
   private boolean verify2FA;
   private int active;
-  private String avatar;
 }
