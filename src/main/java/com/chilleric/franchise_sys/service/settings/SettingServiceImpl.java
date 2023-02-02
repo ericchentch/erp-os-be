@@ -1,6 +1,7 @@
 package com.chilleric.franchise_sys.service.settings;
 
 import static java.util.Map.entry;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -8,7 +9,9 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
+import com.chilleric.franchise_sys.constant.DefaultValue;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.dto.settings.AccountSetting;
 import com.chilleric.franchise_sys.dto.settings.ChangePasswordRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsRequest;
@@ -37,6 +40,21 @@ public class SettingServiceImpl extends AbstractService<SettingRepository>
 
   @Autowired
   private UserInventory userInventory;
+
+  @Override
+  public void updateAvatar(String userId, String avatar) {
+    User user = userInventory.findUserById(userId)
+        .orElseThrow(() -> new ResourceAccessException(LanguageMessageKey.NOT_FOUND_USER));
+    if (avatar.length() > 0) {
+      if (!avatar.startsWith(TypeValidation.PATH_PRE_FIX))
+        throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_PATH_ICON);
+      user.setAvatar(avatar);
+    } else {
+      user.setAvatar(DefaultValue.DEFAULT_AVATAR);
+    }
+    userRepository.insertAndUpdate(user);
+  }
+
 
   @Override
   public Optional<SettingsResponse> getSettingsByUserId(String userId) {

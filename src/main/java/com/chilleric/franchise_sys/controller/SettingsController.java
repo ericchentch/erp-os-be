@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.CommonResponse;
@@ -41,6 +42,20 @@ public class SettingsController extends AbstractController<SettingService> {
     service.updateSettings(settingsRequest, result.getLoginId());
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.UPDATE_GENERAL_SETTINGS_SUCCESS,
+            HttpStatus.OK.value(),
+            result.getViewPoints().get(SettingsResponse.class.getSimpleName()),
+            result.getEditable().get(SettingsRequest.class.getSimpleName())),
+        null, HttpStatus.OK.value());
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PutMapping(value = "update-avatar")
+  public ResponseEntity<CommonResponse<String>> updateAvatar(HttpServletRequest request,
+      @RequestParam String id, @RequestParam String avatar) {
+    ValidationResult result = validateToken(request);
+    service.updateAvatar(id, avatar);
+    return new ResponseEntity<CommonResponse<String>>(
+        new CommonResponse<String>(true, null, LanguageMessageKey.UPDATE_AVATAR_SUCCESS,
             HttpStatus.OK.value(),
             result.getViewPoints().get(SettingsResponse.class.getSimpleName()),
             result.getEditable().get(SettingsRequest.class.getSimpleName())),

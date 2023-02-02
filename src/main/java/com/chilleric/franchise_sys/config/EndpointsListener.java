@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import com.chilleric.franchise_sys.constant.DefaultValue;
 import com.chilleric.franchise_sys.repository.systemRepository.language.Language;
 import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
@@ -50,20 +51,6 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     // .forEach((key, value) -> {
     //
     // });
-
-    List<User> users = userRepository
-        .getUsers(Map.ofEntries(entry("username", "super_admin")), "", 0, 0, "").get();
-    User user = new User();
-    if (users.size() == 0) {
-      user = new User(new ObjectId(), TypeAccount.INTERNAL, "super_admin",
-          bCryptPasswordEncoder
-              .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
-          0, "", "", "Super", "Admin", email, "", "", DateFormat.getCurrentTime(), null, true,
-          false, 0);
-      userRepository.insertAndUpdate(user);
-    } else {
-      user = users.get(0);
-    }
     List<User> userDevs = userRepository
         .getUsers(Map.ofEntries(entry("username", "super_admin_dev")), "", 0, 0, "").get();
     User usersDev = new User();
@@ -72,7 +59,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
           bCryptPasswordEncoder
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", "Dev", "Admin", email, "", "", DateFormat.getCurrentTime(), null, true, false,
-          0);
+          0, DefaultValue.DEFAULT_AVATAR);
       userRepository.insertAndUpdate(usersDev);
     } else {
       usersDev = userDevs.get(0);
@@ -80,7 +67,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     List<Permission> permissions = permissionRepository
         .getPermissions(Map.ofEntries(entry("name", "super_admin_permission")), "", 0, 0, "").get();
     if (permissions.size() == 0) {
-      List<ObjectId> userIds = Arrays.asList(user.get_id(), usersDev.get_id());
+      List<ObjectId> userIds = Arrays.asList(usersDev.get_id());
       Permission permission = new Permission(null, "super_admin_permission", userIds,
           DateFormat.getCurrentTime(), null, permissionRepository.getViewPointSelect(),
           permissionRepository.getEditableSelect(), true);

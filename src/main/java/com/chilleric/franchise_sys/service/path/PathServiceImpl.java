@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.path.PathRequest;
 import com.chilleric.franchise_sys.dto.path.PathResponse;
@@ -27,8 +28,6 @@ import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service
 public class PathServiceImpl extends AbstractService<PathRepository> implements PathService {
-
-  private static String PATH_PRE_FIX = "data:image/svg+xml;base64,";
 
   private static int foundAdmin = 0;
 
@@ -90,10 +89,6 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     if (foundAdmin == 0) {
       listUserId.add(adminUser.get_id());
     }
-    if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
-      error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
-      throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
-    }
     if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
       path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(), TypeAccount.EXTERNAL,
           listUserId, pathRequest.getIcon());
@@ -101,6 +96,11 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     if (pathRequest.getType().compareTo("INTERNAL") == 0) {
       path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(), TypeAccount.INTERNAL,
           listUserId, pathRequest.getIcon());
+    }
+    if (pathRequest.getIcon().length() > 0
+        && !pathRequest.getIcon().startsWith(TypeValidation.PATH_PRE_FIX)) {
+      error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
+      throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
     }
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
@@ -196,7 +196,8 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     if (pathRequest.getType().compareTo("INTERNAL") == 0) {
       path.setType(TypeAccount.INTERNAL);
     }
-    if (pathRequest.getIcon().length() > 0 && !pathRequest.getIcon().startsWith(PATH_PRE_FIX)) {
+    if (pathRequest.getIcon().length() > 0
+        && !pathRequest.getIcon().startsWith(TypeValidation.PATH_PRE_FIX)) {
       error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
       throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
     }

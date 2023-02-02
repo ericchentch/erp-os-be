@@ -13,5 +13,7 @@ public interface SettingService {
 
   void updatePassword(ChangePasswordRequest changePasswordRequest, String userId);
 
+  void updateAvatar(String userId, String avatar);
+
   void updateAccountInformation(AccountSetting accountSetting, String userId);
 }

@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.chilleric.franchise_sys.constant.DefaultValue;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.dto.login.LoginRequest;
@@ -352,7 +353,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
           bCryptPasswordEncoder()
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", givenName, familyName, email, "", newTokens, now, null, emailVerified, false,
-          0);
+          0, DefaultValue.DEFAULT_AVATAR);
       User userAdmin = userInventory.findUserByUsername("super_admin_dev")
           .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
       accessabilityRepository
