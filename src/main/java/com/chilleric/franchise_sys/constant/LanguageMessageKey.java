@@ -472,4 +472,5 @@ public class LanguageMessageKey {
                                                                         // one nav
   public static final String IS_SERVER_REQURIED = "isServerRequried"; // Server side is required
   public static final String UPDATE_AVATAR_SUCCESS = "updateAvtSuccess";// Your avatar is updated
+  public static final String AVATAR_REQUIRED = "avatarRequired"; // avatar is requried
 }
