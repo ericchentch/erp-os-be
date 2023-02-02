@@ -2,6 +2,7 @@ package com.chilleric.franchise_sys.service.settings;
 
 import java.util.Optional;
 import com.chilleric.franchise_sys.dto.settings.AccountSetting;
+import com.chilleric.franchise_sys.dto.settings.AvatarRequest;
 import com.chilleric.franchise_sys.dto.settings.ChangePasswordRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsResponse;
@@ -13,7 +14,7 @@ public interface SettingService {
 
   void updatePassword(ChangePasswordRequest changePasswordRequest, String userId);
 
-  void updateAvatar(String userId, String avatar);
+  void updateAvatar(String userId, AvatarRequest avatar);
 
   void updateAccountInformation(AccountSetting accountSetting, String userId);
 }

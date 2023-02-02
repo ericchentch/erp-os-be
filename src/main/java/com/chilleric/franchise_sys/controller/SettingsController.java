@@ -13,6 +13,7 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.CommonResponse;
 import com.chilleric.franchise_sys.dto.common.ValidationResult;
 import com.chilleric.franchise_sys.dto.settings.AccountSetting;
+import com.chilleric.franchise_sys.dto.settings.AvatarRequest;
 import com.chilleric.franchise_sys.dto.settings.ChangePasswordRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsResponse;
@@ -51,7 +52,7 @@ public class SettingsController extends AbstractController<SettingService> {
   @SecurityRequirement(name = "Bearer Authentication")
   @PutMapping(value = "update-avatar")
   public ResponseEntity<CommonResponse<String>> updateAvatar(HttpServletRequest request,
-      @RequestParam String id, @RequestParam String avatar) {
+      @RequestParam String id, @RequestBody AvatarRequest avatar) {
     ValidationResult result = validateToken(request);
     service.updateAvatar(id, avatar);
     return new ResponseEntity<CommonResponse<String>>(

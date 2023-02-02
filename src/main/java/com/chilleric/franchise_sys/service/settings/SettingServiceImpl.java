@@ -13,6 +13,7 @@ import com.chilleric.franchise_sys.constant.DefaultValue;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.dto.settings.AccountSetting;
+import com.chilleric.franchise_sys.dto.settings.AvatarRequest;
 import com.chilleric.franchise_sys.dto.settings.ChangePasswordRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsResponse;
@@ -42,13 +43,14 @@ public class SettingServiceImpl extends AbstractService<SettingRepository>
   private UserInventory userInventory;
 
   @Override
-  public void updateAvatar(String userId, String avatar) {
+  public void updateAvatar(String userId, AvatarRequest avatar) {
+    validate(avatar);
     User user = userInventory.findUserById(userId)
         .orElseThrow(() -> new ResourceAccessException(LanguageMessageKey.NOT_FOUND_USER));
-    if (avatar.length() > 0) {
-      if (!avatar.startsWith(TypeValidation.PATH_PRE_FIX))
+    if (avatar.getAvatar().length() > 0) {
+      if (!avatar.getAvatar().startsWith(TypeValidation.PATH_PRE_FIX))
         throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_PATH_ICON);
-      user.setAvatar(avatar);
+      user.setAvatar(avatar.getAvatar());
     } else {
       user.setAvatar(DefaultValue.DEFAULT_AVATAR);
     }
