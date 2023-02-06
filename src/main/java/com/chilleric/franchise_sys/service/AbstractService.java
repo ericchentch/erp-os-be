@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
@@ -22,8 +23,15 @@ import com.chilleric.franchise_sys.repository.systemRepository.accessability.Acc
 import com.chilleric.franchise_sys.utils.ObjectValidator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pusher.pushnotifications.PushNotifications;
 
 public abstract class AbstractService<r> {
+
+  @Value("${pusher.instance}")
+  protected String PUSHER_INSTANCE;
+
+  @Value("${pusher.secret}")
+  protected String PUSHER_SECRET;
 
   @Autowired
   protected r repository;
@@ -45,6 +53,10 @@ public abstract class AbstractService<r> {
   public void init() {
     objectMapper =
         new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
+
+  protected PushNotifications beamsClient() {
+    return new PushNotifications(PUSHER_INSTANCE, PUSHER_SECRET);
   }
 
   protected String generateParamsValue(List<String> list) {

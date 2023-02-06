@@ -59,7 +59,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
           bCryptPasswordEncoder
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", "Dev", "Admin", email, "", "", DateFormat.getCurrentTime(), null, true, false,
-          0, DefaultValue.DEFAULT_AVATAR);
+          0, DefaultValue.DEFAULT_AVATAR, new ObjectId());
       userRepository.insertAndUpdate(usersDev);
     } else {
       usersDev = userDevs.get(0);
