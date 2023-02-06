@@ -104,7 +104,8 @@ public abstract class AbstractController<s> {
       thisView.putAll(ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
       thisEdit.putAll(ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
     });
-    if (user.getTokens().compareTo(token) != 0) {
+    if (user.getTokens().stream().filter(thisToken -> thisToken == token)
+        .collect(Collectors.toList()).size() == 0) {
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
     return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit),

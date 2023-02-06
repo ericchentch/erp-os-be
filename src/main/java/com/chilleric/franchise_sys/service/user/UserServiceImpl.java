@@ -49,7 +49,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.set_id(newId);
     user.setPassword(bCryptPasswordEncoder()
         .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())));
-    user.setTokens("");
+    user.setTokens(new ArrayList<>());
     user.setType(TypeAccount.INTERNAL);
     user.setCreated(currentTime);
     user.setModified(currentTime);

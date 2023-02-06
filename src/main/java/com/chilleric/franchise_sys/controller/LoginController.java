@@ -38,7 +38,7 @@ public class LoginController extends AbstractController<LoginService> {
   @PostMapping(value = "logout")
   public ResponseEntity<CommonResponse<String>> logout(HttpServletRequest request) {
     ValidationResult result = validateToken(request);
-    service.logout(result.getLoginId());
+    service.logout(result.getLoginId(), jwtValidation.getJwtFromRequest(request));
     return new ResponseEntity<CommonResponse<String>>(
         new CommonResponse<String>(true, null, LanguageMessageKey.LOGOUT_SUCCESS,
             HttpStatus.OK.value(), new ArrayList<>(), new ArrayList<>()),
