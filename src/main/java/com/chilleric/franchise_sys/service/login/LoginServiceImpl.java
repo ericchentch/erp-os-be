@@ -1,6 +1,7 @@
 package com.chilleric.franchise_sys.service.login;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -133,6 +134,8 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       }
       user.setTokens(token);
       repository.insertAndUpdate(user);
+      pusherService.sendNotification("New login", "Someone login your account!",
+          Arrays.asList(user.getNotificationId().toString()));
       return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
           user.getType(), false, false));
     }
@@ -326,6 +329,8 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     }
     user.setTokens(token);
     repository.insertAndUpdate(user);
+    pusherService.sendNotification("New login", "Someone login your account!",
+        Arrays.asList(user.getNotificationId().toString()));
     return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
         user.getType(), false, false));
 
@@ -390,6 +395,8 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       user.setTokens(tokenUser);
       user.setVerify2FA(false);
       user.setVerified(true);
+      pusherService.sendNotification("New login", "Someone login your account!",
+          Arrays.asList(user.getNotificationId().toString()));
       repository.insertAndUpdate(user);
       return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
           user.getType(), false, false));

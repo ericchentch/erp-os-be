@@ -57,8 +57,6 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setNotificationId(new ObjectId());
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
-    pusherService.sendNotification("Added new user", "A new user has been added to system",
-        Arrays.asList(getNotiId(loginId)));
     repository.insertAndUpdate(user);
   }
 
