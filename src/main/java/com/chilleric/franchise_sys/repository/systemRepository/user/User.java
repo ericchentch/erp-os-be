@@ -1,6 +1,7 @@
 package com.chilleric.franchise_sys.repository.systemRepository.user;
 
 import java.util.Date;
+import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ public class User {
   private String lastName;
   private String email;
   private String phone;
-  private String tokens;
+  private List<String> tokens;
   private Date created;
   private Date modified;
   private boolean verified;

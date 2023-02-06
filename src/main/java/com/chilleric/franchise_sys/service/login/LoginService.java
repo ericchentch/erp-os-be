@@ -9,7 +9,7 @@ public interface LoginService {
 
   Optional<LoginResponse> loginGoogle(String token);
 
-  void logout(String id);
+  void logout(String id, String logoutToken);
 
   // void register(RegisterRequest registerRequest);
 

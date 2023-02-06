@@ -49,7 +49,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.set_id(newId);
     user.setPassword(bCryptPasswordEncoder()
         .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())));
-    user.setTokens("");
+    user.setTokens(new ArrayList<>());
     user.setType(TypeAccount.INTERNAL);
     user.setCreated(currentTime);
     user.setModified(currentTime);
@@ -57,8 +57,6 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setNotificationId(new ObjectId());
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
-    pusherService.sendNotification("Added new user", "A new user has been added to system",
-        Arrays.asList(getNotiId(loginId)));
     repository.insertAndUpdate(user);
   }
 

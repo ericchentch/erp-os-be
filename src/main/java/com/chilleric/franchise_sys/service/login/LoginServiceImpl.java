@@ -1,8 +1,11 @@
 package com.chilleric.franchise_sys.service.login;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -122,18 +125,29 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       return Optional.of(new LoginResponse("", "", TypeAccount.EXTERNAL, true, false));
     } else {
       String newTokens = jwtValidation.generateToken(user.get_id().toString());
-      user.setTokens(newTokens);
+      List<String> token = user.getTokens();
+      if (user.getTokens().size() == 9) {
+        token.remove(9);
+        token.add(0, newTokens);
+      } else {
+        token.add(newTokens);
+      }
+      user.setTokens(token);
       repository.insertAndUpdate(user);
+      pusherService.sendNotification("New login", "Someone login your account!",
+          Arrays.asList(user.getNotificationId().toString()));
       return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
           user.getType(), false, false));
     }
   }
 
   @Override
-  public void logout(String id) {
+  public void logout(String id, String logoutToken) {
     User user = userInventory.findUserById(id)
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
-    user.setTokens("");
+    List<String> token = user.getTokens();
+    token.remove(logoutToken);
+    user.setTokens(token);
     repository.insertAndUpdate(user);
   }
 
@@ -306,8 +320,17 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_CODE);
     }
     String newTokens = jwtValidation.generateToken(user.get_id().toString());
-    user.setTokens(newTokens);
+    List<String> token = user.getTokens();
+    if (user.getTokens().size() == 9) {
+      token.remove(9);
+      token.add(0, newTokens);
+    } else {
+      token.add(newTokens);
+    }
+    user.setTokens(token);
     repository.insertAndUpdate(user);
+    pusherService.sendNotification("New login", "Someone login your account!",
+        Arrays.asList(user.getNotificationId().toString()));
     return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
         user.getType(), false, false));
 
@@ -362,9 +385,18 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     if (getUser.isPresent()) {
       User user = getUser.get();
       String newTokens = jwtValidation.generateToken(user.get_id().toString());
-      user.setTokens(newTokens);
+      List<String> tokenUser = user.getTokens();
+      if (user.getTokens().size() == 9) {
+        tokenUser.remove(9);
+        tokenUser.add(0, newTokens);
+      } else {
+        tokenUser.add(newTokens);
+      }
+      user.setTokens(tokenUser);
       user.setVerify2FA(false);
       user.setVerified(true);
+      pusherService.sendNotification("New login", "Someone login your account!",
+          Arrays.asList(user.getNotificationId().toString()));
       repository.insertAndUpdate(user);
       return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
           user.getType(), false, false));
@@ -373,10 +405,12 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       Date now = new Date();
       ObjectId newId = new ObjectId();
       String newTokens = jwtValidation.generateToken(newId.toString());
+      List<String> tokenUser = new ArrayList<>();
+      tokenUser.add(newTokens);
       User user = new User(newId, TypeAccount.EXTERNAL, "",
           bCryptPasswordEncoder()
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
-          0, "", "", givenName, familyName, email, "", newTokens, now, null, emailVerified, false,
+          0, "", "", givenName, familyName, email, "", tokenUser, now, null, emailVerified, false,
           0, DefaultValue.DEFAULT_AVATAR, new ObjectId());
       User userAdmin = userInventory.findUserByUsername("super_admin_dev")
           .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));

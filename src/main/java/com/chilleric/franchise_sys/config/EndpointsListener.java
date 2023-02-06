@@ -1,6 +1,7 @@
 package com.chilleric.franchise_sys.config;
 
 import static java.util.Map.entry;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -58,8 +59,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
       usersDev = new User(new ObjectId(), TypeAccount.INTERNAL, "super_admin_dev",
           bCryptPasswordEncoder
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
-          0, "", "", "Dev", "Admin", email, "", "", DateFormat.getCurrentTime(), null, true, false,
-          0, DefaultValue.DEFAULT_AVATAR, new ObjectId());
+          0, "", "", "Dev", "Admin", email, "", new ArrayList<>(), DateFormat.getCurrentTime(),
+          null, true, false, 0, DefaultValue.DEFAULT_AVATAR, new ObjectId());
       userRepository.insertAndUpdate(usersDev);
     } else {
       usersDev = userDevs.get(0);
