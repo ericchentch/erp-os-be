@@ -14,9 +14,11 @@ import com.chilleric.franchise_sys.constant.ResponseType;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
+import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
+import com.chilleric.franchise_sys.pusher.PusherService;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.utils.ObjectValidator;
@@ -30,6 +32,12 @@ public abstract class AbstractService<r> {
 
   @Autowired
   protected Environment env;
+
+  @Autowired
+  protected UserInventory userInventory;
+
+  @Autowired
+  protected PusherService pusherService;
 
   @Autowired
   protected ObjectValidator objectValidator;
@@ -75,6 +83,12 @@ public abstract class AbstractService<r> {
     if (isError) {
       throw new InvalidRequestException(errors, LanguageMessageKey.INVALID_REQUEST);
     }
+  }
+
+  protected String getNotiId(String loginId) {
+    return userInventory.findUserById(loginId)
+        .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).getNotificationId()
+        .toString();
   }
 
   protected void validateStringIsObjectId(String id) {

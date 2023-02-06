@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.DateTime;
@@ -22,7 +21,6 @@ import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
-import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User;
@@ -36,9 +34,6 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
 
   @Value("${default.password}")
   protected String defaultPassword;
-
-  @Autowired
-  private UserInventory userInventory;
 
   @Override
   public void createNewUser(UserRequest userRequest, String loginId, boolean isServer) {
@@ -59,8 +54,11 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setCreated(currentTime);
     user.setModified(currentTime);
     user.setAvatar(DefaultValue.DEFAULT_AVATAR);
+    user.setNotificationId(new ObjectId());
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
+    pusherService.sendNotification("Added new user", "A new user has been added to system",
+        Arrays.asList(getNotiId(loginId)));
     repository.insertAndUpdate(user);
   }
 
@@ -72,7 +70,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
         user.getLastName(), user.getEmail(), user.getPhone(),
         DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
         DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-        user.isVerify2FA(), user.getDeleted()));
+        user.isVerify2FA(), user.getDeleted(), user.getNotificationId().toString()));
   }
 
   @Override
@@ -158,16 +156,14 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     }
 
     List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<UserResponse>(
-        users.stream()
-            .map(user -> new UserResponse(user.get_id().toString(), user.getAvatar(),
-                user.getType(), user.getUsername(), user.getGender(), user.getDob(),
-                user.getAddress(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                user.getPhone(), DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
-                DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-                user.isVerify2FA(), user.getDeleted()))
-            .collect(Collectors.toList()),
-        page, pageSize, repository.getTotalPage(allParams)));
+    return Optional.of(new ListWrapperResponse<UserResponse>(users.stream()
+        .map(user -> new UserResponse(user.get_id().toString(), user.getAvatar(), user.getType(),
+            user.getUsername(), user.getGender(), user.getDob(), user.getAddress(),
+            user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhone(),
+            DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
+            DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
+            user.isVerify2FA(), user.getDeleted(), user.getNotificationId().toString()))
+        .collect(Collectors.toList()), page, pageSize, repository.getTotalPage(allParams)));
   }
 
   @Override
@@ -199,15 +195,13 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
       }
     }
     List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
-    return Optional.of(new ListWrapperResponse<UserResponse>(
-        users.stream()
-            .map(user -> new UserResponse(user.get_id().toString(), user.getAvatar(),
-                user.getType(), user.getUsername(), user.getGender(), user.getDob(),
-                user.getAddress(), user.getFirstName(), user.getLastName(), user.getEmail(),
-                user.getPhone(), DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
-                DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
-                user.isVerify2FA(), user.getDeleted()))
-            .collect(Collectors.toList()),
-        page, pageSize, repository.getTotalPage(allParams)));
+    return Optional.of(new ListWrapperResponse<UserResponse>(users.stream()
+        .map(user -> new UserResponse(user.get_id().toString(), user.getAvatar(), user.getType(),
+            user.getUsername(), user.getGender(), user.getDob(), user.getAddress(),
+            user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhone(),
+            DateFormat.toDateString(user.getCreated(), DateTime.YYYY_MM_DD),
+            DateFormat.toDateString(user.getModified(), DateTime.YYYY_MM_DD), user.isVerified(),
+            user.isVerify2FA(), user.getDeleted(), user.getNotificationId().toString()))
+        .collect(Collectors.toList()), page, pageSize, repository.getTotalPage(allParams)));
   }
 }

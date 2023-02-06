@@ -10,6 +10,8 @@ env:
   MONGO_CRM_DB: ${{ secrets.MONGO_CRM_DB }}
   MONGO_INFORMATION_DB: ${{ secrets.MONGO_INFORMATION_DB }}
   GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
+  PUSHER_INSTANCE_ID: ${{ secrets.PUSHER_INSTANCE_ID }}
+  PUSHER_SECRET_KEY: ${{ secrets.PUSHER_SECRET_KEY }}
 
 on:
   pull_request:

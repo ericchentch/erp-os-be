@@ -34,4 +34,5 @@ public class User {
   private boolean verify2FA;
   private int deleted;
   private String avatar;
+  private ObjectId notificationId;
 }
