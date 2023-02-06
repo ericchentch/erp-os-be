@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
@@ -15,29 +14,30 @@ import com.chilleric.franchise_sys.constant.ResponseType;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
+import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
+import com.chilleric.franchise_sys.pusher.PusherService;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
 import com.chilleric.franchise_sys.utils.ObjectValidator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pusher.pushnotifications.PushNotifications;
 
 public abstract class AbstractService<r> {
-
-  @Value("${pusher.instance}")
-  protected String PUSHER_INSTANCE;
-
-  @Value("${pusher.secret}")
-  protected String PUSHER_SECRET;
 
   @Autowired
   protected r repository;
 
   @Autowired
   protected Environment env;
+
+  @Autowired
+  protected UserInventory userInventory;
+
+  @Autowired
+  protected PusherService pusherService;
 
   @Autowired
   protected ObjectValidator objectValidator;
@@ -53,10 +53,6 @@ public abstract class AbstractService<r> {
   public void init() {
     objectMapper =
         new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-  }
-
-  protected PushNotifications beamsClient() {
-    return new PushNotifications(PUSHER_INSTANCE, PUSHER_SECRET);
   }
 
   protected String generateParamsValue(List<String> list) {
@@ -87,6 +83,12 @@ public abstract class AbstractService<r> {
     if (isError) {
       throw new InvalidRequestException(errors, LanguageMessageKey.INVALID_REQUEST);
     }
+  }
+
+  protected String getNotiId(String loginId) {
+    return userInventory.findUserById(loginId)
+        .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).getNotificationId()
+        .toString();
   }
 
   protected void validateStringIsObjectId(String id) {

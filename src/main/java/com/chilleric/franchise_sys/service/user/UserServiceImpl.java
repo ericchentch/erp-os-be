@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.DateTime;
@@ -22,7 +21,6 @@ import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
-import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User;
@@ -36,9 +34,6 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
 
   @Value("${default.password}")
   protected String defaultPassword;
-
-  @Autowired
-  private UserInventory userInventory;
 
   @Override
   public void createNewUser(UserRequest userRequest, String loginId, boolean isServer) {
@@ -62,6 +57,8 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setNotificationId(new ObjectId());
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
+    pusherService.sendNotification("Added new user", "A new user has been added to system",
+        Arrays.asList(getNotiId(loginId)));
     repository.insertAndUpdate(user);
   }
 
