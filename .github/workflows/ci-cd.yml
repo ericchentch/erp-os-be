@@ -12,6 +12,7 @@ env:
   GOOGLE_ID: ${{ secrets.GOOGLE_ID }}
   PUSHER_INSTANCE_ID: ${{ secrets.PUSHER_INSTANCE_ID }}
   PUSHER_SECRET_KEY: ${{ secrets.PUSHER_SECRET_KEY }}
+  WEB_LINK: ${{ secrets.WEB_LINK }}
 
 on:
   pull_request:

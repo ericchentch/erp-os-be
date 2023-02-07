@@ -18,6 +18,9 @@ public class PusherServiceImpl implements PusherService {
   @Value("${pusher.secret}")
   protected String PUSHER_SECRET;
 
+  @Value("${web.link}")
+  protected String WEB_LINK;
+
   public void sendNotification(String title, String body, List<String> interests) {
     PushNotifications beamsClient = new PushNotifications(PUSHER_INSTANCE, PUSHER_SECRET);
 
@@ -26,7 +29,7 @@ public class PusherServiceImpl implements PusherService {
     webNotification.put("title", title);
     webNotification.put("body", body);
     webNotification.put("icon", "https://franchise-sys-frontend.netlify.app/favicon.ico");
-    webNotification.put("deep_link", "https://franchise-sys-frontend.netlify.app/");
+    webNotification.put("deep_link", WEB_LINK);
     Map<String, Map> web = new HashMap<>();
     web.put("notification", webNotification);
     publishRequest.put("web", web);
