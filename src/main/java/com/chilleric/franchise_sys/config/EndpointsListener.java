@@ -28,13 +28,13 @@ import com.chilleric.franchise_sys.utils.DateFormat;
 public class EndpointsListener implements ApplicationListener<ContextRefreshedEvent> {
 
   @Autowired
-  private PermissionRepository permissionRepository;
+  protected PermissionRepository permissionRepository;
 
   @Autowired
-  private UserRepository userRepository;
+  protected UserRepository userRepository;
 
   @Autowired
-  private LanguageRepository languageRepository;
+  protected LanguageRepository languageRepository;
 
   @Value("${spring.mail.username}")
   protected String email;
@@ -42,7 +42,10 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
   @Value("${default.password}")
   protected String defaultPassword;
 
-  private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+  @Value("${server.channel}")
+  protected String serverChannel;
+
+  protected final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
   @Override
   public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -60,7 +63,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
           bCryptPasswordEncoder
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", "Dev", "Admin", email, "", new ArrayList<>(), DateFormat.getCurrentTime(),
-          null, true, false, 0, DefaultValue.DEFAULT_AVATAR, new ObjectId());
+          null, true, false, 0, DefaultValue.DEFAULT_AVATAR, new ObjectId(), serverChannel,
+          new ObjectId());
       userRepository.insertAndUpdate(usersDev);
     } else {
       usersDev = userDevs.get(0);

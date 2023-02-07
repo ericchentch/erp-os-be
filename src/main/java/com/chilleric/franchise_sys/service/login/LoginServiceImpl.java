@@ -411,7 +411,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
           bCryptPasswordEncoder()
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", givenName, familyName, email, "", tokenUser, now, null, emailVerified, false,
-          0, DefaultValue.DEFAULT_AVATAR, new ObjectId());
+          0, DefaultValue.DEFAULT_AVATAR, new ObjectId(), null, new ObjectId());
       User userAdmin = userInventory.findUserByUsername("super_admin_dev")
           .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
       accessabilityRepository
