@@ -32,6 +32,7 @@ import com.chilleric.franchise_sys.repository.systemRepository.accessability.Acc
 import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User;
+import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
 
 public abstract class AbstractController<s> {
@@ -59,6 +60,9 @@ public abstract class AbstractController<s> {
 
   @Autowired
   protected UserInventory userInventory;
+
+  @Autowired
+  protected UserRepository userRepository;
 
   @Autowired
   protected PathInventory pathInventory;
@@ -105,6 +109,9 @@ public abstract class AbstractController<s> {
       thisEdit.putAll(ObjectUtilities.mergePermission(thisEdit, thisPerm.getEditable()));
     });
     if (!user.getTokens().contains(token)) {
+      List<String> tokenUser = user.getTokens();
+      tokenUser.remove(token);
+      userRepository.insertAndUpdate(user);
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
     return new ValidationResult(user.get_id().toString(), removeId(thisView), removeId(thisEdit),
