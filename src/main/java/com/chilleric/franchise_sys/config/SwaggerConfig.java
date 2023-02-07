@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "E-Com API", version = "${api.version}"))
+@OpenAPIDefinition(info = @Info(title = "Franchise API", version = "${api.version}"))
 @SecurityScheme(name = "Bearer Authentication", type = SecuritySchemeType.HTTP,
     bearerFormat = "JWT", scheme = "Bearer")
 public class SwaggerConfig {
