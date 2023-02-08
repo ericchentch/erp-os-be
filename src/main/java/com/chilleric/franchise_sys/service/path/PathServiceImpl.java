@@ -19,6 +19,7 @@ import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.inventory.path.PathInventory;
 import com.chilleric.franchise_sys.inventory.user.UserInventory;
+import com.chilleric.franchise_sys.pusher.PusherUpdateResponse;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
 import com.chilleric.franchise_sys.repository.systemRepository.path.PathRepository;
@@ -36,6 +37,44 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
 
   @Autowired
   private UserInventory userInventory;
+
+  public void sendNotificationUpdate(List<ObjectId> currentList, List<ObjectId> newListId) {
+    List<String> notiList = new ArrayList<>();
+    if (currentList.size() > 0) {
+      for (int i = 0; i < currentList.size(); i++) {
+        boolean isFound = false;
+        for (int j = 0; j < newListId.size(); j++) {
+          if (currentList.get(i).compareTo(newListId.get(j)) == 0) {
+            isFound = true;
+            break;
+          }
+        }
+        if (!isFound) {
+          notiList.add(currentList.get(i).toString());
+        }
+      }
+    }
+    for (int i = 0; i < newListId.size(); i++) {
+      boolean isFound = false;
+      for (int j = 0; j < currentList.size(); j++) {
+        if (newListId.get(i).compareTo(currentList.get(j)) == 0) {
+          isFound = true;
+          break;
+        }
+      }
+      if (!isFound) {
+        notiList.add(newListId.get(i).toString());
+      }
+    }
+    if (notiList.size() > 0) {
+      notiList.forEach(thisNotiId -> {
+        userInventory.getActiveUserById(thisNotiId).ifPresent(thisUser -> {
+          pusherService.pushInfo(thisUser.getChannelId(), thisUser.getEventId().toString(),
+              new PusherUpdateResponse(true));
+        });
+      });
+    }
+  }
 
   @Override
   public Optional<ListWrapperResponse<PathResponse>> getPaths(Map<String, String> allParams,
@@ -102,6 +141,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
       error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
       throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
     }
+    sendNotificationUpdate(new ArrayList<>(), listUserId);
     accessabilityRepository
         .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(path);
@@ -201,6 +241,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
       error.put("type", LanguageMessageKey.INVALID_PATH_ICON);
       throw new InvalidRequestException(error, LanguageMessageKey.INVALID_PATH_ICON);
     }
+    sendNotificationUpdate(path.getUserId(), listUserId);
     path.setUserId(listUserId);
     path.setLabel(pathRequest.getLabel());
     path.setIcon(pathRequest.getIcon());

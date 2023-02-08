@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import com.pusher.pushnotifications.PushNotifications;
+import com.pusher.rest.Pusher;
 
 @Component
 public class PusherServiceImpl implements PusherService {
@@ -20,6 +21,18 @@ public class PusherServiceImpl implements PusherService {
 
   @Value("${web.link}")
   protected String WEB_LINK;
+
+  @Value("${pusher.app.key}")
+  protected String PUSHER_APP_KEY;
+
+  @Value("${pusher.app.id}")
+  protected String PUSHER_APP_ID;
+
+  @Value("${pusher.app.secret}")
+  protected String PUSHER_APP_SECRET;
+
+  @Value("${pusher.cluster}")
+  protected String PUSHER_CLUSTER;
 
   public void sendNotification(String title, String body, List<String> interests) {
     PushNotifications beamsClient = new PushNotifications(PUSHER_INSTANCE, PUSHER_SECRET);
@@ -39,5 +52,14 @@ public class PusherServiceImpl implements PusherService {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  public void pushInfo(String channel, String event, Object data) {
+    Pusher pusher = new Pusher(PUSHER_APP_ID, PUSHER_APP_KEY, PUSHER_APP_SECRET);
+    pusher.setCluster(PUSHER_CLUSTER);
+    pusher.setEncrypted(true);
+
+    pusher.trigger(channel, event, data);
+
   }
 }

@@ -18,6 +18,7 @@ import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.common.ValidationResult;
 import com.chilleric.franchise_sys.dto.user.UserRequest;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
+import com.chilleric.franchise_sys.pusher.PusherResponse;
 import com.chilleric.franchise_sys.service.user.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -53,6 +54,16 @@ public class UserController extends AbstractController<UserService> {
     return response(
         Optional.of(filterResponse(service.findOneUserById(id).get(), result.getViewPoints())),
         LanguageMessageKey.SUCCESS, result.getViewPoints().get(UserResponse.class.getSimpleName()),
+        result.getEditable().get(UserRequest.class.getSimpleName()));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-notification-config")
+  public ResponseEntity<CommonResponse<PusherResponse>> getNotificationConfig(
+      HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    return response(service.getYourPusher(result.getLoginId()), LanguageMessageKey.SUCCESS,
+        result.getViewPoints().get(UserResponse.class.getSimpleName()),
         result.getEditable().get(UserRequest.class.getSimpleName()));
   }
 

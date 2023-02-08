@@ -12,8 +12,8 @@ import com.chilleric.franchise_sys.dto.hotel.HotelRequest;
 import com.chilleric.franchise_sys.dto.hotel.HotelResponse;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.repository.common_entity.ClientInfomation;
-import com.chilleric.franchise_sys.repository.informationRepository.hotel.Hotel;
-import com.chilleric.franchise_sys.repository.informationRepository.hotel.HotelRepository;
+import com.chilleric.franchise_sys.repository.crm_repository.hotel.Hotel;
+import com.chilleric.franchise_sys.repository.crm_repository.hotel.HotelRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service

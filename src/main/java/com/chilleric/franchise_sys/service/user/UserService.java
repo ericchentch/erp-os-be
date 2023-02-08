@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.user.UserRequest;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
+import com.chilleric.franchise_sys.pusher.PusherResponse;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 
 public interface UserService {
@@ -23,4 +24,7 @@ public interface UserService {
       String keySort, int page, int pageSize, String sortField, String loginId, boolean isServer);
 
   void changeStatusUser(String userId);
+
+  Optional<PusherResponse> getYourPusher(String userId);
+
 }

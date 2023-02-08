@@ -4,7 +4,7 @@ import java.util.Optional;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.roomType.RoomTypeRequest;
 import com.chilleric.franchise_sys.dto.roomType.RoomTypeResponse;
-import com.chilleric.franchise_sys.repository.informationRepository.roomType.RoomType;
+import com.chilleric.franchise_sys.repository.crm_repository.roomType.RoomType;
 
 public interface RoomTypeService {
   void createNewRoomType(RoomTypeRequest roomTypeRequest);

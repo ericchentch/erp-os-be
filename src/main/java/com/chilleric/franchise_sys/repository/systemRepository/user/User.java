@@ -36,4 +36,6 @@ public class User {
   private int deleted;
   private String avatar;
   private ObjectId notificationId;
+  private String channelId;
+  private ObjectId eventId;
 }
