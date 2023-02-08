@@ -113,20 +113,16 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
     Path path = new Path();
     List<ObjectId> listUserId = new ArrayList<>();
-    foundAdmin = 0;
+    if (!path.getUserId().contains(adminUser.get_id())) {
+      listUserId.add(adminUser.get_id());
+    }
     if (pathRequest.getUserId().size() > 0) {
       pathRequest.getUserId().forEach(thisId -> {
-        if (thisId.compareTo(adminUser.get_id().toString()) == 0) {
-          foundAdmin++;
-        }
-        if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
+        if (!listUserId.contains(new ObjectId(thisId))
             && userInventory.findUserById(thisId).isPresent()) {
           listUserId.add(new ObjectId(thisId));
         }
       });
-    }
-    if (foundAdmin == 0) {
-      listUserId.add(adminUser.get_id());
     }
     if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
       path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(), TypeAccount.EXTERNAL,
@@ -215,20 +211,16 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     User adminUser = userInventory.findUserByUsername("super_admin_dev")
         .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
     List<ObjectId> listUserId = new ArrayList<>();
-    foundAdmin = 0;
+    if (!path.getUserId().contains(adminUser.get_id())) {
+      listUserId.add(adminUser.get_id());
+    }
     if (pathRequest.getUserId().size() > 0) {
       pathRequest.getUserId().forEach(thisId -> {
-        if (thisId.compareTo(adminUser.get_id().toString()) == 0) {
-          foundAdmin++;
-        }
-        if (accessabilityRepository.getAccessability(loginId, thisId).isPresent()
+        if (!listUserId.contains(new ObjectId(thisId))
             && userInventory.findUserById(thisId).isPresent()) {
           listUserId.add(new ObjectId(thisId));
         }
       });
-    }
-    if (foundAdmin == 0) {
-      listUserId.add(adminUser.get_id());
     }
     if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
       path.setType(TypeAccount.EXTERNAL);
