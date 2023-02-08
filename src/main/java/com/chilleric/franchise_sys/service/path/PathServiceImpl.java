@@ -66,12 +66,14 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         notiList.add(newListId.get(i).toString());
       }
     }
-    notiList.forEach(thisNotiId -> {
-      userInventory.getActiveUserById(thisNotiId).ifPresent(thisUser -> {
-        pusherService.pushInfo(thisUser.getChannelId(), thisUser.getEventId().toString(),
-            new PusherUpdateResponse(true));
+    if (notiList.size() > 0) {
+      notiList.forEach(thisNotiId -> {
+        userInventory.getActiveUserById(thisNotiId).ifPresent(thisUser -> {
+          pusherService.pushInfo(thisUser.getChannelId(), thisUser.getEventId().toString(),
+              new PusherUpdateResponse(true));
+        });
       });
-    });
+    }
   }
 
   @Override
