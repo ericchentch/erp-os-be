@@ -13,8 +13,8 @@ import com.chilleric.franchise_sys.dto.roomType.RoomTypeRequest;
 import com.chilleric.franchise_sys.dto.roomType.RoomTypeResponse;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
-import com.chilleric.franchise_sys.repository.informationRepository.roomType.RoomType;
-import com.chilleric.franchise_sys.repository.informationRepository.roomType.RoomTypeRepository;
+import com.chilleric.franchise_sys.repository.crm_repository.roomType.RoomType;
+import com.chilleric.franchise_sys.repository.crm_repository.roomType.RoomTypeRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service

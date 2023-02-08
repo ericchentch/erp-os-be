@@ -2,7 +2,7 @@ package com.chilleric.franchise_sys.dto.task;
 
 import com.chilleric.franchise_sys.dto.shift.ShiftResponse;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
-import com.chilleric.franchise_sys.repository.informationRepository.task.TaskStatus;
+import com.chilleric.franchise_sys.repository.crm_repository.task.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

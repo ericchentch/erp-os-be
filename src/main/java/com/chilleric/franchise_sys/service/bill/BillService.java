@@ -7,7 +7,7 @@ import com.chilleric.franchise_sys.dto.bill.BillResponse;
 import com.chilleric.franchise_sys.repository.common_entity.DraftDetail;
 import com.chilleric.franchise_sys.repository.common_entity.Timeline;
 import com.chilleric.franchise_sys.repository.common_enum.BillStatus;
-import com.chilleric.franchise_sys.repository.crmRepository.bill.Bill;
+import com.chilleric.franchise_sys.repository.information_repository.bill.Bill;
 
 public interface BillService {
   void createBill(BillRequest billRequest);

@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.inventory.AbstractInventory;
-import com.chilleric.franchise_sys.repository.informationRepository.shift.Shift;
-import com.chilleric.franchise_sys.repository.informationRepository.shift.ShiftRepository;
+import com.chilleric.franchise_sys.repository.crm_repository.shift.Shift;
+import com.chilleric.franchise_sys.repository.crm_repository.shift.ShiftRepository;
 import com.chilleric.franchise_sys.utils.StringUtils;
 
 @Service
