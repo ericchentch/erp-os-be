@@ -41,7 +41,7 @@ public class PusherServiceImpl implements PusherService {
     Map<String, String> webNotification = new HashMap<>();
     webNotification.put("title", title);
     webNotification.put("body", body);
-    webNotification.put("icon", "https://franchise-sys-frontend.netlify.app/favicon.ico");
+    webNotification.put("icon", WEB_LINK + "favicon.ico");
     webNotification.put("deep_link", WEB_LINK);
     Map<String, Map> web = new HashMap<>();
     web.put("notification", webNotification);
