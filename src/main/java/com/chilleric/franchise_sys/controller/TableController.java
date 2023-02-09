@@ -2,6 +2,7 @@ package com.chilleric.franchise_sys.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,8 @@ public class TableController extends AbstractController {
   public ResponseEntity<CommonResponse<List<ViewPoint>>> getIgnoreFieldUser(
       HttpServletRequest request) {
     ValidationResult resultAuthentication = validateToken(request);
-    Optional<List<ViewPoint>> result = Optional
-        .of((List<ViewPoint>) removeAttributes(resultAuthentication.getViewPoints(), IgnoreView)
-            .get(UserResponse.class.getSimpleName()));
-    return response(result, LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
+    return response(getResult(removeAttributes(resultAuthentication.getViewPoints(), IgnoreView),
+        UserResponse.class), LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
@@ -37,10 +36,10 @@ public class TableController extends AbstractController {
   public ResponseEntity<CommonResponse<List<ViewPoint>>> getIgnoreFieldPermission(
       HttpServletRequest request) {
     ValidationResult resultAuthentication = validateToken(request);
-    Optional<List<ViewPoint>> result = Optional
-        .of((List<ViewPoint>) removeAttributes(resultAuthentication.getViewPoints(), IgnoreView)
-            .get(PermissionResponse.class.getSimpleName()));
-    return response(result, LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
+    return response(
+        getResult(removeAttributes(resultAuthentication.getViewPoints(), IgnoreView),
+            PermissionResponse.class),
+        LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
 
   }
 
@@ -49,10 +48,16 @@ public class TableController extends AbstractController {
   public ResponseEntity<CommonResponse<List<ViewPoint>>> getIgnoreFieldPath(
       HttpServletRequest request) {
     ValidationResult resultAuthentication = validateToken(request);
-    Optional<List<ViewPoint>> result = Optional
-        .of((List<ViewPoint>) removeAttributes(resultAuthentication.getViewPoints(), IgnoreView)
-            .get(PathResponse.class.getSimpleName()));
-    return response(result, LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
+    return response(getResult(removeAttributes(resultAuthentication.getViewPoints(), IgnoreView),
+        PathResponse.class), LanguageMessageKey.SUCCESS, new ArrayList<>(), new ArrayList<>());
+  }
+
+  Optional<List<ViewPoint>> getResult(Map<String, List<ViewPoint>> viewPoint, Class<?> getClass) {
+    if (viewPoint.containsKey(getClass.getSimpleName())) {
+      return Optional.of(viewPoint.get(getClass.getSimpleName()));
+    } else {
+      return Optional.of(new ArrayList<>());
+    }
   }
 
 
