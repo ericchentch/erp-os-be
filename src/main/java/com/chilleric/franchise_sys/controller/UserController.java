@@ -49,7 +49,7 @@ public class UserController extends AbstractController<UserService> {
     if (id.compareTo(result.getLoginId()) == 0) {
       return response(service.findOneUserById(id), LanguageMessageKey.SUCCESS,
           result.getViewPoints().get(UserResponse.class.getSimpleName()),
-          result.getEditable().get(UserResponse.class.getSimpleName()));
+          result.getEditable().get(UserRequest.class.getSimpleName()));
     }
     return response(
         Optional.of(filterResponse(service.findOneUserById(id).get(), result.getViewPoints())),
