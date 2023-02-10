@@ -126,7 +126,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     } else {
       String newTokens = jwtValidation.generateToken(user.get_id().toString());
       List<String> token = user.getTokens();
-      if (user.getTokens().size() == 9) {
+      if (user.getTokens().size() == 10) {
         token.remove(9);
         token.add(0, newTokens);
       } else {
@@ -321,7 +321,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     }
     String newTokens = jwtValidation.generateToken(user.get_id().toString());
     List<String> token = user.getTokens();
-    if (user.getTokens().size() == 9) {
+    if (user.getTokens().size() == 10) {
       token.remove(9);
       token.add(0, newTokens);
     } else {
@@ -386,7 +386,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       User user = getUser.get();
       String newTokens = jwtValidation.generateToken(user.get_id().toString());
       List<String> tokenUser = user.getTokens();
-      if (user.getTokens().size() == 9) {
+      if (user.getTokens().size() == 10) {
         tokenUser.remove(9);
         tokenUser.add(0, newTokens);
       } else {
