@@ -113,9 +113,6 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
         .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
     Path path = new Path();
     List<ObjectId> listUserId = new ArrayList<>();
-    if (!path.getUserId().contains(adminUser.get_id())) {
-      listUserId.add(adminUser.get_id());
-    }
     if (pathRequest.getUserId().size() > 0) {
       pathRequest.getUserId().forEach(thisId -> {
         if (!listUserId.contains(new ObjectId(thisId))
@@ -123,6 +120,9 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
           listUserId.add(new ObjectId(thisId));
         }
       });
+    }
+    if (!listUserId.contains(adminUser.get_id())) {
+      listUserId.add(adminUser.get_id());
     }
     if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
       path = new Path(newId, pathRequest.getLabel(), pathRequest.getPath(), TypeAccount.EXTERNAL,
@@ -211,9 +211,6 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     User adminUser = userInventory.findUserByUsername("super_admin_dev")
         .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
     List<ObjectId> listUserId = new ArrayList<>();
-    if (!path.getUserId().contains(adminUser.get_id())) {
-      listUserId.add(adminUser.get_id());
-    }
     if (pathRequest.getUserId().size() > 0) {
       pathRequest.getUserId().forEach(thisId -> {
         if (!listUserId.contains(new ObjectId(thisId))
@@ -221,6 +218,9 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
           listUserId.add(new ObjectId(thisId));
         }
       });
+    }
+    if (!listUserId.contains(adminUser.get_id())) {
+      listUserId.add(adminUser.get_id());
     }
     if (pathRequest.getType().compareTo("EXTERNAL") == 0) {
       path.setType(TypeAccount.EXTERNAL);
