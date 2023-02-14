@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.DateTime;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
@@ -14,7 +13,6 @@ import com.chilleric.franchise_sys.dto.shift.ShiftRequest;
 import com.chilleric.franchise_sys.dto.shift.ShiftResponse;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
-import com.chilleric.franchise_sys.inventory.shift.ShiftInventory;
 import com.chilleric.franchise_sys.repository.crm_repository.shift.Shift;
 import com.chilleric.franchise_sys.repository.crm_repository.shift.ShiftRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
@@ -23,18 +21,15 @@ import com.chilleric.franchise_sys.utils.StringUtils;
 
 @Service
 public class ShiftServiceImpl extends AbstractService<ShiftRepository> implements ShiftService {
-
-  @Autowired
-  private ShiftInventory shiftInventory;
-
   @Override
   public void createShift(ShiftRequest shiftRequest) {
     validate(shiftRequest);
     Map<String, String> error = generateError(ShiftRequest.class);
-    shiftInventory.findShiftByName(shiftRequest.getShiftName().toLowerCase()).ifPresent(shift -> {
-      error.put("shiftName", LanguageMessageKey.SHIFT_NAME_EXISTED);
-      throw new InvalidRequestException(error, LanguageMessageKey.SHIFT_NAME_EXISTED);
-    });
+    repository.getEntityByAttribute(shiftRequest.getShiftName().toLowerCase(), "shiftName")
+        .ifPresent(shift -> {
+          error.put("shiftName", LanguageMessageKey.SHIFT_NAME_EXISTED);
+          throw new InvalidRequestException(error, LanguageMessageKey.SHIFT_NAME_EXISTED);
+        });
 
     Shift shift = new Shift();
     ObjectId newId = new ObjectId();
@@ -53,7 +48,8 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository> implement
   @Override
   public Optional<ListWrapperResponse<ShiftResponse>> getShifts(Map<String, String> allParams,
       String keySort, int page, int pageSize, String sortField) {
-    List<Shift> shifts = repository.getShifts(allParams, keySort, page, pageSize, sortField).get();
+    List<Shift> shifts =
+        repository.getListOrEntity(allParams, keySort, page, pageSize, sortField).get();
     return Optional.of(new ListWrapperResponse<>(shifts.stream()
         .map(shift -> new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
             DateFormat.toDateString(shift.getStartTime(), DateTime.YYYY_MM_DD),
@@ -63,7 +59,7 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository> implement
 
   @Override
   public Optional<ShiftResponse> getShiftById(String shiftId) {
-    Shift shift = shiftInventory.findShiftById(shiftId)
+    Shift shift = repository.getEntityByAttribute(shiftId, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
     return Optional.of(new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
         DateFormat.toDateString(shift.getStartTime(), DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN),
@@ -72,7 +68,7 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository> implement
 
   @Override
   public Optional<ShiftResponse> searchShiftByName(String shiftName) {
-    Shift shift = shiftInventory.findShiftByName(shiftName)
+    Shift shift = repository.getEntityByAttribute(shiftName, "shiftName")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
     return Optional.of(new ShiftResponse(shift.get_id().toString(), shift.getShiftName(),
         DateFormat.toDateString(shift.getStartTime(), DateTime.YYYY_MM_DD_HH_MM_SS_HYPHEN),
@@ -82,7 +78,7 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository> implement
   @Override
   public void updateShift(ShiftRequest shiftRequest, String shiftId) {
     validate(shiftRequest);
-    Shift shift = shiftInventory.findShiftById(shiftId)
+    Shift shift = repository.getEntityByAttribute(shiftId, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
     String normalizeName = StringUtils.normalizeString(shiftRequest.getShiftName());
     shift.setShiftName(normalizeName);
@@ -97,8 +93,8 @@ public class ShiftServiceImpl extends AbstractService<ShiftRepository> implement
 
   @Override
   public void deleteShift(String shiftId) {
-    shiftInventory.findShiftById(shiftId)
+    repository.getEntityByAttribute(shiftId, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.SHIFT_NOT_FOUND));
-    repository.deleteShift(shiftId);
+    repository.deleteById(shiftId);
   }
 }

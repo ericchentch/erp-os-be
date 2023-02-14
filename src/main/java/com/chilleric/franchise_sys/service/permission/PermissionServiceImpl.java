@@ -23,12 +23,11 @@ import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
-import com.chilleric.franchise_sys.inventory.permission.PermissionInventory;
-import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
 import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
+import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 import com.chilleric.franchise_sys.utils.DateFormat;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
@@ -39,16 +38,13 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
 
 
   @Autowired
-  private UserInventory userInventory;
-
-  @Autowired
-  private PermissionInventory permissionInventory;
+  private UserRepository userRepository;
 
   @Override
   public Optional<ListWrapperResponse<PermissionResponse>> getYourPermissions(
       Map<String, String> allParams, String keySort, int page, int pageSize, String sortField,
       String loginId) {
-    List<String> targets = accessabilityRepository.getListTargetId(loginId)
+    List<String> targets = accessabilityRepository.getListByAttribute(loginId, "userId")
         .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).stream()
         .map(access -> access.getTargetId().toString()).collect(Collectors.toList());
     if (targets.size() == 0) {
@@ -72,7 +68,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       allParams.put("_id", generateParamsValue(targets));
     }
     List<Permission> permissions =
-        repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
+        repository.getListOrEntity(allParams, keySort, page, pageSize, sortField).get();
     return Optional.of(new ListWrapperResponse<PermissionResponse>(
         permissions.stream()
             .map(permission -> new PermissionResponse(permission.get_id().toString(),
@@ -84,12 +80,12 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 removeId(permission.getViewPoints()), removeId(permission.getEditable()),
                 permission.isServer() ? 1 : 0))
             .collect(Collectors.toList()),
-        page, pageSize, repository.getTotal(allParams)));
+        page, pageSize, repository.getTotalPage(allParams)));
   }
 
   @Override
   public Optional<PermissionResponse> getPermissionById(String id, String loginId) {
-    Permission permission = permissionInventory.getPermissionById(id)
+    Permission permission = repository.getEntityByAttribute(id, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PERMISSION_NOT_FOUND));
     return Optional
         .of(new PermissionResponse(permission.get_id().toString(), permission.getName(),
@@ -109,7 +105,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     permissionRequest.setViewPoints(removeId(permissionRequest.getViewPoints()));
     Map<String, String> error = generateError(PermissionRequest.class);
     List<Permission> permissions = repository
-        .getPermissions(Map.ofEntries(entry("name", permissionRequest.getName())), "", 0, 0, "")
+        .getListOrEntity(Map.ofEntries(entry("name", permissionRequest.getName())), "", 0, 0, "")
         .get();
     if (permissions.size() != 0) {
       error.put("name", LanguageMessageKey.INVALID_NAME_PERMISSION);
@@ -134,7 +130,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     if (permissionRequest.getUserId().size() != 0) {
       List<ObjectId> resultIds = new ArrayList<>();
       permissionRequest.getUserId().forEach(thisId -> {
-        userInventory.findUserById(thisId).ifPresent(thisUser -> {
+        userRepository.getEntityByAttribute(thisId, "_id").ifPresent(thisUser -> {
           accessabilityRepository.getAccessability(loginId, thisId).ifPresent(thisAccess -> {
             resultIds.add(new ObjectId(thisId));
           });
@@ -147,20 +143,20 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     permission.setEditable(permissionRequest.getEditable());
     permission.setViewPoints(permissionRequest.getViewPoints());
     accessabilityRepository
-        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
+        .insertAndUpdate(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(permission);
   }
 
   @Override
   public void editPermission(PermissionRequest permissionRequest, String id,
       List<ViewPoint> viewPoints, String loginId, boolean isServer) {
-    Permission permission = repository.getPermissionById(id)
+    Permission permission = repository.getEntityByAttribute(id, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PERMISSION_NOT_FOUND));
     validate(permissionRequest);
     permissionRequest.setEditable(removeId(permissionRequest.getEditable()));
     permissionRequest.setViewPoints(removeId(permissionRequest.getViewPoints()));
     Map<String, String> error = generateError(PermissionRequest.class);
-    permissionInventory.getPermissionByName(permissionRequest.getName()).ifPresent(perm -> {
+    repository.getEntityByAttribute(permissionRequest.getName(), "name").ifPresent(perm -> {
       if (perm.get_id().compareTo(permission.get_id()) != 0) {
         error.put("name", LanguageMessageKey.INVALID_NAME_PERMISSION);
         throw new InvalidRequestException(error, LanguageMessageKey.INVALID_NAME_PERMISSION);
@@ -170,7 +166,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
     if (permissionRequest.getUserId().size() != 0) {
       List<ObjectId> resultIds = new ArrayList<>();
       permissionRequest.getUserId().forEach(thisId -> {
-        userInventory.findUserById(thisId).ifPresent(thisUser -> {
+        userRepository.getEntityByAttribute(thisId, "_id").ifPresent(thisUser -> {
           accessabilityRepository.getAccessability(loginId, thisId).ifPresent(thisAccess -> {
             resultIds.add(new ObjectId(thisId));
           });
@@ -199,16 +195,16 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
 
   @Override
   public void deletePermission(String id) {
-    Permission permission = repository.getPermissionById(id)
+    Permission permission = repository.getEntityByAttribute(id, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.PERMISSION_NOT_FOUND));
     checkDeleteAndEdit(permission);
-    repository.deletePermission(id);
+    repository.deleteById(id);
   }
 
   @Override
   public Map<String, List<ViewPoint>> getViewPointSelect(String loginId) {
     Map<String, List<ViewPoint>> thisView = new HashMap<>();
-    repository.getPermissionByUserId(loginId)
+    repository.getListByAttribute(loginId, "userId")
         .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
         .forEach(thisPerm -> {
           thisView.putAll(ObjectUtilities.mergePermission(thisView, thisPerm.getViewPoints()));
@@ -229,7 +225,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
   @Override
   public Map<String, List<ViewPoint>> getEditableSelect(String loginId) {
     Map<String, List<ViewPoint>> thisView = new HashMap<>();
-    repository.getPermissionByUserId(loginId)
+    repository.getListByAttribute(loginId, "userId")
         .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED))
         .forEach(thisPerm -> {
           thisView.putAll(ObjectUtilities.mergePermission(thisView, thisPerm.getEditable()));
@@ -242,7 +238,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       Map<String, String> allParams, String keySort, int page, int pageSize, String sortField,
       String loginId, boolean isServer) {
     if (!isServer) {
-      List<String> targets = accessabilityRepository.getListTargetId(loginId)
+      List<String> targets = accessabilityRepository.getListByAttribute(loginId, "userId")
           .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).stream()
           .map(access -> access.getTargetId().toString()).collect(Collectors.toList());
       if (targets.size() == 0) {
@@ -267,7 +263,7 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
       }
     }
     List<Permission> permissions =
-        repository.getPermissions(allParams, keySort, page, pageSize, sortField).get();
+        repository.getListOrEntity(allParams, keySort, page, pageSize, sortField).get();
     return Optional.of(new ListWrapperResponse<PermissionResponse>(
         permissions.stream()
             .map(permission -> new PermissionResponse(permission.get_id().toString(),
@@ -279,16 +275,17 @@ public class PermissionServiceImpl extends AbstractService<PermissionRepository>
                 removeId(permission.getViewPoints()), removeId(permission.getEditable()),
                 permission.isServer() ? 1 : 0))
             .collect(Collectors.toList()),
-        page, pageSize, repository.getTotal(allParams)));
+        page, pageSize, repository.getTotalPage(allParams)));
   }
 
   private void checkDeleteAndEdit(Permission permission) {
     permission.getUserId().forEach(thisUser -> {
-      accessabilityRepository.getListTargetId(thisUser.toString()).ifPresent(thisAccess -> {
-        if (thisAccess.size() > 0) {
-          throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
-        }
-      });
+      accessabilityRepository.getListByAttribute(thisUser.toString(), "userId")
+          .ifPresent(thisAccess -> {
+            if (thisAccess.size() > 0) {
+              throw new ForbiddenException(LanguageMessageKey.FORBIDDEN);
+            }
+          });
     });
   }
 

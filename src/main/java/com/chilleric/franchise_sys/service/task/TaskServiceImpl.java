@@ -45,7 +45,7 @@ public class TaskServiceImpl extends AbstractService<TaskRepository> implements 
   public void update(TaskRequest taskRequest, String taskId) {
     validate(taskRequest);
 
-    Task task = repository.getTasks(Map.ofEntries(Map.entry("_id", taskId)), "", 0, 0, "")
+    Task task = repository.getListOrEntity(Map.ofEntries(Map.entry("_id", taskId)), "", 0, 0, "")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.TASK_NOT_FOUND)).get(0);
 
     Task newTask =
@@ -61,7 +61,8 @@ public class TaskServiceImpl extends AbstractService<TaskRepository> implements 
   @Override
   public Optional<ListWrapperResponse<TaskResponse>> getTasks(Map<String, String> allParams,
       int pageSize, int page, String keySort, String sortField) {
-    List<Task> tasks = repository.getTasks(allParams, keySort, page, pageSize, sortField).get();
+    List<Task> tasks =
+        repository.getListOrEntity(allParams, keySort, page, pageSize, sortField).get();
 
     List<TaskResponse> listTaskResponses = tasks.stream().map(task -> {
       boolean isValidReferences = isReferencesValid(task.getReviewerId().toString(),
@@ -87,7 +88,7 @@ public class TaskServiceImpl extends AbstractService<TaskRepository> implements 
   public void delete(String taskId) {
     validateStringIsObjectId(taskId);
 
-    repository.delete(taskId);
+    repository.deleteById(taskId);
   }
 
   @Override

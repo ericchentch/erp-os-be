@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository;
+package com.chilleric.franchise_sys.repository.abstract_repository;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
 
-public abstract class AbstractRepo {
+public abstract class AbstractRepository {
 
   @Autowired
   @Qualifier("mongo_system_template")

@@ -1,16 +1,8 @@
 package com.chilleric.franchise_sys.repository.systemRepository.navbar;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.repository.abstract_repository.SystemRepository;
 
-public interface NavbarRepository {
-  Optional<List<Navbar>> getNavbarList(Map<String, String> allParams, String keySort, int page,
-      int pageSize, String sortField);
-
-  void insertAndUpdate(Navbar navbar);
-
-  void deletePath(String id);
-
-  long getTotal(Map<String, String> allParams);
+@Repository
+public class NavbarRepository extends SystemRepository<Navbar> {
 }

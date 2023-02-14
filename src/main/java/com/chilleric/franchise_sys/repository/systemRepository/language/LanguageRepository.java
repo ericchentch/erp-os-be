@@ -1,14 +1,8 @@
 package com.chilleric.franchise_sys.repository.systemRepository.language;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.repository.abstract_repository.SystemRepository;
 
-public interface LanguageRepository {
-  Optional<List<Language>> getLanguages(Map<String, String> allParams, String keySort, int page,
-      int pageSize, String sortField);
-
-  void insertAndUpdate(Language language);
-
-  long getTotal(Map<String, String> allParams);
+@Repository
+public class LanguageRepository extends SystemRepository<Language> {
 }

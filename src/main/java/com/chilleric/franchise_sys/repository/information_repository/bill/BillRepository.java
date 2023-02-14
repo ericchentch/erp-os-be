@@ -1,15 +1,9 @@
 package com.chilleric.franchise_sys.repository.information_repository.bill;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.repository.abstract_repository.InformationRepository;
 
-public interface BillRepository {
-  Optional<List<Bill>> getBills(Map<String, String> allParams, String keySort, int page,
-      int pageSize, String sortField);
-
-  void insertAndUpdate(Bill bill);
-
-  long getTotalPage(Map<String, String> allParams);
+@Repository
+public class BillRepository extends InformationRepository<Bill> {
 
 }

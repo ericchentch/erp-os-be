@@ -20,8 +20,6 @@ import com.chilleric.franchise_sys.dto.common.ValidationResult;
 import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.ForbiddenException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
-import com.chilleric.franchise_sys.inventory.path.PathInventory;
-import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.jwt.JwtValidation;
 import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
@@ -59,13 +57,7 @@ public abstract class AbstractController<s> {
   protected PermissionRepository permissionRepository;
 
   @Autowired
-  protected UserInventory userInventory;
-
-  @Autowired
   protected UserRepository userRepository;
-
-  @Autowired
-  protected PathInventory pathInventory;
 
   @Autowired
   private AccessabilityRepository accessabilityRepository;
@@ -93,12 +85,15 @@ public abstract class AbstractController<s> {
   protected ValidationResult checkAuthentication(String token) {
     isServer = false;
     String userId = jwtValidation.getUserIdFromJwt(token);
-    User user = userInventory.getActiveUserById(userId)
+    User user = userRepository.getEntityByAttribute(userId, "_id")
         .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
+    if (user.getDeleted() == 1) {
+      throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
+    }
     Map<String, List<ViewPoint>> thisView = new HashMap<>();
     Map<String, List<ViewPoint>> thisEdit = new HashMap<>();
     List<Permission> permissions =
-        permissionRepository.getPermissionByUserId(user.get_id().toString())
+        permissionRepository.getListByAttribute(user.get_id().toString(), "userId")
             .orElseThrow(() -> new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED));
 
     permissions.forEach(thisPerm -> {

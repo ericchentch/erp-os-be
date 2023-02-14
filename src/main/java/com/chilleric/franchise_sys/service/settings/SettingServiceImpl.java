@@ -18,8 +18,7 @@ import com.chilleric.franchise_sys.dto.settings.ChangePasswordRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsRequest;
 import com.chilleric.franchise_sys.dto.settings.SettingsResponse;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
-import com.chilleric.franchise_sys.inventory.language.LanguageInventory;
-import com.chilleric.franchise_sys.inventory.user.UserInventory;
+import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.settings.Setting;
 import com.chilleric.franchise_sys.repository.systemRepository.settings.SettingRepository;
 import com.chilleric.franchise_sys.repository.systemRepository.user.User;
@@ -32,20 +31,17 @@ import com.chilleric.franchise_sys.utils.PasswordValidator;
 public class SettingServiceImpl extends AbstractService<SettingRepository>
     implements SettingService {
 
+
+  @Autowired
+  private LanguageRepository languageRepository;
+
   @Autowired
   private UserRepository userRepository;
-
-
-  @Autowired
-  private LanguageInventory languageInventory;
-
-  @Autowired
-  private UserInventory userInventory;
 
   @Override
   public void updateAvatar(String userId, AvatarRequest avatar) {
     validate(avatar);
-    User user = userInventory.findUserById(userId)
+    User user = userRepository.getEntityByAttribute(userId, "_id")
         .orElseThrow(() -> new ResourceAccessException(LanguageMessageKey.NOT_FOUND_USER));
     if (avatar.getAvatar().length() > 0) {
       if (!avatar.getAvatar().startsWith(TypeValidation.PATH_PRE_FIX))
@@ -61,7 +57,7 @@ public class SettingServiceImpl extends AbstractService<SettingRepository>
   @Override
   public Optional<SettingsResponse> getSettingsByUserId(String userId) {
     List<Setting> settings =
-        repository.getSettings(Map.ofEntries(entry("userId", userId)), "", 0, 0, "").get();
+        repository.getListOrEntity(Map.ofEntries(entry("userId", userId)), "", 0, 0, "").get();
 
     if (settings.size() == 0) {
       repository.insertAndUpdate(new Setting(null, new ObjectId(userId), "en"));
@@ -75,12 +71,13 @@ public class SettingServiceImpl extends AbstractService<SettingRepository>
   public void updateSettings(SettingsRequest settingsRequest, String userId) {
     validate(settingsRequest);
     Map<String, String> error = generateError(SettingsRequest.class);
-    languageInventory.findLanguageByKey(settingsRequest.getLanguageKey()).orElseThrow(() -> {
-      error.put("languageKey", LanguageMessageKey.INVALID_LANGUAGE_KEY);
-      throw new InvalidRequestException(error, LanguageMessageKey.INVALID_LANGUAGE_KEY);
-    });
+    languageRepository.getEntityByAttribute(settingsRequest.getLanguageKey(), "key")
+        .orElseThrow(() -> {
+          error.put("languageKey", LanguageMessageKey.INVALID_LANGUAGE_KEY);
+          throw new InvalidRequestException(error, LanguageMessageKey.INVALID_LANGUAGE_KEY);
+        });
     List<Setting> settings =
-        repository.getSettings(Map.ofEntries(entry("userId", userId)), "", 0, 0, "").get();
+        repository.getListOrEntity(Map.ofEntries(entry("userId", userId)), "", 0, 0, "").get();
     if (settings.size() == 0) {
       repository.insertAndUpdate(new Setting(null, new ObjectId(userId), "en"));
     } else {
@@ -96,7 +93,7 @@ public class SettingServiceImpl extends AbstractService<SettingRepository>
     validate(changePasswordRequest);
     PasswordValidator.validatePassword(generateError(ChangePasswordRequest.class),
         changePasswordRequest.getOldPassword(), "oldPassword");
-    User user = userInventory.findUserById(userId)
+    User user = userRepository.getEntityByAttribute(userId, "_id")
         .orElseThrow(() -> new ResourceAccessException(LanguageMessageKey.NOT_FOUND_USER));
     Map<String, String> error = generateError(ChangePasswordRequest.class);
     if (!bCryptPasswordEncoder().matches(changePasswordRequest.getOldPassword(),
@@ -121,15 +118,15 @@ public class SettingServiceImpl extends AbstractService<SettingRepository>
   public void updateAccountInformation(AccountSetting accountSetting, String userId) {
     validate(accountSetting);
     Map<String, String> error = generateError(AccountSetting.class);
-    User user = userInventory.findUserById(userId)
+    User user = userRepository.getEntityByAttribute(userId, "_id")
         .orElseThrow(() -> new ResourceAccessException(LanguageMessageKey.NOT_FOUND_EMAIL));
-    userInventory.findUserByEmail(accountSetting.getEmail()).ifPresent(thisEmail -> {
+    userRepository.getEntityByAttribute(accountSetting.getEmail(), "email").ifPresent(thisEmail -> {
       if (thisEmail.get_id().compareTo(user.get_id()) != 0) {
         error.put("email", LanguageMessageKey.EMAIL_TAKEN);
         throw new InvalidRequestException(error, LanguageMessageKey.EMAIL_TAKEN);
       }
     });
-    userInventory.findUserByPhone(accountSetting.getPhone()).ifPresent(thisPhone -> {
+    userRepository.getEntityByAttribute(accountSetting.getPhone(), "phone").ifPresent(thisPhone -> {
       if (thisPhone.get_id().compareTo((user.get_id())) != 0) {
         error.put("phone", LanguageMessageKey.PHONE_TAKEN);
         throw new InvalidRequestException(error, LanguageMessageKey.PHONE_TAKEN);

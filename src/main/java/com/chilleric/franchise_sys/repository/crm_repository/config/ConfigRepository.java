@@ -1,16 +1,8 @@
 package com.chilleric.franchise_sys.repository.crm_repository.config;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.repository.abstract_repository.CrmRepository;
 
-public interface ConfigRepository {
-  Optional<List<Config>> getConfigs(Map<String, String> allParams, String keySort, int page,
-      int pageSize, String sortField);
-
-  Optional<Config> getConfigByHotel(String hotelId);
-
-  void insertAndUpdate(Config config);
-
-  long getTotalPage(Map<String, String> allParams);
+@Repository
+public class ConfigRepository extends CrmRepository<Config> {
 }

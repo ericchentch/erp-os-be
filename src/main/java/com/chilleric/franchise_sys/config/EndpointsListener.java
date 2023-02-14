@@ -56,7 +56,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     //
     // });
     List<User> userDevs = userRepository
-        .getUsers(Map.ofEntries(entry("username", "super_admin_dev")), "", 0, 0, "").get();
+        .getListOrEntity(Map.ofEntries(entry("username", "super_admin_dev")), "", 0, 0, "").get();
     User usersDev = new User();
     if (userDevs.size() == 0) {
       usersDev = new User(new ObjectId(), TypeAccount.INTERNAL, "super_admin_dev",
@@ -70,7 +70,8 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
       usersDev = userDevs.get(0);
     }
     List<Permission> permissions = permissionRepository
-        .getPermissions(Map.ofEntries(entry("name", "super_admin_permission")), "", 0, 0, "").get();
+        .getListOrEntity(Map.ofEntries(entry("name", "super_admin_permission")), "", 0, 0, "")
+        .get();
     if (permissions.size() == 0) {
       List<ObjectId> userIds = Arrays.asList(usersDev.get_id());
       Permission permission = new Permission(null, "super_admin_permission", userIds,
@@ -84,7 +85,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
       permissionRepository.insertAndUpdate(permission);
     }
     List<Language> defLanguages =
-        languageRepository.getLanguages(Map.ofEntries(entry("key", "en")), "", 0, 0, "").get();
+        languageRepository.getListOrEntity(Map.ofEntries(entry("key", "en")), "", 0, 0, "").get();
     if (defLanguages.size() == 0) {
       Language defLanguage = new Language(null, "English", "en", new HashMap<>());
       languageRepository.insertAndUpdate(defLanguage);
