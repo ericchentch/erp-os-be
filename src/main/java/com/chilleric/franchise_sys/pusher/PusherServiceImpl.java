@@ -57,7 +57,6 @@ public class PusherServiceImpl implements PusherService {
     web.put("notification", webNotification);
     publishRequest.put("web", web);
     try {
-      beamsClient.publishToInterests(interests, publishRequest);
       interests.forEach(thisId -> {
         User user = userRepository.getEntityByAttribute(thisId, "notificationId")
             .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
@@ -71,6 +70,7 @@ public class PusherServiceImpl implements PusherService {
         user.setNotifications(listNoti);
         userRepository.insertAndUpdate(user);
       });
+      beamsClient.publishToInterests(interests, publishRequest);
     } catch (IOException | InterruptedException | URISyntaxException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

@@ -2,6 +2,7 @@ package com.chilleric.franchise_sys.service.path;
 
 import static java.util.Map.entry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -63,6 +64,8 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     if (notiList.size() > 0) {
       notiList.forEach(thisNotiId -> {
         userRepository.getEntityByAttribute(thisNotiId, "_id").ifPresent(thisUser -> {
+          pusherService.sendNotification("New login", "Someone login your account!",
+              Arrays.asList(thisUser.getNotificationId().toString()));
           pusherService.pushInfo(thisUser.getChannelId(), thisUser.getEventId().toString(),
               new PusherUpdateResponse(true, false));
         });
