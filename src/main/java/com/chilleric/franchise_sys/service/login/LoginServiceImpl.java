@@ -26,6 +26,7 @@ import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
 import com.chilleric.franchise_sys.jwt.GoogleValidation;
 import com.chilleric.franchise_sys.jwt.JwtValidation;
+import com.chilleric.franchise_sys.pusher.PusherUpdateResponse;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
 import com.chilleric.franchise_sys.repository.systemRepository.code.Code;
 import com.chilleric.franchise_sys.repository.systemRepository.code.CodeRepository;
@@ -87,6 +88,8 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       repository.insertAndUpdate(user);
       pusherService.sendNotification("New login", "Someone login your account!",
           Arrays.asList(user.getNotificationId().toString()));
+      pusherService.pushInfo(user.getChannelId(), user.getEventId().toString(),
+          new PusherUpdateResponse(false, true));
       return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
           user.getType(), false, false));
     }
@@ -254,6 +257,8 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       user.setVerified(true);
       pusherService.sendNotification("New login", "Someone login your account!",
           Arrays.asList(user.getNotificationId().toString()));
+      pusherService.pushInfo(user.getChannelId(), user.getEventId().toString(),
+          new PusherUpdateResponse(false, true));
       repository.insertAndUpdate(user);
       return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
           user.getType(), false, false));
