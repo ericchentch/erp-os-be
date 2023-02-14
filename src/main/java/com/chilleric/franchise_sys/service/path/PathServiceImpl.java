@@ -64,7 +64,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
       notiList.forEach(thisNotiId -> {
         userRepository.getEntityByAttribute(thisNotiId, "_id").ifPresent(thisUser -> {
           pusherService.pushInfo(thisUser.getChannelId(), thisUser.getEventId().toString(),
-              new PusherUpdateResponse(true));
+              new PusherUpdateResponse(true, false));
         });
       });
     }

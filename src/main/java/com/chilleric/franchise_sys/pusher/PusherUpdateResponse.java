@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PusherUpdateResponse {
   private boolean isUpdateAccessPath;
+  private boolean isUpdateNotification;
 }
