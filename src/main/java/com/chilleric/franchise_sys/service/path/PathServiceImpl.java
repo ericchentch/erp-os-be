@@ -64,7 +64,7 @@ public class PathServiceImpl extends AbstractService<PathRepository> implements 
     if (notiList.size() > 0) {
       notiList.forEach(thisNotiId -> {
         userRepository.getEntityByAttribute(thisNotiId, "_id").ifPresent(thisUser -> {
-          pusherService.sendNotification("New login", "Someone login your account!",
+          pusherService.sendNotification("Upadte permission", "Your permission is updated!",
               Arrays.asList(thisUser.getNotificationId().toString()));
           pusherService.pushInfo(thisUser.getChannelId(), thisUser.getEventId().toString(),
               new PusherUpdateResponse(true, false));
