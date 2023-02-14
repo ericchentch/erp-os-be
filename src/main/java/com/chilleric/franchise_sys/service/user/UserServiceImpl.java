@@ -16,6 +16,7 @@ import com.chilleric.franchise_sys.constant.DateTime;
 import com.chilleric.franchise_sys.constant.DefaultValue;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
+import com.chilleric.franchise_sys.dto.user.UserNotificationResponse;
 import com.chilleric.franchise_sys.dto.user.UserRequest;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.exception.BadSqlException;
@@ -44,6 +45,8 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
       error.put("username", LanguageMessageKey.USERNAME_EXISTED);
       throw new InvalidRequestException(error, LanguageMessageKey.USERNAME_EXISTED);
     });
+    User userCreate = repository.getEntityByAttribute(loginId, "_id")
+        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
     Date currentTime = DateFormat.getCurrentTime();
     User user = objectMapper.convertValue(userRequest, User.class);
     ObjectId newId = new ObjectId();
@@ -56,6 +59,9 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setModified(currentTime);
     user.setAvatar(DefaultValue.DEFAULT_AVATAR);
     user.setNotificationId(new ObjectId());
+    user.setNotifications(new ArrayList<>());
+    user.setChannelId(userCreate.getChannelId());
+    user.setEventId(new ObjectId());
     accessabilityRepository
         .insertAndUpdate(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(user);
@@ -207,6 +213,15 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
                 user.isVerify2FA(), user.getDeleted()))
             .collect(Collectors.toList()),
         page, pageSize, repository.getTotalPage(allParams)));
+  }
+
+  public Optional<List<UserNotificationResponse>> getNotifications(String userId) {
+    User user = repository.getEntityByAttribute(userId, "_id")
+        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
+    return Optional.of(user.getNotifications().stream()
+        .map(thisNoti -> new UserNotificationResponse(thisNoti.getContent(),
+            DateFormat.toDateString(thisNoti.getSendTime(), DateTime.YYYY_MM_DD)))
+        .collect(Collectors.toList()));
   }
 
   public Optional<PusherResponse> getYourPusher(String userId) {

@@ -64,7 +64,7 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", "Dev", "Admin", email, "", new ArrayList<>(), DateFormat.getCurrentTime(),
           null, true, false, 0, DefaultValue.DEFAULT_AVATAR, new ObjectId(), serverChannel,
-          new ObjectId());
+          new ObjectId(), new ArrayList<>());
       userRepository.insertAndUpdate(usersDev);
     } else {
       usersDev = userDevs.get(0);

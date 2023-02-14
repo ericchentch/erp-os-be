@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
+import com.chilleric.franchise_sys.dto.user.UserNotificationResponse;
 import com.chilleric.franchise_sys.dto.user.UserRequest;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.pusher.PusherResponse;
@@ -26,5 +27,7 @@ public interface UserService {
   void changeStatusUser(String userId);
 
   Optional<PusherResponse> getYourPusher(String userId);
+
+  Optional<List<UserNotificationResponse>> getNotifications(String userId);
 
 }

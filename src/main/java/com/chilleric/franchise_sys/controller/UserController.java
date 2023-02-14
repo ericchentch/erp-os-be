@@ -1,5 +1,6 @@
 package com.chilleric.franchise_sys.controller;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.CommonResponse;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.common.ValidationResult;
+import com.chilleric.franchise_sys.dto.user.UserNotificationResponse;
 import com.chilleric.franchise_sys.dto.user.UserRequest;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.pusher.PusherResponse;
@@ -55,6 +57,17 @@ public class UserController extends AbstractController<UserService> {
         Optional.of(filterResponse(service.findOneUserById(id).get(), result.getViewPoints())),
         LanguageMessageKey.SUCCESS, result.getViewPoints().get(UserResponse.class.getSimpleName()),
         result.getEditable().get(UserRequest.class.getSimpleName()));
+  }
+
+  @SecurityRequirement(name = "Bearer Authentication")
+  @GetMapping(value = "get-notifications-user")
+  public ResponseEntity<CommonResponse<List<UserNotificationResponse>>> getNotifications(
+      HttpServletRequest request) {
+    ValidationResult result = validateToken(request);
+    return response(service.getNotifications(result.getLoginId()), LanguageMessageKey.SUCCESS,
+        result.getViewPoints().get(UserResponse.class.getSimpleName()),
+        result.getEditable().get(UserRequest.class.getSimpleName()));
+
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
