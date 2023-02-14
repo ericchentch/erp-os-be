@@ -5,8 +5,15 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.exception.BadSqlException;
+import com.chilleric.franchise_sys.repository.systemRepository.user.User;
+import com.chilleric.franchise_sys.repository.systemRepository.user.UserNotification;
+import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
+import com.chilleric.franchise_sys.utils.DateFormat;
 import com.pusher.pushnotifications.PushNotifications;
 import com.pusher.rest.Pusher;
 
@@ -34,6 +41,9 @@ public class PusherServiceImpl implements PusherService {
   @Value("${pusher.cluster}")
   protected String PUSHER_CLUSTER;
 
+  @Autowired
+  protected UserRepository userRepository;
+
   public void sendNotification(String title, String body, List<String> interests) {
     PushNotifications beamsClient = new PushNotifications(PUSHER_INSTANCE, PUSHER_SECRET);
 
@@ -48,6 +58,19 @@ public class PusherServiceImpl implements PusherService {
     publishRequest.put("web", web);
     try {
       beamsClient.publishToInterests(interests, publishRequest);
+      interests.forEach(thisId -> {
+        User user = userRepository.getEntityByAttribute(thisId, "notificationId")
+            .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
+        List<UserNotification> listNoti = user.getNotifications();
+        if (listNoti.size() == 20) {
+          listNoti.remove(19);
+          listNoti.add(0, new UserNotification(body, DateFormat.getCurrentTime()));
+        } else {
+          listNoti.add(0, new UserNotification(body, DateFormat.getCurrentTime()));
+        }
+        user.setNotifications(listNoti);
+        userRepository.insertAndUpdate(user);
+      });
     } catch (IOException | InterruptedException | URISyntaxException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

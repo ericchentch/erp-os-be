@@ -38,4 +38,5 @@ public class User {
   private ObjectId notificationId;
   private String channelId;
   private ObjectId eventId;
+  private List<UserNotification> notifications;
 }
