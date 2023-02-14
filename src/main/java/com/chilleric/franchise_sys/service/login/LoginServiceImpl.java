@@ -24,7 +24,6 @@ import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.exception.UnauthorizedException;
-import com.chilleric.franchise_sys.inventory.user.UserInventory;
 import com.chilleric.franchise_sys.jwt.GoogleValidation;
 import com.chilleric.franchise_sys.jwt.JwtValidation;
 import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
@@ -51,9 +50,6 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
   private CodeRepository codeRepository;
 
   @Autowired
-  private UserInventory userInventory;
-
-  @Autowired
   private GoogleValidation googleValidation;
 
   @Autowired
@@ -65,17 +61,17 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     User user = new User();
     boolean normalUsername = true;
     if (loginRequest.getUsername().matches(TypeValidation.EMAIL)) {
-      user = userInventory.findUserByEmail(loginRequest.getUsername())
+      user = repository.getEntityByAttribute(loginRequest.getUsername(), "email")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
       normalUsername = false;
     }
     if (loginRequest.getUsername().matches(TypeValidation.PHONE)) {
-      user = userInventory.findUserByPhone(loginRequest.getUsername()).orElseThrow(
+      user = repository.getEntityByAttribute(loginRequest.getUsername(), "phone").orElseThrow(
           () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_PHONE_NUMBER));
       normalUsername = false;
     }
     if (normalUsername) {
-      user = userInventory.findUserByUsername(loginRequest.getUsername())
+      user = repository.getEntityByAttribute(loginRequest.getUsername(), "username")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USERNAME));
     }
     Map<String, String> error = generateError(LoginRequest.class);
@@ -94,10 +90,10 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
         Code code = codes.get();
         code.setCode(newCode);
         code.setExpiredDate(expiredDate);
-        codeRepository.insertAndUpdateCode(code);
+        codeRepository.insertAndUpdate(code);
       } else {
         Code code = new Code(null, user.get_id(), TypeCode.REGISTER, newCode, expiredDate);
-        codeRepository.insertAndUpdateCode(code);
+        codeRepository.insertAndUpdate(code);
       }
       emailService.sendSimpleMail(new EmailDetail(user.getEmail(), newCode, "OTP"));
       return Optional.of(new LoginResponse("", "", TypeAccount.EXTERNAL, false, true));
@@ -117,10 +113,10 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
         Code code = codes.get();
         code.setCode(verify2FACode);
         code.setExpiredDate(expiredDate);
-        codeRepository.insertAndUpdateCode(code);
+        codeRepository.insertAndUpdate(code);
       } else {
         Code code = new Code(null, user.get_id(), TypeCode.VERIFY2FA, verify2FACode, expiredDate);
-        codeRepository.insertAndUpdateCode(code);
+        codeRepository.insertAndUpdate(code);
       }
       return Optional.of(new LoginResponse("", "", TypeAccount.EXTERNAL, true, false));
     } else {
@@ -143,7 +139,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
 
   @Override
   public void logout(String id, String logoutToken) {
-    User user = userInventory.findUserById(id)
+    User user = userRepository.getEntityByAttribute(id, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
     List<String> token = user.getTokens();
     token.remove(logoutToken);
@@ -206,17 +202,17 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     User user = new User();
     boolean normalUsername = true;
     if (email.matches(TypeValidation.EMAIL)) {
-      user = userInventory.findUserByEmail(email)
+      user = repository.getEntityByAttribute(email, "email")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
       normalUsername = false;
     }
     if (email.matches(TypeValidation.PHONE)) {
-      user = userInventory.findUserByPhone(email).orElseThrow(
+      user = repository.getEntityByAttribute(email, "phone").orElseThrow(
           () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_PHONE_NUMBER));
       normalUsername = false;
     }
     if (normalUsername) {
-      user = userInventory.findUserByUsername(email)
+      user = repository.getEntityByAttribute(email, "username")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USERNAME));
     }
     Date now = new Date();
@@ -241,17 +237,17 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     boolean normalUsername = true;
     User userCheckMail = new User();
     if (email.matches(TypeValidation.EMAIL)) {
-      userCheckMail = userInventory.findUserByEmail(email)
+      userCheckMail = repository.getEntityByAttribute(email, "email")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
       normalUsername = false;
     }
     if (email.matches(TypeValidation.PHONE)) {
-      userCheckMail = userInventory.findUserByPhone(email).orElseThrow(
+      userCheckMail = repository.getEntityByAttribute(email, "phone").orElseThrow(
           () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_PHONE_NUMBER));
       normalUsername = false;
     }
     if (normalUsername) {
-      userCheckMail = userInventory.findUserByUsername(email)
+      userCheckMail = repository.getEntityByAttribute(email, "username")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USERNAME));
     }
     String newCode = RandomStringUtils.randomAlphabetic(6).toUpperCase();
@@ -263,10 +259,10 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       Code code = codes.get();
       code.setCode(newCode);
       code.setExpiredDate(expiredDate);
-      codeRepository.insertAndUpdateCode(code);
+      codeRepository.insertAndUpdate(code);
     } else {
       Code code = new Code(null, userCheckMail.get_id(), TypeCode.REGISTER, newCode, expiredDate);
-      codeRepository.insertAndUpdateCode(code);
+      codeRepository.insertAndUpdate(code);
     }
     emailService.sendSimpleMail(new EmailDetail(userCheckMail.getEmail(), newCode, "OTP"));
 
@@ -275,15 +271,20 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
   @Override
   public void forgotPassword(String email) {
     User user = new User();
+    boolean normalUsername = true;
     if (email.matches(TypeValidation.EMAIL)) {
-      user = userInventory.findUserByEmail(email)
+      user = repository.getEntityByAttribute(email, "email")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
-    } else if (email.matches(TypeValidation.PHONE)) {
-      user = userInventory.findUserByPhone(email)
-          .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
-    } else {
-      user = userInventory.findUserByUsername(email)
-          .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
+      normalUsername = false;
+    }
+    if (email.matches(TypeValidation.PHONE)) {
+      user = repository.getEntityByAttribute(email, "phone").orElseThrow(
+          () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_PHONE_NUMBER));
+      normalUsername = false;
+    }
+    if (normalUsername) {
+      user = repository.getEntityByAttribute(email, "username")
+          .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USERNAME));
     }
     user.setPassword(bCryptPasswordEncoder()
         .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())));
@@ -297,13 +298,13 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
   public Optional<LoginResponse> verify2FA(String email, String inputCode) {
     User user = new User();
     if (email.matches(TypeValidation.EMAIL)) {
-      user = userInventory.findUserByEmail(email)
+      user = repository.getEntityByAttribute(email, "email")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
     } else if (email.matches(TypeValidation.PHONE)) {
-      user = userInventory.findUserByPhone(email)
+      user = repository.getEntityByAttribute(email, "phone")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
     } else {
-      user = userInventory.findUserByUsername(email)
+      user = repository.getEntityByAttribute(email, "username")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
     }
     Date now = new Date();
@@ -340,13 +341,13 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
   public void resend2FACode(String email) {
     User user = new User();
     if (email.matches(TypeValidation.EMAIL)) {
-      user = userInventory.findUserByEmail(email)
+      user = repository.getEntityByAttribute(email, "email")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
     } else if (email.matches(TypeValidation.PHONE)) {
-      user = userInventory.findUserByPhone(email)
+      user = repository.getEntityByAttribute(email, "phone")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
     } else {
-      user = userInventory.findUserByUsername(email)
+      user = repository.getEntityByAttribute(email, "username")
           .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
     }
     String newCode = RandomStringUtils.randomAlphabetic(6).toUpperCase();
@@ -358,10 +359,10 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       Code code = codes.get();
       code.setCode(newCode);
       code.setExpiredDate(expiredDate);
-      codeRepository.insertAndUpdateCode(code);
+      codeRepository.insertAndUpdate(code);
     } else {
       Code code = new Code(null, user.get_id(), TypeCode.VERIFY2FA, newCode, expiredDate);
-      codeRepository.insertAndUpdateCode(code);
+      codeRepository.insertAndUpdate(code);
     }
     emailService.sendSimpleMail(new EmailDetail(user.getEmail(), newCode, "OTP"));
   }
@@ -381,7 +382,7 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     // String locale = (String) payload.get("locale");
     String familyName = (String) payload.get("family_name");
     String givenName = (String) payload.get("given_name");
-    Optional<User> getUser = userInventory.findUserByEmail(email);
+    Optional<User> getUser = repository.getEntityByAttribute(email, "email");
     if (getUser.isPresent()) {
       User user = getUser.get();
       String newTokens = jwtValidation.generateToken(user.get_id().toString());
@@ -412,10 +413,10 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
               .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
           0, "", "", givenName, familyName, email, "", tokenUser, now, null, emailVerified, false,
           0, DefaultValue.DEFAULT_AVATAR, new ObjectId(), null, new ObjectId());
-      User userAdmin = userInventory.findUserByUsername("super_admin_dev")
+      User userAdmin = userRepository.getEntityByAttribute("super_admin_dev", "username")
           .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
       accessabilityRepository
-          .addNewAccessability(new Accessability(null, userAdmin.get_id(), newId, true, false));
+          .insertAndUpdate(new Accessability(null, userAdmin.get_id(), newId, true, false));
       repository.insertAndUpdate(user);
       return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
           user.getType(), false, false));

@@ -38,7 +38,7 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
   public void updateHotel(String hotelId, HotelRequest hotelRequest) {
     validate(hotelRequest);
     List<Hotel> hotels =
-        repository.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
+        repository.getListOrEntity(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
     if (hotels.size() == 0) {
       throw new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND);
     }
@@ -53,7 +53,7 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
   @Override
   public Optional<HotelResponse> getHotelById(String hotelId) {
     List<Hotel> hotels =
-        repository.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
+        repository.getListOrEntity(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
     if (hotels.size() == 0) {
       throw new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND);
     }
@@ -72,12 +72,12 @@ public class HotelServiceImpl extends AbstractService<HotelRepository> implement
   @Override
   public void deleteHotel(String hotelId) {
     List<Hotel> hotels =
-        repository.getHotels(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
+        repository.getListOrEntity(Map.ofEntries(Map.entry("_id", hotelId)), "", 0, 0, "").get();
     if (hotels.size() == 0) {
       throw new ResourceNotFoundException(LanguageMessageKey.HOTEL_NOT_FOUND);
     }
     // TODO: need check other constraint repository. Can delete if have nothing use this hotelId
-    repository.delete(hotelId);
+    repository.deleteById(hotelId);
   }
 
 }

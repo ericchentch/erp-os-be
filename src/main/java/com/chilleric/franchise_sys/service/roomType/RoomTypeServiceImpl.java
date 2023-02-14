@@ -60,13 +60,13 @@ public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
   @Override
   public void deleteRoomType(String roomTypeId) {
     validateExistRoomType(roomTypeId);
-    repository.delete(roomTypeId);
+    repository.deleteById(roomTypeId);
   }
 
   @Override
   public RoomType validateExistRoomType(String roomTypeId) {
     List<RoomType> roomTypes =
-        repository.getRoomTypes(Map.ofEntries(Map.entry("_id", roomTypeId)), "", 0, 0, "").get();
+        repository.getListOrEntity(Map.ofEntries(Map.entry("_id", roomTypeId)), "", 0, 0, "").get();
     if (roomTypes.size() == 0) {
       throw new ResourceNotFoundException(LanguageMessageKey.ROOM_TYPE_NOT_FOUND);
     }
@@ -79,7 +79,7 @@ public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
     Map<String, String> params = new HashMap<>();
     params.put("hotelId", hotelId);
     List<RoomType> roomTypes =
-        repository.getRoomTypes(params, keySort, page, pageSize, sortField).get();
+        repository.getListOrEntity(params, keySort, page, pageSize, sortField).get();
 
     return Optional.of(new ListWrapperResponse<RoomTypeResponse>(roomTypes.stream()
         .map(roomType -> new RoomTypeResponse(roomType.get_id().toString(),

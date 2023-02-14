@@ -40,7 +40,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
   public void createNewUser(UserRequest userRequest, String loginId, boolean isServer) {
     validate(userRequest);
     Map<String, String> error = generateError(UserRequest.class);
-    userInventory.findUserByUsername(userRequest.getUsername()).ifPresent(thisName -> {
+    repository.getEntityByAttribute(userRequest.getUsername(), "username").ifPresent(thisName -> {
       error.put("username", LanguageMessageKey.USERNAME_EXISTED);
       throw new InvalidRequestException(error, LanguageMessageKey.USERNAME_EXISTED);
     });
@@ -57,12 +57,12 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
     user.setAvatar(DefaultValue.DEFAULT_AVATAR);
     user.setNotificationId(new ObjectId());
     accessabilityRepository
-        .addNewAccessability(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
+        .insertAndUpdate(new Accessability(null, new ObjectId(loginId), newId, true, isServer));
     repository.insertAndUpdate(user);
   }
 
   public Optional<UserResponse> findOneUserById(String userId) {
-    User user = userInventory.findUserById(userId)
+    User user = repository.getEntityByAttribute(userId, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
     return Optional.of(new UserResponse(user.get_id().toString(), user.getAvatar(), user.getType(),
         user.getUsername(), user.getGender(), user.getDob(), user.getAddress(), user.getFirstName(),
@@ -74,29 +74,30 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
 
   @Override
   public void updateUserById(String userId, UserRequest userRequest, List<ViewPoint> viewPoints) {
-    User user = userInventory.findUserById(userId)
+    User user = repository.getEntityByAttribute(userId, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
     viewPointToRequest(userRequest, viewPoints, user);
     validate(userRequest);
     Map<String, String> error = generateError(UserRequest.class);
-    userInventory.findUserByEmail(userRequest.getEmail()).ifPresent(thisEmail -> {
+    repository.getEntityByAttribute(userRequest.getEmail(), "email").ifPresent(thisEmail -> {
       if (thisEmail.get_id().compareTo(user.get_id()) != 0) {
         error.put("email", LanguageMessageKey.EMAIL_TAKEN);
         throw new InvalidRequestException(error, LanguageMessageKey.EMAIL_TAKEN);
       }
     });
-    userInventory.findUserByPhone(userRequest.getPhone()).ifPresent(thisPhone -> {
+    repository.getEntityByAttribute(userRequest.getPhone(), "phone").ifPresent(thisPhone -> {
       if (thisPhone.get_id().compareTo(user.get_id()) != 0) {
         error.put("phone", LanguageMessageKey.PHONE_TAKEN);
         throw new InvalidRequestException(error, LanguageMessageKey.PHONE_TAKEN);
       }
     });
-    userInventory.findUserByUsername(userRequest.getUsername()).ifPresent(thisUsername -> {
-      if (thisUsername.get_id().compareTo(user.get_id()) != 0) {
-        error.put("username", LanguageMessageKey.USERNAME_EXISTED);
-        throw new InvalidRequestException(error, LanguageMessageKey.USERNAME_EXISTED);
-      }
-    });
+    repository.getEntityByAttribute(userRequest.getUsername(), "username")
+        .ifPresent(thisUsername -> {
+          if (thisUsername.get_id().compareTo(user.get_id()) != 0) {
+            error.put("username", LanguageMessageKey.USERNAME_EXISTED);
+            throw new InvalidRequestException(error, LanguageMessageKey.USERNAME_EXISTED);
+          }
+        });
     if (user.getUsername().compareTo("super_admin") == 0) {
       throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.FORBIDDEN);
     }
@@ -116,7 +117,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
 
   @Override
   public void changeStatusUser(String userId) {
-    User user = userInventory.findUserById(userId)
+    User user = repository.getEntityByAttribute(userId, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
     if (user.getUsername().compareTo("super_admin") == 0) {
       throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.FORBIDDEN);
@@ -130,7 +131,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
   @Override
   public Optional<ListWrapperResponse<UserResponse>> getYourUsers(Map<String, String> allParams,
       String keySort, int page, int pageSize, String sortField, String loginId) {
-    List<String> targets = accessabilityRepository.getListTargetId(loginId)
+    List<String> targets = accessabilityRepository.getListByAttribute(loginId, "userId")
         .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).stream()
         .map(access -> access.getTargetId().toString()).collect(Collectors.toList());
     if (targets.size() == 0) {
@@ -154,7 +155,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
       allParams.put("_id", generateParamsValue(targets));
     }
 
-    List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
+    List<User> users = repository.getListOrEntity(allParams, "", page, pageSize, sortField).get();
     return Optional.of(new ListWrapperResponse<UserResponse>(
         users.stream()
             .map(user -> new UserResponse(user.get_id().toString(), user.getAvatar(),
@@ -171,7 +172,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
   public Optional<ListWrapperResponse<UserResponse>> getAllUsers(Map<String, String> allParams,
       String keySort, int page, int pageSize, String sortField, String loginId, boolean isServer) {
     if (!isServer) {
-      List<String> targets = accessabilityRepository.getListTargetId(loginId)
+      List<String> targets = accessabilityRepository.getListByAttribute(loginId, "userId")
           .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).stream()
           .map(access -> access.getTargetId().toString()).collect(Collectors.toList());
       if (targets.size() == 0) {
@@ -195,7 +196,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
         allParams.put("_id", generateParamsValue(targets));
       }
     }
-    List<User> users = repository.getUsers(allParams, "", page, pageSize, sortField).get();
+    List<User> users = repository.getListOrEntity(allParams, "", page, pageSize, sortField).get();
     return Optional.of(new ListWrapperResponse<UserResponse>(
         users.stream()
             .map(user -> new UserResponse(user.get_id().toString(), user.getAvatar(),
@@ -209,7 +210,7 @@ public class UserServiceImpl extends AbstractService<UserRepository> implements 
   }
 
   public Optional<PusherResponse> getYourPusher(String userId) {
-    User user = userInventory.findUserById(userId)
+    User user = repository.getEntityByAttribute(userId, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
     return Optional.of(new PusherResponse(user.getNotificationId().toString(), user.getChannelId(),
         user.getEventId().toString()));

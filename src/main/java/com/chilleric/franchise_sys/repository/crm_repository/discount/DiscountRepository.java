@@ -1,15 +1,8 @@
 package com.chilleric.franchise_sys.repository.crm_repository.discount;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.repository.abstract_repository.CrmRepository;
 
-public interface DiscountRepository {
-  Optional<List<Discount>> getDiscounts(Map<String, String> allParams, String keySort, int page,
-      int pageSize, String sortField);
-
-
-  void insertAndUpdate(Discount discount);
-
-  long getTotalPage(Map<String, String> allParams);
+@Repository
+public class DiscountRepository extends CrmRepository<Discount> {
 }

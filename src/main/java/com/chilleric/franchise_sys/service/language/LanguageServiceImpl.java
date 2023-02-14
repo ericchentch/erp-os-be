@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
@@ -18,7 +17,6 @@ import com.chilleric.franchise_sys.dto.language.LanguageResponse;
 import com.chilleric.franchise_sys.dto.language.SelectLanguage;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
-import com.chilleric.franchise_sys.inventory.language.LanguageInventory;
 import com.chilleric.franchise_sys.repository.systemRepository.language.Language;
 import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
@@ -27,20 +25,17 @@ import com.chilleric.franchise_sys.service.AbstractService;
 public class LanguageServiceImpl extends AbstractService<LanguageRepository>
     implements LanguageService {
 
-  @Autowired
-  private LanguageInventory languageInventory;
-
   @Override
   public Optional<ListWrapperResponse<LanguageResponse>> getLanguages(Map<String, String> allParams,
       String keySort, int page, int pageSize, String sortField) {
     List<Language> languages =
-        repository.getLanguages(allParams, keySort, page, pageSize, sortField).get();
+        repository.getListOrEntity(allParams, keySort, page, pageSize, sortField).get();
     return Optional.of(new ListWrapperResponse<LanguageResponse>(
         languages.stream()
             .map(lang -> new LanguageResponse(lang.get_id().toString(), lang.getLanguage(),
                 lang.getKey(), lang.getDictionary()))
             .collect(Collectors.toList()),
-        page, pageSize, repository.getTotal(allParams)));
+        page, pageSize, repository.getTotalPage(allParams)));
   }
 
   public void validateDictionary(Map<String, String> defaultValue, Map<String, String> inputValue) {
@@ -77,7 +72,7 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
   public void addNewLanguage(LanguageRequest languageRequest) {
     validate(languageRequest);
     Map<String, String> error = generateError(LanguageRequest.class);
-    languageInventory.findLanguageByKey(languageRequest.getKey().toLowerCase())
+    repository.getEntityByAttribute(languageRequest.getKey().toLowerCase(), "key")
         .ifPresent(language -> {
           error.put("key", LanguageMessageKey.INVALID_LANGUAGE_KEY);
           throw new InvalidRequestException(error, LanguageMessageKey.INVALID_LANGUAGE_KEY);
@@ -86,7 +81,7 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
       error.put("key", LanguageMessageKey.INVALID_LANGUAGE_KEY);
       throw new InvalidRequestException(error, LanguageMessageKey.INVALID_LANGUAGE_KEY);
     }
-    Language languageDefault = languageInventory.findLanguageByKey("en").orElseThrow(
+    Language languageDefault = repository.getEntityByAttribute("en", "key").orElseThrow(
         () -> new InvalidRequestException(new HashMap<>(), LanguageMessageKey.LANGUAGE_NOT_FOUND));
     Language language = new Language(null, languageRequest.getLanguage(),
         languageRequest.getKey().toLowerCase(), languageDefault.getDictionary());
@@ -96,9 +91,9 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
   @Override
   public void updateLanguage(LanguageRequest languageRequest, String id) {
     validate(languageRequest);
-    Language language = languageInventory.findLanguageById(id)
+    Language language = repository.getEntityByAttribute(id, "_id")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.LANGUAGE_NOT_FOUND));
-    Language languageDefault = languageInventory.findLanguageByKey("en")
+    Language languageDefault = repository.getEntityByAttribute("en", "key")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.LANGUAGE_NOT_FOUND));
     validateDictionary(languageDefault.getDictionary(), languageRequest.getDictionary());
     Map<String, String> error = generateError(LanguageRequest.class);
@@ -107,7 +102,7 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
         error.put("key", LanguageMessageKey.INVALID_LANGUAGE_KEY);
         throw new InvalidRequestException(error, LanguageMessageKey.INVALID_KEY_2_DIGIT);
       }
-      languageInventory.findLanguageByKey(languageRequest.getKey().toLowerCase())
+      repository.getEntityByAttribute(languageRequest.getKey().toLowerCase(), "key")
           .ifPresent(languageName -> {
             if (languageName.get_id().compareTo(language.get_id()) != 0) {
               error.put("key", LanguageMessageKey.INVALID_LANGUAGE_KEY);
@@ -125,7 +120,7 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
 
   @Override
   public void deleteDictionaryKey(String dictKey) {
-    repository.getLanguages(new HashMap<>(), "", 0, 0, "").get().forEach(language -> {
+    repository.getListOrEntity(new HashMap<>(), "", 0, 0, "").get().forEach(language -> {
       Map<String, String> updateDict = new HashMap<>();
       language.getDictionary().entrySet().forEach(word -> {
         if (word.getKey().compareTo(dictKey) != 0) {
@@ -153,13 +148,13 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
         break;
       }
     }
-    repository.getLanguages(new HashMap<>(), "", 0, 0, "").get().forEach(lang -> {
+    repository.getListOrEntity(new HashMap<>(), "", 0, 0, "").get().forEach(lang -> {
       if (!newDict.containsKey(lang.getKey())) {
         throw new InvalidRequestException(new HashMap<>(),
             LanguageMessageKey.INVALID_CONTAIN_ALL_LANGUAGE);
       }
     });
-    repository.getLanguages(new HashMap<>(), "", 0, 0, "").get().forEach(lang -> {
+    repository.getListOrEntity(new HashMap<>(), "", 0, 0, "").get().forEach(lang -> {
       if (newDict.containsKey(lang.getKey())) {
         Map<String, String> updateDict = lang.getDictionary();
         updateDict.put(keyUpdate.toString(), newDict.get(lang.getKey()));
@@ -171,7 +166,7 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
 
   @Override
   public Optional<Map<String, String>> getDefaultValueSample() {
-    Language languageDefault = languageInventory.findLanguageByKey("en")
+    Language languageDefault = repository.getEntityByAttribute("en", "key")
         .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.LANGUAGE_NOT_FOUND));
     return Optional.of(languageDefault.getDictionary());
   }
@@ -180,7 +175,7 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
   public void updateDictionaryByFile(List<LanguageFileRequest> payload) {
     payload.forEach(item -> {
       if (StringUtils.hasText(item.getId())) {
-        languageInventory.findLanguageById(item.getId()).ifPresent(langUpdate -> {
+        repository.getEntityByAttribute(item.getId(), "_id").ifPresent(langUpdate -> {
           langUpdate.setDictionary(item.getDictionary());
           repository.insertAndUpdate(langUpdate);
         });
@@ -190,7 +185,7 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
 
   @Override
   public Optional<List<SelectLanguage>> getSelectLanguage() {
-    List<Language> languages = repository.getLanguages(new HashMap<>(), "", 0, 0, "").get();
+    List<Language> languages = repository.getListOrEntity(new HashMap<>(), "", 0, 0, "").get();
     if (languages.size() == 0) {
       return Optional.of(new ArrayList<>());
     }
@@ -201,10 +196,10 @@ public class LanguageServiceImpl extends AbstractService<LanguageRepository>
 
   @Override
   public Optional<LanguageResponse> getLanguageByKey(String key) {
-    List<Language> languages =
-        repository.getLanguages(Map.ofEntries(entry("key", key.toLowerCase())), "", 0, 0, "").get();
+    List<Language> languages = repository
+        .getListOrEntity(Map.ofEntries(entry("key", key.toLowerCase())), "", 0, 0, "").get();
     List<Language> languageDefault =
-        repository.getLanguages(Map.ofEntries(entry("key", "en")), "", 0, 0, "").get();
+        repository.getListOrEntity(Map.ofEntries(entry("key", "en")), "", 0, 0, "").get();
     if (languages.size() == 0) {
       return Optional.of(new LanguageResponse(languageDefault.get(0).get_id().toString(),
           languageDefault.get(0).getLanguage(), languageDefault.get(0).getKey(),

@@ -1,14 +1,8 @@
 package com.chilleric.franchise_sys.repository.systemRepository.user;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.repository.abstract_repository.SystemRepository;
 
-public interface UserRepository {
-  Optional<List<User>> getUsers(Map<String, String> allParams, String keySort, int page,
-      int pageSize, String sortField);
-
-  void insertAndUpdate(User user);
-
-  long getTotalPage(Map<String, String> allParams);
+@Repository
+public class UserRepository extends SystemRepository<User> {
 }

@@ -139,8 +139,8 @@ public class BillServiceImpl extends AbstractService<BillRepository> implements 
   public Optional<Bill> findBillById(String billId) {
     validateStringIsObjectId(billId);
 
-    List<Bill> bills =
-        repository.getBills(Map.ofEntries(Map.entry("_id", billId)), "", 0, 0, "").orElse(null);
+    List<Bill> bills = repository
+        .getListOrEntity(Map.ofEntries(Map.entry("_id", billId)), "", 0, 0, "").orElse(null);
     if (bills != null) {
       return Optional.of(bills.get(0));
     } else {

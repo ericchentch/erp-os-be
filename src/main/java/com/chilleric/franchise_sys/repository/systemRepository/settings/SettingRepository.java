@@ -1,13 +1,9 @@
 package com.chilleric.franchise_sys.repository.systemRepository.settings;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.repository.abstract_repository.SystemRepository;
 
-public interface SettingRepository {
-  Optional<List<Setting>> getSettings(Map<String, String> allParams, String keySort, int page,
-      int pageSize, String sortField);
-
-  void insertAndUpdate(Setting setting);
+@Repository
+public class SettingRepository extends SystemRepository<Setting> {
 
 }

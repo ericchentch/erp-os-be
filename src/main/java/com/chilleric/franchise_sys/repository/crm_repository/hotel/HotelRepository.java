@@ -1,16 +1,8 @@
 package com.chilleric.franchise_sys.repository.crm_repository.hotel;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
+import com.chilleric.franchise_sys.repository.abstract_repository.CrmRepository;
 
-public interface HotelRepository {
-  Optional<List<Hotel>> getHotels(Map<String, String> allParams, String keySort, int page,
-      int pageSize, String sortField);
-
-  void insertAndUpdate(Hotel hotel);
-
-  long getTotalPage(Map<String, String> allParams);
-
-  void delete(String hotelId);
+@Repository
+public class HotelRepository extends CrmRepository<Hotel> {
 }
