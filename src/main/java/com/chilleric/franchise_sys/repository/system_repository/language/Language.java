@@ -1,18 +1,19 @@
-package com.chilleric.franchise_sys.repository.systemRepository.navbar;
+package com.chilleric.franchise_sys.repository.system_repository.language;
 
-import java.util.List;
+import java.util.Map;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Document(collection = "navbar")
+@Document(collection = "languages")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Navbar {
+public class Language {
   private ObjectId _id;
-  private String name;
-  private List<ContentNavbar> content;
+  private String language;
+  private String key;
+  private Map<String, String> dictionary;
 }

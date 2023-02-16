@@ -25,12 +25,12 @@ import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
-import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
-import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
-import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User;
-import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
+import com.chilleric.franchise_sys.repository.system_repository.accessability.Accessability;
+import com.chilleric.franchise_sys.repository.system_repository.accessability.AccessabilityRepository;
+import com.chilleric.franchise_sys.repository.system_repository.permission.Permission;
+import com.chilleric.franchise_sys.repository.system_repository.permission.PermissionRepository;
+import com.chilleric.franchise_sys.repository.system_repository.user.User;
+import com.chilleric.franchise_sys.repository.system_repository.user.UserRepository;
 import com.chilleric.franchise_sys.utils.ObjectUtilities;
 
 public abstract class AbstractController<s> {

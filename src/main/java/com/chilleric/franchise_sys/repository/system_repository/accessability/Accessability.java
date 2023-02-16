@@ -1,20 +1,19 @@
-package com.chilleric.franchise_sys.repository.systemRepository.code;
+package com.chilleric.franchise_sys.repository.system_repository.accessability;
 
-import java.util.Date;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Document(collection = "codes")
+@Document(collection = "accessability")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Code {
+public class Accessability {
   private ObjectId _id;
   private ObjectId userId;
-  private TypeCode type;
-  private String code;
-  private Date expiredDate;
+  private ObjectId targetId;
+  private boolean editable;
+  private boolean isServer;
 }

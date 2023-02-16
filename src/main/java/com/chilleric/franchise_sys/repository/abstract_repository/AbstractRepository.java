@@ -17,7 +17,7 @@ import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.system_repository.user.User.TypeAccount;
 
 public abstract class AbstractRepository {
 

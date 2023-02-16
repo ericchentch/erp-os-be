@@ -1,9 +1,9 @@
-package com.chilleric.franchise_sys.repository.systemRepository.path;
+package com.chilleric.franchise_sys.repository.system_repository.path;
 
 import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.system_repository.user.User.TypeAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

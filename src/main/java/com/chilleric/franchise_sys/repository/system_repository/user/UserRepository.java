@@ -1,8 +1,8 @@
-package com.chilleric.franchise_sys.repository.systemRepository.language;
+package com.chilleric.franchise_sys.repository.system_repository.user;
 
 import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.repository.abstract_repository.SystemRepository;
 
 @Repository
-public class LanguageRepository extends SystemRepository<Language> {
+public class UserRepository extends SystemRepository<User> {
 }

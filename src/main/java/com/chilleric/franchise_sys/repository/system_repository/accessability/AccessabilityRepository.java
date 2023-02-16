@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.systemRepository.accessability;
+package com.chilleric.franchise_sys.repository.system_repository.accessability;
 
 import java.util.Optional;
 import org.bson.types.ObjectId;

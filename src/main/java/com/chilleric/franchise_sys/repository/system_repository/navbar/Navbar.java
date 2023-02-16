@@ -1,17 +1,18 @@
-package com.chilleric.franchise_sys.repository.systemRepository.settings;
+package com.chilleric.franchise_sys.repository.system_repository.navbar;
 
+import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Document(collection = "settings")
+@Document(collection = "navbar")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Setting {
+public class Navbar {
   private ObjectId _id;
-  private ObjectId userId;
-  private String languageKey;
+  private String name;
+  private List<ContentNavbar> content;
 }

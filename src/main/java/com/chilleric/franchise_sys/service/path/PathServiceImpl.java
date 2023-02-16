@@ -19,12 +19,12 @@ import com.chilleric.franchise_sys.exception.BadSqlException;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.pusher.PusherUpdateResponse;
-import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
-import com.chilleric.franchise_sys.repository.systemRepository.path.Path;
-import com.chilleric.franchise_sys.repository.systemRepository.path.PathRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
-import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
+import com.chilleric.franchise_sys.repository.system_repository.accessability.Accessability;
+import com.chilleric.franchise_sys.repository.system_repository.path.Path;
+import com.chilleric.franchise_sys.repository.system_repository.path.PathRepository;
+import com.chilleric.franchise_sys.repository.system_repository.user.User;
+import com.chilleric.franchise_sys.repository.system_repository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.system_repository.user.UserRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service

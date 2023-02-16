@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.systemRepository.navbar;
+package com.chilleric.franchise_sys.repository.system_repository.navbar;
 
 import java.util.List;
 import org.bson.types.ObjectId;

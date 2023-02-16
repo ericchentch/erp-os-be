@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.systemRepository.user;
+package com.chilleric.franchise_sys.repository.system_repository.user;
 
 import java.util.Date;
 import java.util.List;

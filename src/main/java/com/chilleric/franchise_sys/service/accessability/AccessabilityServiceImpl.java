@@ -10,9 +10,9 @@ import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.accessability.AccessabilityRequest;
 import com.chilleric.franchise_sys.dto.accessability.AccessabilityResponse;
 import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
-import com.chilleric.franchise_sys.repository.systemRepository.accessability.Accessability;
-import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
+import com.chilleric.franchise_sys.repository.system_repository.accessability.Accessability;
+import com.chilleric.franchise_sys.repository.system_repository.accessability.AccessabilityRepository;
+import com.chilleric.franchise_sys.repository.system_repository.user.UserRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
 
 @Service

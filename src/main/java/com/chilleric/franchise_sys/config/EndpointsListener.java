@@ -15,13 +15,13 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.chilleric.franchise_sys.constant.DefaultValue;
-import com.chilleric.franchise_sys.repository.systemRepository.language.Language;
-import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
-import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
-import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
+import com.chilleric.franchise_sys.repository.system_repository.language.Language;
+import com.chilleric.franchise_sys.repository.system_repository.language.LanguageRepository;
+import com.chilleric.franchise_sys.repository.system_repository.permission.Permission;
+import com.chilleric.franchise_sys.repository.system_repository.permission.PermissionRepository;
+import com.chilleric.franchise_sys.repository.system_repository.user.User;
+import com.chilleric.franchise_sys.repository.system_repository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.system_repository.user.UserRepository;
 import com.chilleric.franchise_sys.utils.DateFormat;
 
 @Component

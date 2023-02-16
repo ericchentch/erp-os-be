@@ -1,19 +1,17 @@
-package com.chilleric.franchise_sys.repository.systemRepository.language;
+package com.chilleric.franchise_sys.repository.system_repository.settings;
 
-import java.util.Map;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Document(collection = "languages")
+@Document(collection = "settings")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Language {
+public class Setting {
   private ObjectId _id;
-  private String language;
-  private String key;
-  private Map<String, String> dictionary;
+  private ObjectId userId;
+  private String languageKey;
 }

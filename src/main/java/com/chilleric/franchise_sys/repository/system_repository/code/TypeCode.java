@@ -1,4 +1,4 @@
-package com.chilleric.franchise_sys.repository.systemRepository.code;
+package com.chilleric.franchise_sys.repository.system_repository.code;
 
 public enum TypeCode {
 
