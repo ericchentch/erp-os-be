@@ -1,16 +1,20 @@
 package com.chilleric.franchise_sys.repository.abstract_repository;
 
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.exception.BadSqlException;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
-public class CrmRepository<T> extends AbstractRepository {
+public class CrmRepository<T>
+  extends AbstractRepository
+  implements RepositoryInterface<T> {
+  @Autowired
+  @Qualifier("mongo_crm_template")
+  protected MongoTemplate crmDBTemplate;
 
   public Class<T> g() throws RuntimeException {
     ParameterizedType superclass = (ParameterizedType) getClass().getGenericSuperclass();
@@ -33,7 +37,7 @@ public class CrmRepository<T> extends AbstractRepository {
       page,
       pageSize
     );
-    return crmFind(query, g());
+    return findFunction(query, g(), crmDBTemplate);
   }
 
   public Optional<List<T>> getListByAttribute(String value, String attribute) {
@@ -45,7 +49,7 @@ public class CrmRepository<T> extends AbstractRepository {
       0,
       0
     );
-    List<T> list = crmFind(query, g()).get();
+    List<T> list = findFunction(query, g(), crmDBTemplate).get();
     if (list.size() > 0) {
       return Optional.of(list);
     }
@@ -61,7 +65,7 @@ public class CrmRepository<T> extends AbstractRepository {
       0,
       0
     );
-    List<T> list = crmFind(query, g()).get();
+    List<T> list = findFunction(query, g(), crmDBTemplate).get();
     if (list.size() > 0) {
       return Optional.of(list.get(0));
     }
@@ -69,24 +73,14 @@ public class CrmRepository<T> extends AbstractRepository {
   }
 
   public void insertAndUpdate(T entity) {
-    crmDBTemplate.save(entity);
+    insertUpdateFunction(entity, crmDBTemplate);
   }
 
   public long getTotalPage(Map<String, String> allParams) {
-    Query query = generateQueryMongoDB(allParams, g(), "", "", 0, 0);
-    long total = crmDBTemplate.count(query, g());
-    return total;
+    return getTotalPageFunction(allParams, crmDBTemplate, g());
   }
 
   public void deleteById(String id) {
-    try {
-      ObjectId _id = new ObjectId(id);
-      Query query = new Query();
-      query.addCriteria(Criteria.where("_id").is(_id));
-      crmDBTemplate.remove(query, g());
-    } catch (IllegalArgumentException e) {
-      APP_LOGGER.error("wrong type_id");
-      throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
-    }
+    deleteById(id, crmDBTemplate, g());
   }
 }

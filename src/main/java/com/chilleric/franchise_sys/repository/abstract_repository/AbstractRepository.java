@@ -12,27 +12,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 public abstract class AbstractRepository {
-  @Autowired
-  @Qualifier("mongo_system_template")
-  protected MongoTemplate systemDBTemplate;
-
-  @Autowired
-  @Qualifier("mongo_information_template")
-  protected MongoTemplate informationDBTemplate;
-
-  @Autowired
-  @Qualifier("mongo_crm_template")
-  protected MongoTemplate crmDBTemplate;
-
   protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
+
+  public void insertUpdateFunction(Object entity, MongoTemplate template) {
+    template.save(entity);
+  }
+
+  public long getTotalPageFunction(
+    Map<String, String> allParams,
+    MongoTemplate template,
+    Class<?> clazz
+  ) {
+    Query query = generateQueryMongoDB(allParams, clazz, "", "", 0, 0);
+    long total = template.count(query, clazz);
+    return total;
+  }
+
+  public void deleteById(String id, MongoTemplate template, Class<?> clazz) {
+    try {
+      ObjectId _id = new ObjectId(id);
+      Query query = new Query();
+      query.addCriteria(Criteria.where("_id").is(_id));
+      template.remove(query, clazz);
+    } catch (IllegalArgumentException e) {
+      APP_LOGGER.error("wrong type_id");
+      throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
+    }
+  }
 
   protected Query generateQueryMongoDB(
     Map<String, String> allParams,
@@ -80,39 +92,13 @@ public abstract class AbstractRepository {
     return query;
   }
 
-  protected <T> Optional<List<T>> systemFind(Query query, Class<T> clazz) {
+  protected <T> Optional<List<T>> findFunction(
+    Query query,
+    Class<T> clazz,
+    MongoTemplate template
+  ) {
     try {
-      List<T> result = systemDBTemplate.find(query, clazz);
-      return Optional.of(result);
-    } catch (IllegalArgumentException | NullPointerException e) {
-      APP_LOGGER.error(e.getMessage());
-      return Optional.empty();
-    }
-  }
-
-  protected <T> Optional<T> systemFindOne(Query query, Class<T> clazz) {
-    try {
-      T result = systemDBTemplate.findOne(query, clazz);
-      return Optional.of(result);
-    } catch (IllegalArgumentException | NullPointerException e) {
-      APP_LOGGER.error(e.getMessage());
-      return Optional.empty();
-    }
-  }
-
-  protected <T> Optional<List<T>> crmFind(Query query, Class<T> clazz) {
-    try {
-      List<T> result = crmDBTemplate.find(query, clazz);
-      return Optional.of(result);
-    } catch (IllegalArgumentException | NullPointerException e) {
-      APP_LOGGER.error(e.getMessage());
-      return Optional.empty();
-    }
-  }
-
-  protected <T> Optional<List<T>> informationFind(Query query, Class<T> clazz) {
-    try {
-      List<T> result = informationDBTemplate.find(query, clazz);
+      List<T> result = template.find(query, clazz);
       return Optional.of(result);
     } catch (IllegalArgumentException | NullPointerException e) {
       APP_LOGGER.error(e.getMessage());

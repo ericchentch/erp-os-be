@@ -1,35 +1,42 @@
 package com.chilleric.franchise_sys.repository.system_repository.code;
 
 import com.chilleric.franchise_sys.repository.abstract_repository.SystemRepository;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class CodeRepository extends SystemRepository<Code> {
 
   public Optional<Code> getCodesByType(String userId, String type) {
-    try {
-      ObjectId user_id = new ObjectId(userId);
-      Query query = new Query();
-      query.addCriteria(Criteria.where("userId").is(user_id).and("type").is(type));
-      return systemFindOne(query, Code.class);
-    } catch (IllegalArgumentException e) {
-      APP_LOGGER.error("wrong type user id");
+    List<Code> list = getListOrEntity(
+        Map.ofEntries(Map.entry("userId", userId), Map.entry("type", type)),
+        "",
+        0,
+        0,
+        ""
+      )
+      .get();
+    if (list.size() > 0) {
+      return Optional.of(list.get(0));
+    } else {
       return Optional.empty();
     }
   }
 
   public Optional<Code> getCodesByCode(String userId, String code) {
-    try {
-      ObjectId user_id = new ObjectId(userId);
-      Query query = new Query();
-      query.addCriteria(Criteria.where("userId").is(user_id).and("code").is(code));
-      return systemFindOne(query, Code.class);
-    } catch (IllegalArgumentException e) {
-      APP_LOGGER.error("wrong type user id");
+    List<Code> list = getListOrEntity(
+        Map.ofEntries(Map.entry("userId", userId), Map.entry("code", code)),
+        "",
+        0,
+        0,
+        ""
+      )
+      .get();
+    if (list.size() > 0) {
+      return Optional.of(list.get(0));
+    } else {
       return Optional.empty();
     }
   }

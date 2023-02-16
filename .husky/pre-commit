@@ -4,7 +4,7 @@
 echo '🏗️👷 Styling, testing and building your project before committing'
 
 # Check Prettier standards
-mvn prettier:check ||
+yarn check-format ||
 (
     echo '🤢🤮🤢🤮
                 Yaaaaaccccccckkkkkkkkkk 🤢🤮🤢🤮
