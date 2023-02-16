@@ -6,9 +6,10 @@
     "prettier-plugin-java": "^2.0.0"
   },
   "scripts": {
-    "dev": " mvn spring-boot:run & lt --port 8080 --subdomain erp-os",
+    "dev": " mvn spring-boot:run",
+    "local-deploy": "lt --port 8080 --subdomain erp-os-be",
     "prepare": "husky install",
-    "check-format": "prettier --check .",
-    "format": "prettier --write ."
+    "check-format": "mvn prettier:check ",
+    "format": "mvn prettier:write "
   }
 }
