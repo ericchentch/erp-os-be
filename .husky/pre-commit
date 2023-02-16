@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo '🏗️👷 Styling, testing and building your project before committing'
+
+# Check Prettier standards
+mvn prettier:check ||
+(
+    echo '🤢🤮🤢🤮
+                Yaaaaaccccccckkkkkkkkkk 🤢🤮🤢🤮
+            Prettier Check Failed. Please Run yarn format, add changes and try commit again.';
+    false;
+)
+
+# If everything passes... Now we can commit
+echo '🤔🤔🤔🤔... Alright.... Code looks good to me... Trying to build now. 🤔🤔🤔🤔'
+
+mvn clean install ||
+(
+    echo '❌👷🔨❌ Send Help Build has failed ❌👷🔨❌
+            Next build failed: View the errors above to see why. 
+    '
+    false;
+)
+
+# If everything passes... Now we can commit
+echo '✅✅✅✅ Yo you got this... I am committing this now. ✅✅✅✅'
