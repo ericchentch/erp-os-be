@@ -1,12 +1,7 @@
 package com.chilleric.franchise_sys.jwt;
 
 import static java.util.Map.entry;
-import java.util.Date;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -19,10 +14,15 @@ import com.chilleric.franchise_sys.exception.UnauthorizedException;
 import com.chilleric.franchise_sys.log.AppLogger;
 import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
+import java.util.Date;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 public class JwtValidation {
-
   @Value("${spring.key.jwt}")
   protected String JWT_SECRET;
 
@@ -34,8 +34,11 @@ public class JwtValidation {
     Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
     try {
       Algorithm algorithm = Algorithm.HMAC512(JWT_SECRET);
-      String token = JWT.create().withPayload(Map.ofEntries(entry("userId", userId)))
-          .withExpiresAt(expiryDate).sign(algorithm);
+      String token = JWT
+        .create()
+        .withPayload(Map.ofEntries(entry("userId", userId)))
+        .withExpiresAt(expiryDate)
+        .sign(algorithm);
       return token;
     } catch (JWTCreationException exception) {
       return "";
@@ -71,7 +74,6 @@ public class JwtValidation {
       APP_LOGGER.error(exception.getMessage());
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
-
   }
 
   public boolean isValid(String token) {
@@ -84,7 +86,5 @@ public class JwtValidation {
       APP_LOGGER.error(exception.getMessage());
       return false;
     }
-
   }
-
 }

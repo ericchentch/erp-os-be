@@ -1,8 +1,7 @@
 package com.chilleric.franchise_sys.repository.crm_repository.roomType;
 
-import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.repository.abstract_repository.CrmRepository;
+import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoomTypeRepository extends CrmRepository<RoomType> {
-}
+public class RoomTypeRepository extends CrmRepository<RoomType> {}

@@ -1,5 +1,13 @@
 package com.chilleric.franchise_sys.pusher;
 
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.exception.BadSqlException;
+import com.chilleric.franchise_sys.repository.system_repository.user.User;
+import com.chilleric.franchise_sys.repository.system_repository.user.UserNotification;
+import com.chilleric.franchise_sys.repository.system_repository.user.UserRepository;
+import com.chilleric.franchise_sys.utils.DateFormat;
+import com.pusher.pushnotifications.PushNotifications;
+import com.pusher.rest.Pusher;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -8,18 +16,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.exception.BadSqlException;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User;
-import com.chilleric.franchise_sys.repository.systemRepository.user.UserNotification;
-import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
-import com.chilleric.franchise_sys.utils.DateFormat;
-import com.pusher.pushnotifications.PushNotifications;
-import com.pusher.rest.Pusher;
 
 @Component
 public class PusherServiceImpl implements PusherService {
-
   @Value("${pusher.instance}")
   protected String PUSHER_INSTANCE;
 
@@ -57,19 +56,22 @@ public class PusherServiceImpl implements PusherService {
     web.put("notification", webNotification);
     publishRequest.put("web", web);
     try {
-      interests.forEach(thisId -> {
-        User user = userRepository.getEntityByAttribute(thisId, "notificationId")
+      interests.forEach(
+        thisId -> {
+          User user = userRepository
+            .getEntityByAttribute(thisId, "notificationId")
             .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
-        List<UserNotification> listNoti = user.getNotifications();
-        if (listNoti.size() == 20) {
-          listNoti.remove(19);
-          listNoti.add(0, new UserNotification(body, DateFormat.getCurrentTime()));
-        } else {
-          listNoti.add(0, new UserNotification(body, DateFormat.getCurrentTime()));
+          List<UserNotification> listNoti = user.getNotifications();
+          if (listNoti.size() == 20) {
+            listNoti.remove(19);
+            listNoti.add(0, new UserNotification(body, DateFormat.getCurrentTime()));
+          } else {
+            listNoti.add(0, new UserNotification(body, DateFormat.getCurrentTime()));
+          }
+          user.setNotifications(listNoti);
+          userRepository.insertAndUpdate(user);
         }
-        user.setNotifications(listNoti);
-        userRepository.insertAndUpdate(user);
-      });
+      );
       beamsClient.publishToInterests(interests, publishRequest);
     } catch (IOException | InterruptedException | URISyntaxException e) {
       // TODO Auto-generated catch block
@@ -83,6 +85,5 @@ public class PusherServiceImpl implements PusherService {
     pusher.setEncrypted(true);
 
     pusher.trigger(channel, event, data);
-
   }
 }

@@ -1,6 +1,16 @@
 package com.chilleric.franchise_sys.config;
 
 import static java.util.Map.entry;
+
+import com.chilleric.franchise_sys.constant.DefaultValue;
+import com.chilleric.franchise_sys.repository.system_repository.language.Language;
+import com.chilleric.franchise_sys.repository.system_repository.language.LanguageRepository;
+import com.chilleric.franchise_sys.repository.system_repository.permission.Permission;
+import com.chilleric.franchise_sys.repository.system_repository.permission.PermissionRepository;
+import com.chilleric.franchise_sys.repository.system_repository.user.User;
+import com.chilleric.franchise_sys.repository.system_repository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.system_repository.user.UserRepository;
+import com.chilleric.franchise_sys.utils.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -14,19 +24,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import com.chilleric.franchise_sys.constant.DefaultValue;
-import com.chilleric.franchise_sys.repository.systemRepository.language.Language;
-import com.chilleric.franchise_sys.repository.systemRepository.language.LanguageRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.permission.Permission;
-import com.chilleric.franchise_sys.repository.systemRepository.permission.PermissionRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User;
-import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
-import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
-import com.chilleric.franchise_sys.utils.DateFormat;
 
 @Component
 public class EndpointsListener implements ApplicationListener<ContextRefreshedEvent> {
-
   @Autowired
   protected PermissionRepository permissionRepository;
 
@@ -56,27 +56,62 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
     //
     // });
     List<User> userDevs = userRepository
-        .getListOrEntity(Map.ofEntries(entry("username", "super_admin_dev")), "", 0, 0, "").get();
+      .getListOrEntity(Map.ofEntries(entry("username", "super_admin_dev")), "", 0, 0, "")
+      .get();
     User usersDev = new User();
     if (userDevs.size() == 0) {
-      usersDev = new User(new ObjectId(), TypeAccount.INTERNAL, "super_admin_dev",
-          bCryptPasswordEncoder
-              .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
-          0, "", "", "Dev", "Admin", email, "", new ArrayList<>(), DateFormat.getCurrentTime(),
-          null, true, false, 0, DefaultValue.DEFAULT_AVATAR, new ObjectId(), serverChannel,
-          new ObjectId(), new ArrayList<>());
+      usersDev =
+        new User(
+          new ObjectId(),
+          TypeAccount.INTERNAL,
+          "super_admin_dev",
+          bCryptPasswordEncoder.encode(
+            Base64.getEncoder().encodeToString(defaultPassword.getBytes())
+          ),
+          0,
+          "",
+          "",
+          "Dev",
+          "Admin",
+          email,
+          "",
+          new ArrayList<>(),
+          DateFormat.getCurrentTime(),
+          null,
+          true,
+          false,
+          0,
+          DefaultValue.DEFAULT_AVATAR,
+          new ObjectId(),
+          serverChannel,
+          new ObjectId(),
+          new ArrayList<>()
+        );
       userRepository.insertAndUpdate(usersDev);
     } else {
       usersDev = userDevs.get(0);
     }
     List<Permission> permissions = permissionRepository
-        .getListOrEntity(Map.ofEntries(entry("name", "super_admin_permission")), "", 0, 0, "")
-        .get();
+      .getListOrEntity(
+        Map.ofEntries(entry("name", "super_admin_permission")),
+        "",
+        0,
+        0,
+        ""
+      )
+      .get();
     if (permissions.size() == 0) {
       List<ObjectId> userIds = Arrays.asList(usersDev.get_id());
-      Permission permission = new Permission(null, "super_admin_permission", userIds,
-          DateFormat.getCurrentTime(), null, permissionRepository.getViewPointSelect(),
-          permissionRepository.getEditableSelect(), true);
+      Permission permission = new Permission(
+        null,
+        "super_admin_permission",
+        userIds,
+        DateFormat.getCurrentTime(),
+        null,
+        permissionRepository.getViewPointSelect(),
+        permissionRepository.getEditableSelect(),
+        true
+      );
       permissionRepository.insertAndUpdate(permission);
     } else {
       Permission permission = permissions.get(0);
@@ -84,8 +119,9 @@ public class EndpointsListener implements ApplicationListener<ContextRefreshedEv
       permission.setEditable(permissionRepository.getEditableSelect());
       permissionRepository.insertAndUpdate(permission);
     }
-    List<Language> defLanguages =
-        languageRepository.getListOrEntity(Map.ofEntries(entry("key", "en")), "", 0, 0, "").get();
+    List<Language> defLanguages = languageRepository
+      .getListOrEntity(Map.ofEntries(entry("key", "en")), "", 0, 0, "")
+      .get();
     if (defLanguages.size() == 0) {
       Language defLanguage = new Language(null, "English", "en", new HashMap<>());
       languageRepository.insertAndUpdate(defLanguage);

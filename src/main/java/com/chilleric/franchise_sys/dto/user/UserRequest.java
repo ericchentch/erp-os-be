@@ -1,14 +1,14 @@
 package com.chilleric.franchise_sys.dto.user;
 
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.constant.TypeValidation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.constant.TypeValidation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,10 @@ import lombok.NoArgsConstructor;
 @Schema
 public class UserRequest {
   @NotNull(message = LanguageMessageKey.USERNAME_REQUIRED)
-  @Pattern(regexp = TypeValidation.USERNAME, message = LanguageMessageKey.INVALID_USERNAME)
+  @Pattern(
+    regexp = TypeValidation.USERNAME,
+    message = LanguageMessageKey.INVALID_USERNAME
+  )
   private String username;
 
   @NotNull(message = LanguageMessageKey.GENDER_REQUIRED)

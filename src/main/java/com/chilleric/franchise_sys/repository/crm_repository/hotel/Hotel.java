@@ -1,12 +1,12 @@
 package com.chilleric.franchise_sys.repository.crm_repository.hotel;
 
-import java.util.List;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
 import com.chilleric.franchise_sys.repository.common_entity.ClientInfomation;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "hotels")
 @Data

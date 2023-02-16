@@ -1,6 +1,6 @@
 package com.chilleric.franchise_sys.dto.user;
 
-import com.chilleric.franchise_sys.repository.systemRepository.user.User.TypeAccount;
+import com.chilleric.franchise_sys.repository.system_repository.user.User.TypeAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
-
   private String id;
   private String avatar;
   private TypeAccount type;

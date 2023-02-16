@@ -1,14 +1,5 @@
 package com.chilleric.franchise_sys.service;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.constant.ResponseType;
 import com.chilleric.franchise_sys.exception.BadSqlException;
@@ -19,14 +10,22 @@ import com.chilleric.franchise_sys.log.LoggerFactory;
 import com.chilleric.franchise_sys.log.LoggerType;
 import com.chilleric.franchise_sys.pusher.PusherService;
 import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
-import com.chilleric.franchise_sys.repository.systemRepository.accessability.AccessabilityRepository;
-import com.chilleric.franchise_sys.repository.systemRepository.user.UserRepository;
+import com.chilleric.franchise_sys.repository.system_repository.accessability.AccessabilityRepository;
+import com.chilleric.franchise_sys.repository.system_repository.user.UserRepository;
 import com.chilleric.franchise_sys.utils.ObjectValidator;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public abstract class AbstractService<r> {
-
   @Autowired
   protected r repository;
 
@@ -52,7 +51,8 @@ public abstract class AbstractService<r> {
   @PostConstruct
   public void init() {
     objectMapper =
-        new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+      new ObjectMapper()
+      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   protected String generateParamsValue(List<String> list) {
@@ -72,8 +72,10 @@ public abstract class AbstractService<r> {
 
   protected <T> void validate(T request) {
     boolean isError = false;
-    Map<String, String> errors = objectValidator
-        .validateRequestThenReturnMessage(generateError(request.getClass()), request);
+    Map<String, String> errors = objectValidator.validateRequestThenReturnMessage(
+      generateError(request.getClass()),
+      request
+    );
     for (Map.Entry<String, String> items : errors.entrySet()) {
       if (items.getValue().length() > 0) {
         isError = true;
@@ -86,9 +88,11 @@ public abstract class AbstractService<r> {
   }
 
   protected String getNotiId(String loginId) {
-    return userRepository.getEntityByAttribute(loginId, "_id")
-        .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR)).getNotificationId()
-        .toString();
+    return userRepository
+      .getEntityByAttribute(loginId, "_id")
+      .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR))
+      .getNotificationId()
+      .toString();
   }
 
   protected void validateStringIsObjectId(String id) {
@@ -97,7 +101,11 @@ public abstract class AbstractService<r> {
     }
   }
 
-  protected <T> T viewPointToRequest(T request, List<ViewPoint> viewPoints, Object source) {
+  protected <T> T viewPointToRequest(
+    T request,
+    List<ViewPoint> viewPoints,
+    Object source
+  ) {
     for (Field field : request.getClass().getDeclaredFields()) {
       boolean isEditable = false;
       field.setAccessible(true);
@@ -133,7 +141,11 @@ public abstract class AbstractService<r> {
     return result;
   }
 
-  protected ResponseType isPublic(String ownerId, String loginId, boolean skipAccessability) {
+  protected ResponseType isPublic(
+    String ownerId,
+    String loginId,
+    boolean skipAccessability
+  ) {
     if (skipAccessability) {
       return ResponseType.PRIVATE;
     }
@@ -145,7 +157,8 @@ public abstract class AbstractService<r> {
   }
 
   protected void checkDeleteAndEdit(String userId, String targetId) {
-    accessabilityRepository.getAccessability(userId, targetId)
-        .orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
+    accessabilityRepository
+      .getAccessability(userId, targetId)
+      .orElseThrow(() -> new ForbiddenException(LanguageMessageKey.FORBIDDEN));
   }
 }

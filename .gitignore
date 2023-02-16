@@ -33,3 +33,5 @@ build/
 #.vscode/
 .java-version
 .env
+
+node_modules

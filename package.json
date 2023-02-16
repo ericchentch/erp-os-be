@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "localtunnel": "^2.0.2",
+    "husky": "^8.0.3",
+    "prettier": "^2.8.4",
+    "prettier-plugin-java": "^2.0.0"
+  },
+  "scripts": {
+    "dev": " mvn spring-boot:run & lt --port 8080 --subdomain erp-os",
+    "prepare": "husky install",
+    "check-format": "prettier --check .",
+    "format": "prettier --write ."
+  }
+}

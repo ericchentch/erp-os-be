@@ -1,7 +1,7 @@
 package com.chilleric.franchise_sys.repository.common_entity;
 
-import java.util.Date;
 import com.chilleric.franchise_sys.repository.common_enum.PaymentMethod;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

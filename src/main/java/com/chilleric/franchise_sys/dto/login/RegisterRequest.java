@@ -1,11 +1,11 @@
 package com.chilleric.franchise_sys.dto.login;
 
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.constant.TypeValidation;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.constant.TypeValidation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RegisterRequest {
   @NotNull(message = LanguageMessageKey.USERNAME_REQUIRED)
-  @Pattern(regexp = TypeValidation.USERNAME, message = LanguageMessageKey.INVALID_USERNAME)
+  @Pattern(
+    regexp = TypeValidation.USERNAME,
+    message = LanguageMessageKey.INVALID_USERNAME
+  )
   private String username;
 
   @NotNull(message = LanguageMessageKey.PASSWORD_REQUIRED)
@@ -45,5 +48,4 @@ public class RegisterRequest {
   @NotBlank(message = LanguageMessageKey.ADDRESS_REQUIRED)
   @NotEmpty(message = LanguageMessageKey.ADDRESS_REQUIRED)
   private String address;
-
 }

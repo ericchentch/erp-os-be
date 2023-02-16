@@ -1,12 +1,5 @@
 package com.chilleric.franchise_sys.service.roomType;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.bson.types.ObjectId;
-import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
 import com.chilleric.franchise_sys.dto.roomType.RoomTypeRequest;
@@ -16,10 +9,18 @@ import com.chilleric.franchise_sys.exception.ResourceNotFoundException;
 import com.chilleric.franchise_sys.repository.crm_repository.roomType.RoomType;
 import com.chilleric.franchise_sys.repository.crm_repository.roomType.RoomTypeRepository;
 import com.chilleric.franchise_sys.service.AbstractService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.bson.types.ObjectId;
+import org.springframework.stereotype.Service;
 
 @Service
-public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
-    implements RoomTypeService {
+public class RoomTypeServiceImpl
+  extends AbstractService<RoomTypeRepository>
+  implements RoomTypeService {
 
   @Override
   public void createNewRoomType(RoomTypeRequest roomTypeRequest) {
@@ -28,9 +29,15 @@ public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
       throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
     }
 
-    RoomType roomType = new RoomType(new ObjectId(), new ObjectId(roomTypeRequest.getHotelId()),
-        roomTypeRequest.getName(), roomTypeRequest.getLinkImages(), roomTypeRequest.getRooms(),
-        roomTypeRequest.getRate(), roomTypeRequest.getStockPrice());
+    RoomType roomType = new RoomType(
+      new ObjectId(),
+      new ObjectId(roomTypeRequest.getHotelId()),
+      roomTypeRequest.getName(),
+      roomTypeRequest.getLinkImages(),
+      roomTypeRequest.getRooms(),
+      roomTypeRequest.getRate(),
+      roomTypeRequest.getStockPrice()
+    );
     repository.insertAndUpdate(roomType);
   }
 
@@ -41,10 +48,15 @@ public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
 
     RoomType roomType = validateExistRoomType(roomTypeId);
 
-    RoomType newRoomType =
-        new RoomType(roomType.get_id(), new ObjectId(roomTypeRequest.getHotelId()),
-            roomTypeRequest.getName(), roomTypeRequest.getLinkImages(), roomTypeRequest.getRooms(),
-            roomTypeRequest.getRate(), roomTypeRequest.getStockPrice());
+    RoomType newRoomType = new RoomType(
+      roomType.get_id(),
+      new ObjectId(roomTypeRequest.getHotelId()),
+      roomTypeRequest.getName(),
+      roomTypeRequest.getLinkImages(),
+      roomTypeRequest.getRooms(),
+      roomTypeRequest.getRate(),
+      roomTypeRequest.getStockPrice()
+    );
     repository.insertAndUpdate(newRoomType);
   }
 
@@ -52,9 +64,17 @@ public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
   public Optional<RoomTypeResponse> getRoomTypeById(String roomTypeId) {
     RoomType roomType = validateExistRoomType(roomTypeId);
 
-    return Optional.of(new RoomTypeResponse(roomType.get_id().toString(),
-        roomType.getHotelId().toString(), roomType.getName(), roomType.getLinkImages(),
-        roomType.getRooms(), roomType.getRate(), roomType.getStockPrice()));
+    return Optional.of(
+      new RoomTypeResponse(
+        roomType.get_id().toString(),
+        roomType.getHotelId().toString(),
+        roomType.getName(),
+        roomType.getLinkImages(),
+        roomType.getRooms(),
+        roomType.getRate(),
+        roomType.getStockPrice()
+      )
+    );
   }
 
   @Override
@@ -65,8 +85,9 @@ public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
 
   @Override
   public RoomType validateExistRoomType(String roomTypeId) {
-    List<RoomType> roomTypes =
-        repository.getListOrEntity(Map.ofEntries(Map.entry("_id", roomTypeId)), "", 0, 0, "").get();
+    List<RoomType> roomTypes = repository
+      .getListOrEntity(Map.ofEntries(Map.entry("_id", roomTypeId)), "", 0, 0, "")
+      .get();
     if (roomTypes.size() == 0) {
       throw new ResourceNotFoundException(LanguageMessageKey.ROOM_TYPE_NOT_FOUND);
     }
@@ -74,18 +95,40 @@ public class RoomTypeServiceImpl extends AbstractService<RoomTypeRepository>
   }
 
   @Override
-  public Optional<ListWrapperResponse<RoomTypeResponse>> getRoomTypeByHotelId(String hotelId,
-      String keySort, int page, int pageSize, String sortField) {
+  public Optional<ListWrapperResponse<RoomTypeResponse>> getRoomTypeByHotelId(
+    String hotelId,
+    String keySort,
+    int page,
+    int pageSize,
+    String sortField
+  ) {
     Map<String, String> params = new HashMap<>();
     params.put("hotelId", hotelId);
-    List<RoomType> roomTypes =
-        repository.getListOrEntity(params, keySort, page, pageSize, sortField).get();
+    List<RoomType> roomTypes = repository
+      .getListOrEntity(params, keySort, page, pageSize, sortField)
+      .get();
 
-    return Optional.of(new ListWrapperResponse<RoomTypeResponse>(roomTypes.stream()
-        .map(roomType -> new RoomTypeResponse(roomType.get_id().toString(),
-            roomType.getHotelId().toString(), roomType.getName(), roomType.getLinkImages(),
-            roomType.getRooms(), roomType.getRate(), roomType.getStockPrice()))
-        .collect(Collectors.toList()), page, pageSize, repository.getTotalPage(params)));
+    return Optional.of(
+      new ListWrapperResponse<RoomTypeResponse>(
+        roomTypes
+          .stream()
+          .map(
+            roomType ->
+              new RoomTypeResponse(
+                roomType.get_id().toString(),
+                roomType.getHotelId().toString(),
+                roomType.getName(),
+                roomType.getLinkImages(),
+                roomType.getRooms(),
+                roomType.getRate(),
+                roomType.getStockPrice()
+              )
+          )
+          .collect(Collectors.toList()),
+        page,
+        pageSize,
+        repository.getTotalPage(params)
+      )
+    );
   }
-
 }

@@ -1,7 +1,10 @@
 package com.chilleric.franchise_sys.log;
 
 public enum LoggerType {
-  REQUEST("requestLog"), APPLICATION("applicationLog"), API("apiLog"), SQL("sqlLog");
+  REQUEST("requestLog"),
+  APPLICATION("applicationLog"),
+  API("apiLog"),
+  SQL("sqlLog");
 
   private String loggerName;
 

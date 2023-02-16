@@ -1,13 +1,13 @@
 package com.chilleric.franchise_sys.dto.hotel;
 
+import com.chilleric.franchise_sys.annotation.IsObjectId.IsObjectId;
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import java.util.List;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import com.chilleric.franchise_sys.annotation.IsObjectId.IsObjectId;
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,8 +28,9 @@ public class HotelRequest {
 
   @NotNull(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED)
   @NotEmpty(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED)
-  private List<@NotBlank(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED) @NotEmpty(
-      message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED) String> linkImages;
+  private List<@NotBlank(
+    message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED
+  ) @NotEmpty(message = LanguageMessageKey.HOTEL_LINK_IMAGE_REQUIRED) String> linkImages;
 
   @NotNull(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
   @NotEmpty(message = LanguageMessageKey.HOTEL_CLIENT_REQUIRED)
