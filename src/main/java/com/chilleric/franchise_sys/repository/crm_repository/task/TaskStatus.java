@@ -1,7 +1,10 @@
 package com.chilleric.franchise_sys.repository.crm_repository.task;
 
 public enum TaskStatus {
-  TODO("To-do"), IN_PROGRESS("In-progress"), NEED_BE_REVIEWED("Need-be-reviewed"), DONE("Done");
+  TODO("To-do"),
+  IN_PROGRESS("In-progress"),
+  NEED_BE_REVIEWED("Need-be-reviewed"),
+  DONE("Done");
 
   private String statusTask;
 
@@ -13,4 +16,3 @@ public enum TaskStatus {
     return statusTask;
   }
 }
-

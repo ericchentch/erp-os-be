@@ -1,5 +1,7 @@
 package com.chilleric.franchise_sys.dto.permission;
 
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.Max;
@@ -7,8 +9,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PermissionRequest {
-
   @NotBlank(message = LanguageMessageKey.PERMISSION_NAME_REQUIRED)
   @NotNull(message = LanguageMessageKey.PERMISSION_NAME_REQUIRED)
   @NotEmpty(message = LanguageMessageKey.PERMISSION_NAME_REQUIRED)
@@ -36,5 +35,4 @@ public class PermissionRequest {
   @Min(value = 0, message = LanguageMessageKey.ONLY_0_1)
   @Max(value = 1, message = LanguageMessageKey.ONLY_0_1)
   private int isServer;
-
 }

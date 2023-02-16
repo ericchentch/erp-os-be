@@ -1,10 +1,10 @@
 package com.chilleric.franchise_sys.dto.accessability;
 
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import java.util.List;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

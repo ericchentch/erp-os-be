@@ -1,18 +1,5 @@
 package com.chilleric.franchise_sys.service.login;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import com.chilleric.franchise_sys.constant.DefaultValue;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.constant.TypeValidation;
@@ -37,10 +24,24 @@ import com.chilleric.franchise_sys.repository.system_repository.user.UserReposit
 import com.chilleric.franchise_sys.service.AbstractService;
 import com.chilleric.franchise_sys.utils.PasswordValidator;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
-public class LoginServiceImpl extends AbstractService<UserRepository> implements LoginService {
-
+public class LoginServiceImpl
+  extends AbstractService<UserRepository>
+  implements LoginService {
   @Value("${default.password}")
   protected String defaultPassword;
 
@@ -61,8 +62,11 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     validate(loginRequest);
     User user = getThisUser(loginRequest.getUsername());
     Map<String, String> error = generateError(LoginRequest.class);
-    PasswordValidator.validatePassword(generateError(LoginRequest.class),
-        loginRequest.getPassword(), "password");
+    PasswordValidator.validatePassword(
+      generateError(LoginRequest.class),
+      loginRequest.getPassword(),
+      "password"
+    );
     if (user.getDeleted() == 1) {
       throw new UnauthorizedException(LanguageMessageKey.UNAUTHORIZED);
     }
@@ -72,7 +76,9 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       emailService.sendSimpleMail(new EmailDetail(user.getEmail(), newCode, "OTP"));
       return Optional.of(new LoginResponse("", "", TypeAccount.EXTERNAL, false, true));
     }
-    if (!bCryptPasswordEncoder().matches(loginRequest.getPassword(), user.getPassword())) {
+    if (
+      !bCryptPasswordEncoder().matches(loginRequest.getPassword(), user.getPassword())
+    ) {
       error.put("password", LanguageMessageKey.PASSWORD_NOT_MATCH);
       throw new InvalidRequestException(error, LanguageMessageKey.PASSWORD_NOT_MATCH);
     }
@@ -86,12 +92,25 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       List<String> token = modifyToken(user.getTokens(), newTokens);
       user.setTokens(token);
       repository.insertAndUpdate(user);
-      pusherService.sendNotification("New login", "Someone login your account!",
-          Arrays.asList(user.getNotificationId().toString()));
-      pusherService.pushInfo(user.getChannelId(), user.getEventId().toString(),
-          new PusherUpdateResponse(false, true));
-      return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
-          user.getType(), false, false));
+      pusherService.sendNotification(
+        "New login",
+        "Someone login your account!",
+        Arrays.asList(user.getNotificationId().toString())
+      );
+      pusherService.pushInfo(
+        user.getChannelId(),
+        user.getEventId().toString(),
+        new PusherUpdateResponse(false, true)
+      );
+      return Optional.of(
+        new LoginResponse(
+          user.get_id().toString(),
+          "Bearer " + newTokens,
+          user.getType(),
+          false,
+          false
+        )
+      );
     }
   }
 
@@ -108,8 +127,11 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
 
   @Override
   public void logout(String id, String logoutToken) {
-    User user = userRepository.getEntityByAttribute(id, "_id")
-        .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER));
+    User user = userRepository
+      .getEntityByAttribute(id, "_id")
+      .orElseThrow(
+        () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_USER)
+      );
     List<String> token = user.getTokens();
     token.remove(logoutToken);
     user.setTokens(token);
@@ -176,13 +198,22 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
 
   public void checkCode(String userId, TypeCode typeCode, String inputCode) {
     Date now = new Date();
-    Optional<Code> codes = codeRepository.getCodesByType(userId, TypeCode.REGISTER.name());
+    Optional<Code> codes = codeRepository.getCodesByType(
+      userId,
+      TypeCode.REGISTER.name()
+    );
     if (codes.isPresent()) {
       Code code = codes.get();
       if (code.getCode().compareTo(inputCode) != 0) {
-        throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_CODE);
+        throw new InvalidRequestException(
+          new HashMap<>(),
+          LanguageMessageKey.INVALID_CODE
+        );
       } else if (code.getExpiredDate().compareTo(now) < 0) {
-        throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.CODE_EXPIRED);
+        throw new InvalidRequestException(
+          new HashMap<>(),
+          LanguageMessageKey.CODE_EXPIRED
+        );
       }
     } else {
       throw new InvalidRequestException(new HashMap<>(), LanguageMessageKey.INVALID_CODE);
@@ -195,18 +226,23 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     String newCode = RandomStringUtils.randomAlphabetic(6).toUpperCase();
     insertCode(user.get_id().toString(), TypeCode.REGISTER, newCode);
     emailService.sendSimpleMail(new EmailDetail(user.getEmail(), newCode, "OTP"));
-
   }
 
   @Override
   public void forgotPassword(String email) {
     User user = getThisUser(email);
-    user.setPassword(bCryptPasswordEncoder()
-        .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())));
+    user.setPassword(
+      bCryptPasswordEncoder()
+        .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes()))
+    );
     repository.insertAndUpdate(user);
-    emailService.sendSimpleMail(new EmailDetail(user.getEmail(),
+    emailService.sendSimpleMail(
+      new EmailDetail(
+        user.getEmail(),
         "Username: " + user.getUsername() + " \n" + "Password: " + defaultPassword,
-        "New password!"));
+        "New password!"
+      )
+    );
   }
 
   @Override
@@ -217,11 +253,20 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     List<String> token = modifyToken(user.getTokens(), newTokens);
     user.setTokens(token);
     repository.insertAndUpdate(user);
-    pusherService.sendNotification("New login", "Someone login your account!",
-        Arrays.asList(user.getNotificationId().toString()));
-    return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
-        user.getType(), false, false));
-
+    pusherService.sendNotification(
+      "New login",
+      "Someone login your account!",
+      Arrays.asList(user.getNotificationId().toString())
+    );
+    return Optional.of(
+      new LoginResponse(
+        user.get_id().toString(),
+        "Bearer " + newTokens,
+        user.getType(),
+        false,
+        false
+      )
+    );
   }
 
   @Override
@@ -238,8 +283,10 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
     String email = payload.getEmail();
     boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
     if (!emailVerified) {
-      throw new InvalidRequestException(new HashMap<>(),
-          LanguageMessageKey.GG_EMAIL_IS_NOT_VERIFIED);
+      throw new InvalidRequestException(
+        new HashMap<>(),
+        LanguageMessageKey.GG_EMAIL_IS_NOT_VERIFIED
+      );
     }
     String name = (String) payload.get("name");
     // String userId = payload.getSubject();
@@ -255,45 +302,95 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       user.setTokens(tokenUser);
       user.setVerify2FA(false);
       user.setVerified(true);
-      pusherService.sendNotification("New login", "Someone login your account!",
-          Arrays.asList(user.getNotificationId().toString()));
-      pusherService.pushInfo(user.getChannelId(), user.getEventId().toString(),
-          new PusherUpdateResponse(false, true));
+      pusherService.sendNotification(
+        "New login",
+        "Someone login your account!",
+        Arrays.asList(user.getNotificationId().toString())
+      );
+      pusherService.pushInfo(
+        user.getChannelId(),
+        user.getEventId().toString(),
+        new PusherUpdateResponse(false, true)
+      );
       repository.insertAndUpdate(user);
-      return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
-          user.getType(), false, false));
+      return Optional.of(
+        new LoginResponse(
+          user.get_id().toString(),
+          "Bearer " + newTokens,
+          user.getType(),
+          false,
+          false
+        )
+      );
     } else {
       Date now = new Date();
       ObjectId newId = new ObjectId();
       String newTokens = jwtValidation.generateToken(newId.toString());
       List<String> tokenUser = new ArrayList<>();
       tokenUser.add(newTokens);
-      User user = new User(newId, TypeAccount.EXTERNAL, name,
-          bCryptPasswordEncoder()
-              .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
-          0, "", "", givenName, familyName, email, "", tokenUser, now, null, emailVerified, false,
-          0, DefaultValue.DEFAULT_AVATAR, new ObjectId(), "", new ObjectId(), new ArrayList<>());
-      User userAdmin = userRepository.getEntityByAttribute("super_admin_dev", "username")
-          .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
-      accessabilityRepository
-          .insertAndUpdate(new Accessability(null, userAdmin.get_id(), newId, true, false));
+      User user = new User(
+        newId,
+        TypeAccount.EXTERNAL,
+        name,
+        bCryptPasswordEncoder()
+          .encode(Base64.getEncoder().encodeToString(defaultPassword.getBytes())),
+        0,
+        "",
+        "",
+        givenName,
+        familyName,
+        email,
+        "",
+        tokenUser,
+        now,
+        null,
+        emailVerified,
+        false,
+        0,
+        DefaultValue.DEFAULT_AVATAR,
+        new ObjectId(),
+        "",
+        new ObjectId(),
+        new ArrayList<>()
+      );
+      User userAdmin = userRepository
+        .getEntityByAttribute("super_admin_dev", "username")
+        .orElseThrow(() -> new BadSqlException(LanguageMessageKey.SERVER_ERROR));
+      accessabilityRepository.insertAndUpdate(
+        new Accessability(null, userAdmin.get_id(), newId, true, false)
+      );
       repository.insertAndUpdate(user);
-      return Optional.of(new LoginResponse(user.get_id().toString(), "Bearer " + newTokens,
-          user.getType(), false, false));
+      return Optional.of(
+        new LoginResponse(
+          user.get_id().toString(),
+          "Bearer " + newTokens,
+          user.getType(),
+          false,
+          false
+        )
+      );
     }
-
   }
 
   public User getThisUser(String email) {
     if (email.matches(TypeValidation.EMAIL)) {
-      return repository.getEntityByAttribute(email, "email")
-          .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
+      return repository
+        .getEntityByAttribute(email, "email")
+        .orElseThrow(
+          () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL)
+        );
     } else if (email.matches(TypeValidation.PHONE)) {
-      return repository.getEntityByAttribute(email, "phone")
-          .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
+      return repository
+        .getEntityByAttribute(email, "phone")
+        .orElseThrow(
+          () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL)
+        );
     } else {
-      return repository.getEntityByAttribute(email, "username")
-          .orElseThrow(() -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL));
+      return repository
+        .getEntityByAttribute(email, "username")
+        .orElseThrow(
+          () -> new ResourceNotFoundException(LanguageMessageKey.NOT_FOUND_EMAIL)
+        );
     }
   }
 
@@ -311,5 +408,4 @@ public class LoginServiceImpl extends AbstractService<UserRepository> implements
       codeRepository.insertAndUpdate(code);
     }
   }
-
 }

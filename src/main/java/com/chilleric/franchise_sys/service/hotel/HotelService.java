@@ -1,11 +1,10 @@
 package com.chilleric.franchise_sys.service.hotel;
 
-import java.util.Optional;
 import com.chilleric.franchise_sys.dto.hotel.HotelRequest;
 import com.chilleric.franchise_sys.dto.hotel.HotelResponse;
+import java.util.Optional;
 
 public interface HotelService {
-
   void createNewHotel(HotelRequest hotelRequest);
 
   void updateHotel(String hotelId, HotelRequest hotelRequest);
@@ -14,4 +13,3 @@ public interface HotelService {
 
   void deleteHotel(String hotelId);
 }
-

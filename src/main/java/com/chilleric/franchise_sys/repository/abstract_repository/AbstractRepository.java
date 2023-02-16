@@ -1,5 +1,11 @@
 package com.chilleric.franchise_sys.repository.abstract_repository;
 
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.exception.BadSqlException;
+import com.chilleric.franchise_sys.log.AppLogger;
+import com.chilleric.franchise_sys.log.LoggerFactory;
+import com.chilleric.franchise_sys.log.LoggerType;
+import com.chilleric.franchise_sys.repository.system_repository.user.User.TypeAccount;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +18,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.exception.BadSqlException;
-import com.chilleric.franchise_sys.log.AppLogger;
-import com.chilleric.franchise_sys.log.LoggerFactory;
-import com.chilleric.franchise_sys.log.LoggerType;
-import com.chilleric.franchise_sys.repository.system_repository.user.User.TypeAccount;
 
 public abstract class AbstractRepository {
-
   @Autowired
   @Qualifier("mongo_system_template")
   protected MongoTemplate systemDBTemplate;
@@ -35,8 +34,14 @@ public abstract class AbstractRepository {
 
   protected AppLogger APP_LOGGER = LoggerFactory.getLogger(LoggerType.APPLICATION);
 
-  protected Query generateQueryMongoDB(Map<String, String> allParams, Class<?> clazz,
-      String keySort, String sortField, int page, int pageSize) {
+  protected Query generateQueryMongoDB(
+    Map<String, String> allParams,
+    Class<?> clazz,
+    String keySort,
+    String sortField,
+    int page,
+    int pageSize
+  ) {
     Query query = new Query();
     Field[] fields = clazz.getDeclaredFields();
     List<Criteria> allCriteria = new ArrayList<>();
@@ -55,10 +60,18 @@ public abstract class AbstractRepository {
     if (allCriteria.size() > 0) {
       query.addCriteria(new Criteria().andOperator(allCriteria));
     }
-    if (isSort == 1 && keySort.trim().compareTo("") != 0 && keySort.trim().compareTo("ASC") == 0) {
+    if (
+      isSort == 1 &&
+      keySort.trim().compareTo("") != 0 &&
+      keySort.trim().compareTo("ASC") == 0
+    ) {
       query.with(Sort.by(Sort.Direction.ASC, sortField));
     }
-    if (isSort == 1 && keySort.trim().compareTo("") != 0 && keySort.trim().compareTo("DESC") == 0) {
+    if (
+      isSort == 1 &&
+      keySort.trim().compareTo("") != 0 &&
+      keySort.trim().compareTo("DESC") == 0
+    ) {
       query.with(Sort.by(Sort.Direction.DESC, sortField));
     }
     if (page > 0 && pageSize > 0) {
@@ -107,7 +120,10 @@ public abstract class AbstractRepository {
     }
   }
 
-  List<Criteria> generateConditionCriterias(Field field, Map.Entry<String, String> items) {
+  List<Criteria> generateConditionCriterias(
+    Field field,
+    Map.Entry<String, String> items
+  ) {
     String[] values = items.getValue().split(",");
     List<Criteria> conditionCriteria = new ArrayList<>();
     if (field.getType() == TypeAccount.class) {
@@ -167,10 +183,8 @@ public abstract class AbstractRepository {
           APP_LOGGER.error("error ");
           throw new BadSqlException(LanguageMessageKey.SERVER_ERROR);
         }
-
       }
     }
     return conditionCriteria;
   }
-
 }

@@ -1,5 +1,13 @@
 package com.chilleric.franchise_sys.controller;
 
+import com.chilleric.franchise_sys.constant.LanguageMessageKey;
+import com.chilleric.franchise_sys.dto.common.CommonResponse;
+import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
+import com.chilleric.franchise_sys.dto.common.ValidationResult;
+import com.chilleric.franchise_sys.dto.path.PathRequest;
+import com.chilleric.franchise_sys.dto.path.PathResponse;
+import com.chilleric.franchise_sys.service.path.PathService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -12,92 +20,134 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.chilleric.franchise_sys.constant.LanguageMessageKey;
-import com.chilleric.franchise_sys.dto.common.CommonResponse;
-import com.chilleric.franchise_sys.dto.common.ListWrapperResponse;
-import com.chilleric.franchise_sys.dto.common.ValidationResult;
-import com.chilleric.franchise_sys.dto.path.PathRequest;
-import com.chilleric.franchise_sys.dto.path.PathResponse;
-import com.chilleric.franchise_sys.service.path.PathService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping(value = "paths")
 public class PathController extends AbstractController<PathService> {
+
   @SecurityRequirement(name = "Bearer Authentication")
   @GetMapping(value = "get-path-list")
   public ResponseEntity<CommonResponse<ListWrapperResponse<PathResponse>>> getPaths(
-      @RequestParam(required = false, defaultValue = "1") int page,
-      @RequestParam(required = false, defaultValue = "10") int pageSize,
-      @RequestParam Map<String, String> allParams,
-      @RequestParam(defaultValue = "asc") String keySort,
-      @RequestParam(defaultValue = "modified") String sortField, HttpServletRequest request) {
+    @RequestParam(required = false, defaultValue = "1") int page,
+    @RequestParam(required = false, defaultValue = "10") int pageSize,
+    @RequestParam Map<String, String> allParams,
+    @RequestParam(defaultValue = "asc") String keySort,
+    @RequestParam(defaultValue = "modified") String sortField,
+    HttpServletRequest request
+  ) {
     ValidationResult result = validateToken(request);
     return response(
-        service.getPaths(allParams, keySort, page, pageSize, sortField, result.getLoginId()),
-        LanguageMessageKey.SUCCESS, result.getViewPoints().get(PathResponse.class.getSimpleName()),
-        result.getEditable().get(PathRequest.class.getSimpleName()));
+      service.getPaths(
+        allParams,
+        keySort,
+        page,
+        pageSize,
+        sortField,
+        result.getLoginId()
+      ),
+      LanguageMessageKey.SUCCESS,
+      result.getViewPoints().get(PathResponse.class.getSimpleName()),
+      result.getEditable().get(PathRequest.class.getSimpleName())
+    );
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
   @GetMapping(value = "get-path-access")
-  public ResponseEntity<CommonResponse<List<String>>> getPathAccess(HttpServletRequest request) {
+  public ResponseEntity<CommonResponse<List<String>>> getPathAccess(
+    HttpServletRequest request
+  ) {
     ValidationResult result = validateToken(request);
-    return response(service.getPathAccess(result.getLoginId()), LanguageMessageKey.SUCCESS,
-        result.getViewPoints().get(PathResponse.class.getSimpleName()),
-        result.getEditable().get(PathRequest.class.getSimpleName()));
+    return response(
+      service.getPathAccess(result.getLoginId()),
+      LanguageMessageKey.SUCCESS,
+      result.getViewPoints().get(PathResponse.class.getSimpleName()),
+      result.getEditable().get(PathRequest.class.getSimpleName())
+    );
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
   @GetMapping(value = "get-path-detail")
-  public ResponseEntity<CommonResponse<PathResponse>> getPathsDetail(@RequestParam String id,
-      HttpServletRequest request) {
+  public ResponseEntity<CommonResponse<PathResponse>> getPathsDetail(
+    @RequestParam String id,
+    HttpServletRequest request
+  ) {
     ValidationResult result = validateToken(request);
     checkAccessability(result.getLoginId(), id, false, result.isServer());
-    return response(service.getPathDetail(id), LanguageMessageKey.SUCCESS,
-        result.getViewPoints().get(PathResponse.class.getSimpleName()),
-        result.getEditable().get(PathRequest.class.getSimpleName()));
+    return response(
+      service.getPathDetail(id),
+      LanguageMessageKey.SUCCESS,
+      result.getViewPoints().get(PathResponse.class.getSimpleName()),
+      result.getEditable().get(PathRequest.class.getSimpleName())
+    );
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
   @PostMapping(value = "add-new-path")
-  public ResponseEntity<CommonResponse<String>> addNewPath(@RequestBody PathRequest pathRequest,
-      HttpServletRequest httpServletRequest) {
+  public ResponseEntity<CommonResponse<String>> addNewPath(
+    @RequestBody PathRequest pathRequest,
+    HttpServletRequest httpServletRequest
+  ) {
     ValidationResult result = validateToken(httpServletRequest);
     checkAddCondition(result.getEditable(), PathRequest.class);
     service.addNewPath(pathRequest, result.getLoginId(), result.isServer());
     return new ResponseEntity<CommonResponse<String>>(
-        new CommonResponse<String>(true, null, LanguageMessageKey.PATH_ADD_SUCCESS,
-            HttpStatus.OK.value(), result.getViewPoints().get(PathResponse.class.getSimpleName()),
-            result.getEditable().get(PathRequest.class.getSimpleName())),
-        null, HttpStatus.OK.value());
+      new CommonResponse<String>(
+        true,
+        null,
+        LanguageMessageKey.PATH_ADD_SUCCESS,
+        HttpStatus.OK.value(),
+        result.getViewPoints().get(PathResponse.class.getSimpleName()),
+        result.getEditable().get(PathRequest.class.getSimpleName())
+      ),
+      null,
+      HttpStatus.OK.value()
+    );
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
   @PutMapping(value = "update-path")
-  public ResponseEntity<CommonResponse<String>> updatePath(@RequestBody PathRequest pathRequest,
-      HttpServletRequest httpServletRequest, @RequestParam String id) {
+  public ResponseEntity<CommonResponse<String>> updatePath(
+    @RequestBody PathRequest pathRequest,
+    HttpServletRequest httpServletRequest,
+    @RequestParam String id
+  ) {
     ValidationResult result = validateToken(httpServletRequest);
     checkAccessability(result.getLoginId(), id, true, result.isServer());
     service.updatePath(pathRequest, result.getLoginId(), id);
     return new ResponseEntity<CommonResponse<String>>(
-        new CommonResponse<String>(true, null, LanguageMessageKey.UPDATE_PATH_SUCCESS,
-            HttpStatus.OK.value(), result.getViewPoints().get(PathResponse.class.getSimpleName()),
-            result.getEditable().get(PathRequest.class.getSimpleName())),
-        null, HttpStatus.OK.value());
+      new CommonResponse<String>(
+        true,
+        null,
+        LanguageMessageKey.UPDATE_PATH_SUCCESS,
+        HttpStatus.OK.value(),
+        result.getViewPoints().get(PathResponse.class.getSimpleName()),
+        result.getEditable().get(PathRequest.class.getSimpleName())
+      ),
+      null,
+      HttpStatus.OK.value()
+    );
   }
 
   @SecurityRequirement(name = "Bearer Authentication")
   @PutMapping(value = "delete-path")
-  public ResponseEntity<CommonResponse<String>> deletePath(@RequestParam String id,
-      HttpServletRequest httpServletRequest) {
+  public ResponseEntity<CommonResponse<String>> deletePath(
+    @RequestParam String id,
+    HttpServletRequest httpServletRequest
+  ) {
     ValidationResult result = validateToken(httpServletRequest);
     checkAccessability(result.getLoginId(), id, true, result.isServer());
     service.deletePath(id);
     return new ResponseEntity<CommonResponse<String>>(
-        new CommonResponse<String>(true, null, LanguageMessageKey.DELETE_PATH_SUCCESS,
-            HttpStatus.OK.value(), result.getViewPoints().get(PathResponse.class.getSimpleName()),
-            result.getEditable().get(PathRequest.class.getSimpleName())),
-        null, HttpStatus.OK.value());
+      new CommonResponse<String>(
+        true,
+        null,
+        LanguageMessageKey.DELETE_PATH_SUCCESS,
+        HttpStatus.OK.value(),
+        result.getViewPoints().get(PathResponse.class.getSimpleName()),
+        result.getEditable().get(PathRequest.class.getSimpleName())
+      ),
+      null,
+      HttpStatus.OK.value()
+    );
   }
 }

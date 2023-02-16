@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-@SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
+@SpringBootApplication(
+  exclude = { MongoAutoConfiguration.class, MongoDataAutoConfiguration.class }
+)
 public class FranchiseSysApplication {
 
   public static void main(String[] args) {
@@ -18,8 +20,7 @@ public class FranchiseSysApplication {
 
   @Bean
   public MessageSource messageSource() {
-    ReloadableResourceBundleMessageSource messageSource =
-        new ReloadableResourceBundleMessageSource();
+    ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
     messageSource.setBasenames("classpath:messages");
     messageSource.setDefaultEncoding("UTF-8");
     return messageSource;

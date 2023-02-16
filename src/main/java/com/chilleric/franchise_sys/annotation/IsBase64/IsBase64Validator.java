@@ -1,9 +1,9 @@
 package com.chilleric.franchise_sys.annotation.IsBase64;
 
+import com.chilleric.franchise_sys.constant.TypeValidation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.apache.tomcat.util.codec.binary.Base64;
-import com.chilleric.franchise_sys.constant.TypeValidation;
 
 public class IsBase64Validator implements ConstraintValidator<IsBase64, String> {
 
@@ -19,13 +19,10 @@ public class IsBase64Validator implements ConstraintValidator<IsBase64, String> 
         }
       } catch (IllegalArgumentException e) {
         return false;
-
       } catch (IllegalStateException e) {
         return false;
-
       }
     }
     return true;
   }
-
 }

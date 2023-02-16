@@ -1,14 +1,17 @@
 package com.chilleric.franchise_sys.utils;
 
-import java.util.Map;
-import org.apache.tomcat.util.codec.binary.Base64;
 import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.exception.InvalidRequestException;
+import java.util.Map;
+import org.apache.tomcat.util.codec.binary.Base64;
 
 public class PasswordValidator {
 
-  public static void validatePassword(Map<String, String> errorObject, String password,
-      String keyError) {
+  public static void validatePassword(
+    Map<String, String> errorObject,
+    String password,
+    String keyError
+  ) {
     if (!Base64.isBase64(password)) {
       errorObject.put(keyError, "Password must be encoded!");
       throw new InvalidRequestException(errorObject, "Password must be encoded!");
@@ -29,8 +32,11 @@ public class PasswordValidator {
     }
   }
 
-  public static void validateNewPassword(Map<String, String> errorObject, String newPassword,
-      String keyError) {
+  public static void validateNewPassword(
+    Map<String, String> errorObject,
+    String newPassword,
+    String keyError
+  ) {
     if (Base64.isBase64(newPassword)) {
       try {
         String decodedNewPassword = new String(Base64.decodeBase64(newPassword));
@@ -40,7 +46,10 @@ public class PasswordValidator {
         }
         if (!decodedNewPassword.matches(TypeValidation.PASSWORD)) {
           errorObject.put(keyError, "Password must be passed condition!");
-          throw new InvalidRequestException(errorObject, "Password must be passed condition!");
+          throw new InvalidRequestException(
+            errorObject,
+            "Password must be passed condition!"
+          );
         }
       } catch (IllegalArgumentException e) {
         errorObject.put(keyError, "Password must be encoded!");
@@ -53,5 +62,4 @@ public class PasswordValidator {
       throw new InvalidRequestException(errorObject, "Password must be encoded!");
     }
   }
-
 }

@@ -1,9 +1,9 @@
 package com.chilleric.franchise_sys.dto.bill;
 
-import java.util.List;
 import com.chilleric.franchise_sys.dto.discount.DiscountResponse;
 import com.chilleric.franchise_sys.dto.user.UserResponse;
 import com.chilleric.franchise_sys.repository.common_enum.BillStatus;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

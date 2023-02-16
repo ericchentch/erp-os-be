@@ -1,13 +1,13 @@
 package com.chilleric.franchise_sys.dto.task;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import com.chilleric.franchise_sys.annotation.IsObjectId.IsObjectId;
 import com.chilleric.franchise_sys.constant.LanguageMessageKey;
 import com.chilleric.franchise_sys.constant.TypeValidation;
 import com.chilleric.franchise_sys.repository.crm_repository.task.TaskStatus;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,15 +37,20 @@ public class TaskRequest {
   @NotBlank(message = LanguageMessageKey.TASK_START_DATE_REQUIRED)
   @NotEmpty(message = LanguageMessageKey.TASK_START_DATE_REQUIRED)
   @NotNull(message = LanguageMessageKey.TASK_START_DATE_REQUIRED)
-  @Pattern(regexp = TypeValidation.DATE, message = LanguageMessageKey.SHIFT_INVALID_START_DATE)
+  @Pattern(
+    regexp = TypeValidation.DATE,
+    message = LanguageMessageKey.SHIFT_INVALID_START_DATE
+  )
   private String startDate;
 
   @NotBlank(message = LanguageMessageKey.TASK_START_HOUR_REQUIRED)
   @NotEmpty(message = LanguageMessageKey.TASK_START_HOUR_REQUIRED)
   @NotNull(message = LanguageMessageKey.TASK_START_HOUR_REQUIRED)
-  @Pattern(regexp = TypeValidation.HOUR, message = LanguageMessageKey.SHIFT_INVALID_START_DATE)
+  @Pattern(
+    regexp = TypeValidation.HOUR,
+    message = LanguageMessageKey.SHIFT_INVALID_START_DATE
+  )
   private String startHour;
-
 
   @NotBlank(message = LanguageMessageKey.TASK_TITLE_REQUIRED)
   @NotEmpty(message = LanguageMessageKey.TASK_TITLE_REQUIRED)
@@ -61,5 +66,4 @@ public class TaskRequest {
   // @NotEmpty(message = LanguageMessageKey.TASK_STATUS_REQUIRED)
   @NotNull(message = LanguageMessageKey.TASK_STATUS_REQUIRED)
   private TaskStatus status;
-
 }

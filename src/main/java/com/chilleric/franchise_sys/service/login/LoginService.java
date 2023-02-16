@@ -1,8 +1,8 @@
 package com.chilleric.franchise_sys.service.login;
 
-import java.util.Optional;
 import com.chilleric.franchise_sys.dto.login.LoginRequest;
 import com.chilleric.franchise_sys.dto.login.LoginResponse;
+import java.util.Optional;
 
 public interface LoginService {
   Optional<LoginResponse> login(LoginRequest loginRequest, boolean isRegister);

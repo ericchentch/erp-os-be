@@ -1,11 +1,11 @@
 package com.chilleric.franchise_sys.repository.system_repository.code;
 
+import com.chilleric.franchise_sys.repository.abstract_repository.SystemRepository;
 import java.util.Optional;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
-import com.chilleric.franchise_sys.repository.abstract_repository.SystemRepository;
 
 @Repository
 public class CodeRepository extends SystemRepository<Code> {
@@ -33,5 +33,4 @@ public class CodeRepository extends SystemRepository<Code> {
       return Optional.empty();
     }
   }
-
 }

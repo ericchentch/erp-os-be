@@ -1,8 +1,7 @@
 package com.chilleric.franchise_sys.repository.crm_repository.discount;
 
-import org.springframework.stereotype.Repository;
 import com.chilleric.franchise_sys.repository.abstract_repository.CrmRepository;
+import org.springframework.stereotype.Repository;
 
 @Repository
-public class DiscountRepository extends CrmRepository<Discount> {
-}
+public class DiscountRepository extends CrmRepository<Discount> {}

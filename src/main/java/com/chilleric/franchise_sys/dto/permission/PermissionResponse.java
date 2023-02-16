@@ -1,8 +1,8 @@
 package com.chilleric.franchise_sys.dto.permission;
 
+import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import java.util.List;
 import java.util.Map;
-import com.chilleric.franchise_sys.repository.common_entity.ViewPoint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PermissionResponse {
-
   private String id;
   private String name;
   private List<String> userId;

@@ -52,7 +52,13 @@ public class AppLogger {
    * @return message created
    */
   private String prepareMessage(String msg, Object[] headerNames) {
-    return Arrays.stream(headerNames).map(p -> String.format("[%s]", p))
-        .collect(Collectors.joining("")) + " " + msg;
+    return (
+      Arrays
+        .stream(headerNames)
+        .map(p -> String.format("[%s]", p))
+        .collect(Collectors.joining("")) +
+      " " +
+      msg
+    );
   }
 }

@@ -8,5 +8,4 @@ class FranchiseSysApplicationTests {
 
   @Test
   void contextLoads() {}
-
 }

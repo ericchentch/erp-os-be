@@ -1,7 +1,8 @@
 package com.chilleric.franchise_sys.constant;
 
 public enum ResponseType {
-  PUBLIC("public"), PRIVATE("private");
+  PUBLIC("public"),
+  PRIVATE("private");
 
   private String responseType;
 

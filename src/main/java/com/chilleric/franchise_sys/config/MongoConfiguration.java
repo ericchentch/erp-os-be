@@ -18,8 +18,12 @@ public class MongoConfiguration {
   }
 
   @Bean("mongo_system_template")
-  public MongoTemplate getSystemDBTemplate(@Qualifier("mongo_system") MongoProperties mongo) {
-    SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(mongo.getUri());
+  public MongoTemplate getSystemDBTemplate(
+    @Qualifier("mongo_system") MongoProperties mongo
+  ) {
+    SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(
+      mongo.getUri()
+    );
     return new MongoTemplate(factory);
   }
 
@@ -31,7 +35,9 @@ public class MongoConfiguration {
 
   @Bean("mongo_crm_template")
   public MongoTemplate getCrmDBTemplate(@Qualifier("mongo_crm") MongoProperties mongo) {
-    SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(mongo.getUri());
+    SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(
+      mongo.getUri()
+    );
     return new MongoTemplate(factory);
   }
 
@@ -43,8 +49,11 @@ public class MongoConfiguration {
 
   @Bean("mongo_information_template")
   public MongoTemplate getInformationDBTemplate(
-      @Qualifier("mongo_information") MongoProperties mongo) {
-    SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(mongo.getUri());
+    @Qualifier("mongo_information") MongoProperties mongo
+  ) {
+    SimpleMongoClientDatabaseFactory factory = new SimpleMongoClientDatabaseFactory(
+      mongo.getUri()
+    );
     return new MongoTemplate(factory);
   }
 }
